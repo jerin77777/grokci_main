@@ -2,11 +2,20 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-String userId = "";
+// String userId = "";
 
 StreamController<Map> router = StreamController<Map>.broadcast();
 StreamSink<Map> get routerSink => router.sink;
 Stream<Map> get routerStream => router.stream;
+showMessage(BuildContext context, String message) {
+  final snackBar = SnackBar(
+    content: Text(message),
+  );
+
+  // Find the ScaffoldMessenger in the widget tree
+  // and use it to show a SnackBar.
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}
 
 class Pallet {
   static Color primary2 = Color(0xFF30E287);
@@ -26,43 +35,6 @@ class Pallet {
 class Style {
   static TextStyle h1 = TextStyle(fontSize: 25, fontWeight: FontWeight.w800);
   static TextStyle h2 = TextStyle(fontSize: 18, fontWeight: FontWeight.w800);
-  static TextStyle h3 = TextStyle(fontWeight: FontWeight.w700);
+  static TextStyle h3 = TextStyle(fontSize: 15, fontWeight: FontWeight.w700);
+  static TextStyle h4 = TextStyle(fontSize: 14, fontWeight: FontWeight.w700);
 }
-
-Map googlePayConfig = {
-  "provider": "google_pay",
-  "data": {
-    "environment": "TEST",
-    "apiVersion": 2,
-    "apiVersionMinor": 0,
-    "allowedPaymentMethods": [
-      {
-        "type": "CARD",
-        "tokenizationSpecification": {
-          "type": "PAYMENT_GATEWAY",
-          "parameters": {
-            "gateway": "example",
-            "gatewayMerchantId": "gatewayMerchantId"
-          }
-        },
-        "parameters": {
-          "allowedCardNetworks": ["VISA", "MASTERCARD"],
-          "allowedAuthMethods": ["PAN_ONLY", "CRYPTOGRAM_3DS"],
-          "billingAddressRequired": true,
-          "billingAddressParameters": {
-            "format": "FULL",
-            "phoneNumberRequired": true
-          }
-        }
-      }
-    ],
-    "merchantInfo": {
-      "merchantId": "01234567890123456789",
-      "merchantName": "Example Merchant Name"
-    },
-    "transactionInfo": {
-      "countryCode": "US",
-      "currencyCode": "USD"
-    }
-  }
-};

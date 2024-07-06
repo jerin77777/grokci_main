@@ -11,6 +11,8 @@ import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
 Future<void> saveAddress(BuildContext context, Map address) async {
+  String userId = sharedPreferences!.get("phone").toString();
+
   DocumentList temp = await db.listDocuments(
       databaseId: AppConfig.database, collectionId: AppConfig.address, queries: [Query.equal("userId", userId)]);
   int cn = temp.documents.length;

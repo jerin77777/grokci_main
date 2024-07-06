@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:grokci_main/backend/server.dart';
 import 'package:grokci_main/types.dart';
 import 'package:grokci_main/widgets.dart';
@@ -16,86 +17,104 @@ class _CheckoutState extends State<Checkout> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            children: [
-              Row(
+        body: Column(
+          children: [
+            SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(Icons.arrow_back),
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(Icons.arrow_back, size: 22)),
                   SizedBox(width: 15),
                   Text(
                     "Checkout",
                     style: Style.h3,
                   ),
                   Expanded(child: SizedBox()),
-                  Icon(Icons.notifications_none)
+                  Icon(Icons.notifications_none, size: 22),
                 ],
               ),
-              SizedBox(height: 10),
-              Expanded(
-                  child: ListView(
-                children: [
-                  Text(
-                    "Delivery Information",
-                    style: Style.h3,
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-                    decoration: BoxDecoration(color: Pallet.inner1, borderRadius: BorderRadius.circular(10)),
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Deliver To"),
-                          Button(
-                              radius: 30,
-                              padding: EdgeInsets.symmetric(vertical: 5),
-                              color: Pallet.inner2,
-                              fontColor: Pallet.primary,
-                              label: "Change",
-                              onPress: () {})
-                        ],
-                      ),
-                      Text(
-                        "Manish Kumar",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      Text("X1, 201\nTiruvanthapuram City,\nValay Singh Yadhav Path,\nKhagul Path, 801503\n1234567890"),
-                    ]),
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Pallet.inner1,
-                    ),
-                    child: Row(
+            ),
+            Divider(color: Colors.grey[300]),
+            SizedBox(height: 10),
+            Expanded(
+                child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              children: [
+                Text(
+                  "Delivery Information",
+                  style: Style.h3,
+                ),
+                SizedBox(height: 10),
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                  decoration: BoxDecoration(color: Pallet.inner1, borderRadius: BorderRadius.circular(10)),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    // SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(
-                          Icons.delivery_dining,
-                          color: Pallet.primary,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            "Deliver To:",
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
                         ),
-                        SizedBox(width: 15),
-                        Text(
-                          "Delivery within a hour",
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        )
+                        Button(
+                            radius: 30,
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            color: Pallet.inner2,
+                            fontColor: Pallet.primary,
+                            label: "Change",
+                            onPress: () {})
                       ],
                     ),
+                    Text(
+                      "Manish Kumar",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Text("X1, 201\nTiruvanthapuram City,\nValay Singh Yadhav Path,\nKhagul Path, 801503\n1234567890"),
+                    SizedBox(height: 5)
+                  ]),
+                ),
+                SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Pallet.inner1,
                   ),
-                  SizedBox(height: 10),
-                  Text("Items", style: Style.h3),
-                  SizedBox(height: 10),
-                  for (var item in widget.items) product(item)
-                ],
-              ))
-            ],
-          ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.delivery_dining,
+                        color: Pallet.primary,
+                      ),
+                      SizedBox(width: 15),
+                      Text(
+                        "Delivery within a hour",
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text("Items", style: Style.h3),
+                SizedBox(height: 10),
+                Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Pallet.inner1),
+                    child: Column(children: [for (var item in widget.items) product(item)])),
+              ],
+            ))
+          ],
         ),
       ),
     );
@@ -123,7 +142,11 @@ class _CheckoutState extends State<Checkout> {
             ),
             Text(
               item["product"]["about"].toString(),
-              style: TextStyle(color: Pallet.font3),
+              maxLines: 1,
+              style: TextStyle(color: Pallet.font3, overflow: TextOverflow.ellipsis),
+            ),
+            SizedBox(
+              height: 5,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

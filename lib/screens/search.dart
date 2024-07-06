@@ -37,7 +37,7 @@ class _SearchState extends State<Search> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Icon(Icons.arrow_back), Icon(Icons.notifications_none)],
+            children: [Icon(Icons.arrow_back, size: 22), Icon(Icons.notifications_none, size: 22)],
           ),
           SizedBox(height: 10),
           Text(
@@ -134,6 +134,8 @@ class _SearchState extends State<Search> {
                                         label: "Add to Bag",
                                         onPress: () {
                                           addToBag(product["id"]);
+                                                                      showMessage(context, "Added ${product["name"]} to bag");
+
                                         })
                                   ],
                                 )

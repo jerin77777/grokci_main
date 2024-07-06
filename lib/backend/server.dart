@@ -161,6 +161,8 @@ Future<Map> getProduct(String productId) async {
 }
 
 Future<List> getAddresses() async {
+  String userId = sharedPreferences!.get("phone").toString();
+
   DocumentList temp = await db.listDocuments(databaseId: AppConfig.database, collectionId: AppConfig.address, queries: [
     Query.equal("userId", userId),
   ]);
@@ -168,6 +170,8 @@ Future<List> getAddresses() async {
 }
 
 getBag() async {
+  String userId = sharedPreferences!.get("phone").toString();
+
   List<Map> result = [];
   DocumentList products = await db.listDocuments(
       databaseId: AppConfig.database,
@@ -178,6 +182,8 @@ getBag() async {
 }
 
 getSaveForLater() async {
+  String userId = sharedPreferences!.get("phone").toString();
+
   List<Map> result = [];
   DocumentList products = await db.listDocuments(
       databaseId: AppConfig.database,
@@ -188,6 +194,8 @@ getSaveForLater() async {
 }
 
 addToBag(String productId) async {
+  String userId = sharedPreferences!.get("phone").toString();
+
   DocumentList product = await db.listDocuments(databaseId: AppConfig.database, collectionId: AppConfig.cart, queries: [
     Query.equal("userId", userId),
     Query.equal("productId", productId),
@@ -202,6 +210,7 @@ addToBag(String productId) async {
 }
 
 updateBag(String productId, int qty) async {
+  String userId = sharedPreferences!.get("phone").toString();
   DocumentList product = await db.listDocuments(
       databaseId: AppConfig.database,
       collectionId: AppConfig.cart,
@@ -219,6 +228,8 @@ updateBag(String productId, int qty) async {
 }
 
 saveForLater(String productId, bool saveForLater) async {
+  String userId = sharedPreferences!.get("phone").toString();
+
   DocumentList product = await db.listDocuments(
       databaseId: AppConfig.database,
       collectionId: AppConfig.cart,

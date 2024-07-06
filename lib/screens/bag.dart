@@ -6,6 +6,8 @@ import 'package:grokci_main/types.dart';
 import 'package:grokci_main/widgets.dart';
 import 'checkout.dart';
 
+double total = 0;
+
 class Bag extends StatefulWidget {
   const Bag({super.key});
 
@@ -16,7 +18,6 @@ class Bag extends StatefulWidget {
 class _BagState extends State<Bag> {
   List bag = [];
   List saved = [];
-  double total = 0;
   @override
   void initState() {
     getData(saveForLater: true);
@@ -46,13 +47,20 @@ class _BagState extends State<Bag> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Icon(Icons.arrow_back), Icon(Icons.notifications_none)],
+            children: [
+              GestureDetector(
+                  // onTap: () {
+                  //   Navigator.pop(context);
+                  // },
+                  child: Icon(Icons.arrow_back, size: 22)),
+              Icon(Icons.notifications_none, size: 22)
+            ],
           ),
           SizedBox(height: 10),
           Text(
@@ -76,6 +84,7 @@ class _BagState extends State<Bag> {
           else
             Expanded(
               child: ListView(
+                padding: EdgeInsets.symmetric(horizontal: 5),
                 children: [
                   if (bag.isNotEmpty)
                     Container(
@@ -100,38 +109,40 @@ class _BagState extends State<Bag> {
             ),
           SizedBox(height: 10),
           if (total != 0)
-            Row(
-              children: [
-                Expanded(
-                    child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Total Amount:",
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      "\$ ${total}",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                )),
-                Button(
-                    label: "Proceed to Buy",
-                    radius: 30,
-                    onPress: () {
-                      Navigator.push(
-                        mainContext,
-                        MaterialPageRoute(
-                            builder: (context) => Checkout(
-                                  items: bag,
-                                )),
-                      );
-                      // routerSink.add({"route": "checkout"});
-                      // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Checkout()));
-                    })
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                children: [
+                  Expanded(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Total Amount:",
+                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        "\$ ${total}",
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  )),
+                  Button(
+                      label: "Proceed to Buy",
+                      radius: 30,
+                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      onPress: () {
+                        Navigator.push(
+                          mainContext,
+                          MaterialPageRoute(
+                              builder: (context) => Checkout(
+                                    items: bag,
+                                  )),
+                        );
+                      })
+                ],
+              ),
             )
         ],
       ),
@@ -160,8 +171,10 @@ class _BagState extends State<Bag> {
             ),
             Text(
               item["product"]["about"].toString(),
-              style: TextStyle(color: Pallet.font3),
+              maxLines: 1,
+              style: TextStyle(color: Pallet.font3, overflow: TextOverflow.ellipsis),
             ),
+            SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -184,8 +197,13 @@ class _BagState extends State<Bag> {
                     children: [
                       GestureDetector(
                           onTap: () async {
-                            await updateBag(item["productId"], (item["qty"] + 1));
-                            getData();
+                            item["qty"] += 1;
+                            total += item["product"]["sellingPrice"];
+
+                            setState(() {});
+                            updateBag(item["productId"], item["qty"]);
+
+                            // getData();
                           },
                           child: Icon(Icons.add, size: 18, color: Pallet.font2)),
                       SizedBox(width: 10),
@@ -193,8 +211,17 @@ class _BagState extends State<Bag> {
                       SizedBox(width: 10),
                       GestureDetector(
                           onTap: () async {
-                            await updateBag(item["productId"], (item["qty"] - 1));
-                            getData();
+                            if (item["qty"] > 0) {
+                              item["qty"] -= 1;
+                              total -= item["product"]["sellingPrice"];
+
+                              setState(() {});
+
+                              updateBag(item["productId"], item["qty"]);
+                            }
+                            if (item["qty"] == 0) {
+                              bag.remove(item);
+                            }
                           },
                           child: Icon(Icons.remove, size: 18, color: Pallet.font2))
                     ],
@@ -214,6 +241,7 @@ class _BagState extends State<Bag> {
                     fontColor: Color(0xFFBA1A1A),
                     onPress: () async {
                       await updateBag(item["productId"], 0);
+
                       getData();
                     }),
                 SizedBox(width: 10),

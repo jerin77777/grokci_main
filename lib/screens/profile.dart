@@ -39,335 +39,349 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(15),
-      child: ListView(
+      padding: const EdgeInsets.all(10),
+      child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Icon(Icons.arrow_back), Icon(Icons.notifications_none)],
+            children: [Icon(Icons.arrow_back, size: 22), Icon(Icons.notifications_none, size: 22)],
           ),
-          SizedBox(height: 10),
-          Text(
-            "Account",
-            style: Style.h1,
-          ),
-          SizedBox(height: 10),
-          Row(
+          Expanded(
+              child: ListView(
+            padding: EdgeInsets.symmetric(horizontal: 5),
             children: [
-              ProfileIcon(
-                size: 60,
-                fontSize: 20,
-                color: Colors.red,
-                name: "j",
+              SizedBox(height: 10),
+              Text(
+                "Account",
+                style: Style.h1,
               ),
-              SizedBox(width: 10),
-              Expanded(
+              SizedBox(height: 30),
+              Row(
+                children: [
+                  ProfileIcon(
+                    size: 60,
+                    fontSize: 20,
+                    color: Colors.red,
+                    name: "j",
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Hi, $name", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                        Text("How are you doing ?", style: TextStyle(fontSize: 14))
+                      ],
+                    ),
+                  ),
+                  // Container(
+                  //   padding: EdgeInsets.all(10),
+                  //   decoration: BoxDecoration(color: Pallet.primary, borderRadius: BorderRadius.circular(20)),
+                  //   child: Center(
+                  //     child: Icon(
+                  //       Icons.edit,
+                  //       color: Pallet.fontInner,
+                  //       size: 18,
+                  //     ),
+                  //   ),
+                  // )
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Hi, $name", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                    Text("How are you doing ?", style: TextStyle(fontSize: 14))
+                    SizedBox(height: 25),
+                    Text(
+                      "Primary options",
+                      style: Style.h4,
+                    ),
+                    SizedBox(height: 10),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(vertical: 10),
+                    //   child: Row(
+                    //     children: [
+                    //       SizedBox(
+                    //         width: 25,
+                    //         child: Center(
+                    //           child: FaIcon(
+                    //             FontAwesomeIcons.box,
+                    //             color: Pallet.primary,
+                    //             size: 22,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       SizedBox(width: 10),
+                    //       Expanded(
+                    //           child: Text(
+                    //         "My Orders",
+                    //         style: TextStyle(color: Pallet.primary, fontSize: 16),
+                    //       )),
+                    //       Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
+                    //     ],
+                    //   ),
+                    // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(vertical: 10),
+                    //   child: Row(
+                    //     children: [
+                    //       SizedBox(
+                    //         width: 25,
+                    //         child: Center(
+                    //           child: FaIcon(
+                    //             FontAwesomeIcons.solidCreditCard,
+                    //             color: Pallet.primary,
+                    //             size: 22,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       SizedBox(width: 10),
+                    //       Expanded(
+                    //           child: Text(
+                    //         "Payment Options",
+                    //         style: TextStyle(color: Pallet.primary, fontSize: 16),
+                    //       )),
+                    //       Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
+                    //     ],
+                    //   ),
+                    // ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          mainContext,
+                          MaterialPageRoute(builder: (context) => Address()),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 25,
+                              child: Center(
+                                child: FaIcon(
+                                  FontAwesomeIcons.locationDot,
+                                  color: Pallet.primary,
+                                  size: 22,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                                child: Text(
+                              "Manage Addresses",
+                              style: TextStyle(color: Pallet.primary, fontSize: 16),
+                            )),
+                            Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
+                          ],
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          mainContext,
+                          MaterialPageRoute(builder: (context) => Support()),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 25,
+                              child: Center(
+                                child: FaIcon(
+                                  FontAwesomeIcons.headset,
+                                  color: Pallet.primary,
+                                  size: 22,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                                child: Text(
+                              "Support",
+                              style: TextStyle(color: Pallet.primary, fontSize: 16),
+                            )),
+                            Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
+                          ],
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          mainContext,
+                          MaterialPageRoute(builder: (context) => Support()),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 25,
+                              child: Center(
+                                child: FaIcon(
+                                  FontAwesomeIcons.solidMessage,
+                                  color: Pallet.primary,
+                                  size: 22,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                                child: Text(
+                              "Feed Back",
+                              style: TextStyle(color: Pallet.primary, fontSize: 16),
+                            )),
+                            Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
+                          ],
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          mainContext,
+                          MaterialPageRoute(builder: (context) => Security()),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 25,
+                              child: Center(
+                                child: FaIcon(
+                                  FontAwesomeIcons.key,
+                                  color: Pallet.primary,
+                                  size: 22,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                                child: Text(
+                              "Login & Security",
+                              style: TextStyle(color: Pallet.primary, fontSize: 16),
+                            )),
+                            Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    GestureDetector(
+                      onTap: () {
+                        sharedPreferences!.remove("phone");
+                        Navigator.pushReplacement(
+                          mainContext,
+                          MaterialPageRoute(builder: (context) => Login()),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 25,
+                              child: Center(
+                                child: FaIcon(
+                                  FontAwesomeIcons.rightFromBracket,
+                                  color: Pallet.primary,
+                                  size: 22,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                                child: Text(
+                              "Logout",
+                              style: TextStyle(color: Pallet.primary, fontSize: 16),
+                            )),
+                            Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+
+                    // Text(
+                    //   "Extra Features",
+                    //   style: Style.h3,
+                    // ),
+                    // SizedBox(height: 10),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(vertical: 5),
+                    //   child: Row(
+                    //     children: [
+                    //       SizedBox(
+                    //         width: 25,
+                    //         child: Center(
+                    //           child: FaIcon(
+                    //             FontAwesomeIcons.solidBell,
+                    //             color: Pallet.primary,
+                    //             size: 22,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       SizedBox(width: 10),
+                    //       Expanded(
+                    //           child: Text(
+                    //         "Login & Security",
+                    //         style: TextStyle(color: Pallet.primary, fontSize: 16),
+                    //       )),
+                    //       Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
+                    //     ],
+                    //   ),
+                    // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(vertical: 5),
+                    //   child: Row(
+                    //     children: [
+                    //       FaIcon(
+                    //         FontAwesomeIcons.solidBell,
+                    //         color: Pallet.primary,
+                    //         size: 22,
+                    //       ),
+                    //       SizedBox(width: 10),
+                    //       Expanded(
+                    //           child: Text(
+                    //         "My Reviews",
+                    //         style: TextStyle(color: Pallet.primary, fontSize: 16),
+                    //       )),
+                    //       Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
+                    //     ],
+                    //   ),
+                    // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(vertical: 5),
+                    //   child: Row(
+                    //     children: [
+                    //       FaIcon(
+                    //         FontAwesomeIcons.solidCircleQuestion,
+                    //         color: Pallet.primary,
+                    //         size: 22,
+                    //       ),
+                    //       SizedBox(width: 10),
+                    //       Expanded(
+                    //           child: Text(
+                    //         "Frequently Asked Questions",
+                    //         style: TextStyle(color: Pallet.primary, fontSize: 16),
+                    //       )),
+                    //       Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
-              ),
-              // Container(
-              //   padding: EdgeInsets.all(10),
-              //   decoration: BoxDecoration(color: Pallet.primary, borderRadius: BorderRadius.circular(20)),
-              //   child: Center(
-              //     child: Icon(
-              //       Icons.edit,
-              //       color: Pallet.fontInner,
-              //       size: 18,
-              //     ),
-              //   ),
-              // )
+              )
             ],
-          ),
-          SizedBox(height: 20),
-          Text(
-            "Primary options",
-            style: Style.h3,
-          ),
-          SizedBox(height: 10),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(vertical: 8),
-          //   child: Row(
-          //     children: [
-          //       SizedBox(
-          //         width: 25,
-          //         child: Center(
-          //           child: FaIcon(
-          //             FontAwesomeIcons.box,
-          //             color: Pallet.primary,
-          //             size: 22,
-          //           ),
-          //         ),
-          //       ),
-          //       SizedBox(width: 10),
-          //       Expanded(
-          //           child: Text(
-          //         "My Orders",
-          //         style: TextStyle(color: Pallet.primary, fontSize: 16),
-          //       )),
-          //       Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary)
-          //     ],
-          //   ),
-          // ),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(vertical: 8),
-          //   child: Row(
-          //     children: [
-          //       SizedBox(
-          //         width: 25,
-          //         child: Center(
-          //           child: FaIcon(
-          //             FontAwesomeIcons.solidCreditCard,
-          //             color: Pallet.primary,
-          //             size: 22,
-          //           ),
-          //         ),
-          //       ),
-          //       SizedBox(width: 10),
-          //       Expanded(
-          //           child: Text(
-          //         "Payment Options",
-          //         style: TextStyle(color: Pallet.primary, fontSize: 16),
-          //       )),
-          //       Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary)
-          //     ],
-          //   ),
-          // ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                mainContext,
-                MaterialPageRoute(builder: (context) => Address()),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 25,
-                    child: Center(
-                      child: FaIcon(
-                        FontAwesomeIcons.locationDot,
-                        color: Pallet.primary,
-                        size: 22,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                      child: Text(
-                    "Manage Addresses",
-                    style: TextStyle(color: Pallet.primary, fontSize: 16),
-                  )),
-                  Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary)
-                ],
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                mainContext,
-                MaterialPageRoute(builder: (context) => Support()),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 25,
-                    child: Center(
-                      child: FaIcon(
-                        FontAwesomeIcons.headset,
-                        color: Pallet.primary,
-                        size: 22,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                      child: Text(
-                    "Support",
-                    style: TextStyle(color: Pallet.primary, fontSize: 16),
-                  )),
-                  Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary)
-                ],
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                mainContext,
-                MaterialPageRoute(builder: (context) => Support()),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 25,
-                    child: Center(
-                      child: FaIcon(
-                        FontAwesomeIcons.solidMessage,
-                        color: Pallet.primary,
-                        size: 22,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                      child: Text(
-                    "Feed Back",
-                    style: TextStyle(color: Pallet.primary, fontSize: 16),
-                  )),
-                  Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary)
-                ],
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                mainContext,
-                MaterialPageRoute(builder: (context) => Security()),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 25,
-                    child: Center(
-                      child: FaIcon(
-                        FontAwesomeIcons.key,
-                        color: Pallet.primary,
-                        size: 22,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                      child: Text(
-                    "Login & Security",
-                    style: TextStyle(color: Pallet.primary, fontSize: 16),
-                  )),
-                  Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary)
-                ],
-              ),
-            ),
-          ),
-
-          GestureDetector(
-            onTap: () {
-              sharedPreferences!.remove("phone");
-              Navigator.pushReplacement(
-                mainContext,
-                MaterialPageRoute(builder: (context) => Login()),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 25,
-                    child: Center(
-                      child: FaIcon(
-                        FontAwesomeIcons.rightFromBracket,
-                        color: Pallet.primary,
-                        size: 22,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                      child: Text(
-                    "Logout",
-                    style: TextStyle(color: Pallet.primary, fontSize: 16),
-                  )),
-                  Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary)
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-
-          // Text(
-          //   "Extra Features",
-          //   style: Style.h3,
-          // ),
-          // SizedBox(height: 10),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(vertical: 5),
-          //   child: Row(
-          //     children: [
-          //       SizedBox(
-          //         width: 25,
-          //         child: Center(
-          //           child: FaIcon(
-          //             FontAwesomeIcons.solidBell,
-          //             color: Pallet.primary,
-          //             size: 22,
-          //           ),
-          //         ),
-          //       ),
-          //       SizedBox(width: 10),
-          //       Expanded(
-          //           child: Text(
-          //         "Login & Security",
-          //         style: TextStyle(color: Pallet.primary, fontSize: 16),
-          //       )),
-          //       Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary)
-          //     ],
-          //   ),
-          // ),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(vertical: 5),
-          //   child: Row(
-          //     children: [
-          //       FaIcon(
-          //         FontAwesomeIcons.solidBell,
-          //         color: Pallet.primary,
-          //         size: 22,
-          //       ),
-          //       SizedBox(width: 10),
-          //       Expanded(
-          //           child: Text(
-          //         "My Reviews",
-          //         style: TextStyle(color: Pallet.primary, fontSize: 16),
-          //       )),
-          //       Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary)
-          //     ],
-          //   ),
-          // ),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(vertical: 5),
-          //   child: Row(
-          //     children: [
-          //       FaIcon(
-          //         FontAwesomeIcons.solidCircleQuestion,
-          //         color: Pallet.primary,
-          //         size: 22,
-          //       ),
-          //       SizedBox(width: 10),
-          //       Expanded(
-          //           child: Text(
-          //         "Frequently Asked Questions",
-          //         style: TextStyle(color: Pallet.primary, fontSize: 16),
-          //       )),
-          //       Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary)
-          //     ],
-          //   ),
-          // ),
+          ))
         ],
       ),
     );
