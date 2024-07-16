@@ -32,30 +32,30 @@ SharedPreferences? sharedPreferences;
 // order states delivering, delivered, payed
 // all database details used from here
 class AppConfig {
-  static String endpoint = "*";
-  static String project = "*";
-  static String mapKey = "*";
-  static String database = "*";
-  static String orders = "*";
-  static String products = "*";
-  static String orderProductMap = "*";
-  static String drivers = "*";
-  static String users = "*";
-  static String categories = "*";
-  static String warehouses = "*";
-  static String promotions = "*";
-  static String monthlyPicks = "*";
-  static String cart = "*";
-  static String address = "*";
+  static String endpoint = "***";
+  static String project = "***";
+  static String mapKey = "***";
+  static String database = "***";
+  static String orders = "***";
+  static String products = "***";
+  static String orderProductMap = "***";
+  static String drivers = "***";
+  static String users = "***";
+  static String categories = "***";
+  static String warehouses = "***";
+  static String promotions = "***";
+  static String monthlyPicks = "***";
+  static String cart = "***";
+  static String address = "***";
 
-  static String twilloSid = "*";
-  static String twilloToken = "*";
-  static String twilloNumber = "*";
+  static String twilloSid = "***";
+  static String twilloToken = "***";
+  static String twilloNumber = "***";
 }
 
 class Bucket {
-  static String categories = "6650a1990032c806f041";
-  static String products = "66432daf000dc57d6cf0";
+  static String categories = "***";
+  static String products = "***";
 }
 
 createAccount(

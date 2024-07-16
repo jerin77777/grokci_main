@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:grokci_main/backend/server.dart';
+import 'package:grokci_main/screens/changeMode.dart';
 import 'package:grokci_main/screens/feedback.dart';
 import 'package:grokci_main/screens/login.dart';
 import 'package:grokci_main/screens/security.dart';
@@ -44,7 +45,10 @@ class _ProfileState extends State<Profile> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Icon(Icons.arrow_back, size: 22), Icon(Icons.notifications_none, size: 22)],
+            children: [
+              Icon(Icons.arrow_back, size: 22),
+              Icon(Icons.notifications_none, size: 22)
+            ],
           ),
           Expanded(
               child: ListView(
@@ -69,8 +73,11 @@ class _ProfileState extends State<Profile> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Hi, $name", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                        Text("How are you doing ?", style: TextStyle(fontSize: 14))
+                        Text("Hi, $name",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600)),
+                        Text("How are you doing ?",
+                            style: TextStyle(fontSize: 14))
                       ],
                     ),
                   ),
@@ -171,9 +178,11 @@ class _ProfileState extends State<Profile> {
                             Expanded(
                                 child: Text(
                               "Manage Addresses",
-                              style: TextStyle(color: Pallet.primary, fontSize: 16),
+                              style: TextStyle(
+                                  color: Pallet.primary, fontSize: 16),
                             )),
-                            Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
+                            Icon(Icons.keyboard_arrow_right_outlined,
+                                color: Pallet.primary, size: 20)
                           ],
                         ),
                       ),
@@ -203,9 +212,11 @@ class _ProfileState extends State<Profile> {
                             Expanded(
                                 child: Text(
                               "Support",
-                              style: TextStyle(color: Pallet.primary, fontSize: 16),
+                              style: TextStyle(
+                                  color: Pallet.primary, fontSize: 16),
                             )),
-                            Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
+                            Icon(Icons.keyboard_arrow_right_outlined,
+                                color: Pallet.primary, size: 20)
                           ],
                         ),
                       ),
@@ -235,9 +246,11 @@ class _ProfileState extends State<Profile> {
                             Expanded(
                                 child: Text(
                               "Feed Back",
-                              style: TextStyle(color: Pallet.primary, fontSize: 16),
+                              style: TextStyle(
+                                  color: Pallet.primary, fontSize: 16),
                             )),
-                            Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
+                            Icon(Icons.keyboard_arrow_right_outlined,
+                                color: Pallet.primary, size: 20)
                           ],
                         ),
                       ),
@@ -246,7 +259,41 @@ class _ProfileState extends State<Profile> {
                       onTap: () {
                         Navigator.push(
                           mainContext,
-                          MaterialPageRoute(builder: (context) => Security()),
+                          MaterialPageRoute(builder: (context) => Support()),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 25,
+                              child: Center(
+                                child: FaIcon(
+                                  FontAwesomeIcons.dragon,
+                                  color: Pallet.primary,
+                                  size: 22,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                                child: Text(
+                              "Change Mode",
+                              style: TextStyle(
+                                  color: Pallet.primary, fontSize: 16),
+                            )),
+                            Icon(Icons.keyboard_arrow_right_outlined,
+                                color: Pallet.primary, size: 20)
+                          ],
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          mainContext,
+                          MaterialPageRoute(builder: (context) => Changemode()),
                         );
                       },
                       child: Padding(
@@ -267,9 +314,11 @@ class _ProfileState extends State<Profile> {
                             Expanded(
                                 child: Text(
                               "Login & Security",
-                              style: TextStyle(color: Pallet.primary, fontSize: 16),
+                              style: TextStyle(
+                                  color: Pallet.primary, fontSize: 16),
                             )),
-                            Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
+                            Icon(Icons.keyboard_arrow_right_outlined,
+                                color: Pallet.primary, size: 20)
                           ],
                         ),
                       ),
@@ -301,9 +350,11 @@ class _ProfileState extends State<Profile> {
                             Expanded(
                                 child: Text(
                               "Logout",
-                              style: TextStyle(color: Pallet.primary, fontSize: 16),
+                              style: TextStyle(
+                                  color: Pallet.primary, fontSize: 16),
                             )),
-                            Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
+                            Icon(Icons.keyboard_arrow_right_outlined,
+                                color: Pallet.primary, size: 20)
                           ],
                         ),
                       ),

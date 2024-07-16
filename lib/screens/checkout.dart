@@ -17,6 +17,8 @@ class _CheckoutState extends State<Checkout> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+                backgroundColor: Pallet.background,
+
         body: Column(
           children: [
             SizedBox(height: 10),
@@ -40,7 +42,7 @@ class _CheckoutState extends State<Checkout> {
                 ],
               ),
             ),
-            Divider(color: Colors.grey[300]),
+            Divider(color: Pallet.divider),
             SizedBox(height: 10),
             Expanded(
                 child: ListView(
@@ -143,7 +145,7 @@ class _CheckoutState extends State<Checkout> {
             Text(
               item["product"]["about"].toString(),
               maxLines: 1,
-              style: TextStyle(color: Pallet.font3, overflow: TextOverflow.ellipsis),
+              style: Style.ellipsisText,
             ),
             SizedBox(
               height: 5,

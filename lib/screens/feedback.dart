@@ -14,6 +14,8 @@ class _SupportState extends State<Support> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+                backgroundColor: Pallet.background,
+
         body: Padding(
           padding: EdgeInsets.all(10),
           child: Column(

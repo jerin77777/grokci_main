@@ -113,6 +113,8 @@ class GetAddressState extends State<GetAddress> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+                backgroundColor: Pallet.background,
+  
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(

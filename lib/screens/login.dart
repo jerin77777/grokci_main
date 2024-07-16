@@ -60,6 +60,8 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     mainContext = context;
     return Scaffold(
+              backgroundColor: Pallet.background,
+
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -212,6 +214,8 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+              backgroundColor: Pallet.background,
+
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),

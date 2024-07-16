@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grokci_main/backend/server.dart';
+import 'package:grokci_main/screens/products.dart';
 
 import '../types.dart';
 
@@ -234,6 +236,84 @@ class _ButtonState extends State<Button> with TickerProviderStateMixin {
             SizedBox(width: 10)
           ],
         ),
+      ),
+    );
+  }
+}
+
+class Category extends StatelessWidget {
+  const Category({
+    super.key,
+    required this.category,
+  });
+
+  final category;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProductsInCategory(
+                    categoryId: category["id"],
+                    categoryName: category["categoryName"],
+                  )),
+        );
+      },
+      child: Container(
+        width: 70,
+        decoration: BoxDecoration(
+          color: Pallet.inner1,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(50),
+            topRight: Radius.circular(50),
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10),
+          ),
+        ),
+        child: Stack(children: [
+          Center(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 5,
+                ),
+                Image.network(
+                  height: 60,
+                  width: 55,
+                  getUrl(Bucket.categories, category["imageId"]),
+                  fit: BoxFit.contain,
+                ),
+                SizedBox(
+                  height: 35,
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            child: Container(
+              width: 70,
+              height: 40,
+              padding: EdgeInsets.symmetric(horizontal: 2),
+              decoration: BoxDecoration(
+                color: Pallet.secondary,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
+                ),
+              ),
+              child: Center(
+                  child: Text(
+                category["categoryName"],
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Pallet.fontInner, fontSize: 12),
+              )),
+            ),
+          )
+        ]),
       ),
     );
   }

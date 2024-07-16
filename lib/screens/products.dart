@@ -31,6 +31,8 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+
+        backgroundColor: Pallet.background,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -55,7 +57,7 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
                 ],
               ),
             ),
-            Divider(color: Colors.grey[300], height: 1),
+            Divider(color: Pallet.divider, height: 1),
             SizedBox(height: 10),
             if (products.isNotEmpty)
               Container(
@@ -171,6 +173,8 @@ class _CategoriesState extends State<Categories> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+                backgroundColor: Pallet.background,
+
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -280,6 +284,8 @@ class _ProductDetailsState extends State<ProductDetails> {
     }
     return SafeArea(
       child: Scaffold(
+                backgroundColor: Pallet.background,
+
         body: Column(
           children: [
             // SizedBox(height: 5),
@@ -302,7 +308,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 ],
               ),
             ),
-            Divider(color: Colors.grey[300], height: 1),
+            Divider(color: Pallet.divider, height: 1),
             Expanded(
                 child: ListView(
               padding: EdgeInsets.symmetric(horizontal: 15),
@@ -345,7 +351,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       height: 10,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: (i == imageIdx) ? Colors.grey : Colors.grey[300]),
+                          color: (i == imageIdx) ? Colors.grey : Pallet.divider),
                     )
                 ]),
                 SizedBox(height: 10),
@@ -528,7 +534,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               ],
             )),
             Divider(
-              color: Colors.grey[300],
+              color: Pallet.divider,
               height: 1,
             ),
 

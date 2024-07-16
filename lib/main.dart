@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:appwrite/appwrite.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grokci_main/globals.dart';
 import 'package:grokci_main/screens/address.dart';
 import 'package:grokci_main/screens/bag.dart';
 import 'package:grokci_main/screens/dashboard.dart';
@@ -23,7 +28,8 @@ Future<void> main() async {
   sharedPreferences = await SharedPreferences.getInstance();
   db = Databases(client);
   storage = Storage(client);
-
+  var brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
+  isDark = brightness == Brightness.dark;
   client
           .setEndpoint(AppConfig.endpoint) // Your Appwrite Endpoint
           .setProject(AppConfig.project) // Your project ID
@@ -71,48 +77,82 @@ class _HomeState extends State<Home> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Pallet.background,
-        bottomNavigationBar: BottomNavigationBar(
-          showUnselectedLabels: true,
-          selectedFontSize: 12,
-          unselectedFontSize: 12,
-          backgroundColor: Pallet.background,
-          landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
-          type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: 'Search',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Account',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_bag),
-              label: 'Shopping Bag  ',
-            ),
-          ],
-          currentIndex: navIdx,
-          selectedItemColor: Pallet.primary,
-          unselectedItemColor: Pallet.font3,
-          onTap: (index) {
-            navIdx = index;
-            if (index == 0) {
-              routerSink.add({"route": "dashboard"});
-            } else if (index == 1) {
-              routerSink.add({"route": "search"});
-            } else if (index == 2) {
-              routerSink.add({"route": "profile"});
-            } else if (index == 3) {
-              routerSink.add({"route": "bag"});
-            }
-            setState(() {});
-          },
-        ),
+        bottomNavigationBar: Platform.isIOS
+            ? CupertinoTabBar(
+                onTap: (index) {
+                  navIdx = index;
+                  if (index == 0) {
+                    routerSink.add({"route": "dashboard"});
+                  } else if (index == 1) {
+                    routerSink.add({"route": "search"});
+                  } else if (index == 2) {
+                    routerSink.add({"route": "profile"});
+                  } else if (index == 3) {
+                    routerSink.add({"route": "bag"});
+                  }
+                  setState(() {});
+                },
+                items: const <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.search),
+                    label: 'Search',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.person),
+                    label: 'Account',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.shopping_bag),
+                    label: 'Shopping Bag  ',
+                  ),
+                ],
+              )
+            : BottomNavigationBar(
+                showUnselectedLabels: true,
+                selectedFontSize: 12,
+                unselectedFontSize: 12,
+                backgroundColor: Pallet.background,
+                landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
+                type: BottomNavigationBarType.fixed,
+                items: const <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.search),
+                    label: 'Search',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.person),
+                    label: 'Account',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.shopping_bag),
+                    label: 'Shopping Bag  ',
+                  ),
+                ],
+                currentIndex: navIdx,
+                selectedItemColor: Pallet.primary,
+                unselectedItemColor: Pallet.font3,
+                onTap: (index) {
+                  navIdx = index;
+                  if (index == 0) {
+                    routerSink.add({"route": "dashboard"});
+                  } else if (index == 1) {
+                    routerSink.add({"route": "search"});
+                  } else if (index == 2) {
+                    routerSink.add({"route": "profile"});
+                  } else if (index == 3) {
+                    routerSink.add({"route": "bag"});
+                  }
+                  setState(() {});
+                },
+              ),
         body: StreamBuilder<Map>(
             initialData: const {"route": "dashboard"},
             stream: routerStream,

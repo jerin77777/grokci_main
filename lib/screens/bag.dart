@@ -172,7 +172,7 @@ class _BagState extends State<Bag> {
             Text(
               item["product"]["about"].toString(),
               maxLines: 1,
-              style: TextStyle(color: Pallet.font3, overflow: TextOverflow.ellipsis),
+              style: Style.ellipsisText,
             ),
             SizedBox(height: 5),
             Row(
