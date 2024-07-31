@@ -73,6 +73,7 @@ class _DashboardState extends State<Dashboard> {
           //   ),
           // ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SvgPicture.asset(
                 width: 100,
@@ -88,11 +89,11 @@ class _DashboardState extends State<Dashboard> {
                   // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Address()));
                 },
                 child: Container(
-                  width: 150,
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                  width: 168,
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Pallet.inner1,
+                    borderRadius: BorderRadius.circular(12),
+                    color: Pallet.tertiaryFill,
                   ),
                   child: Row(
                     children: [
@@ -103,13 +104,16 @@ class _DashboardState extends State<Dashboard> {
                           children: [
                             Text(
                               'Delivery Address',
-                              style: GoogleFonts.beVietnamPro(
-                                  fontSize: 10, fontWeight: FontWeight.w700),
+                              style: Style.caption2Emphasized.copyWith(
+                                color: Pallet.onBackground
+                              ),
                             ),
                             Text(
                               'L2, 204, Tiruvant puram',
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.beVietnamPro(fontSize: 10),
+                              style: Style.caption1.copyWith(
+                                color: Pallet.onBackground
+                              ),
                             ),
                           ],
                         ),
@@ -128,29 +132,35 @@ class _DashboardState extends State<Dashboard> {
               Icon(Icons.notifications_none)
             ],
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 16),
 
           // SizedBox(height: 20),
           Expanded(
             child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               children: [
+                const SizedBox(height: 20),
                 Text(
                   "Shop by Category",
-                  style: Style.h2,
+                  style: Style.headline.copyWith(
+                    color: Pallet.onBackground
+                  ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 16),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     for (var category in categories)
                       Category(category: category),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Monthly Picks", style: Style.h2),
+                    Text("Monthly Picks", style: Style.headline.copyWith(
+                      color: Pallet.onBackground
+                    )),
                     Button(
                       radius: 20,
                       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
@@ -167,8 +177,8 @@ class _DashboardState extends State<Dashboard> {
                 SizedBox(height: 10),
                 Container(
                   decoration: BoxDecoration(
-                      color: Pallet.inner1,
-                      borderRadius: BorderRadius.circular(10)),
+                      color: Pallet.tertiaryFill,
+                      borderRadius: BorderRadius.circular(14)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -192,7 +202,7 @@ class _DashboardState extends State<Dashboard> {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: Container(
-                                      color: Colors.white,
+                                      color: Pallet.onBackground,
                                       child: Image.network(
                                         getUrl(Bucket.categories,
                                             category["imageId"]),
@@ -201,7 +211,7 @@ class _DashboardState extends State<Dashboard> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: 10),
+                                  const SizedBox(width: 10),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
@@ -209,16 +219,16 @@ class _DashboardState extends State<Dashboard> {
                                       children: [
                                         Text(
                                           category["categoryName"],
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
+                                          style: Style.subHeadlineEmphasized.copyWith(
+                                            color: Pallet.onBackground
+                                          ),
                                         ),
-                                        SizedBox(height: 2),
+                                        const SizedBox(height: 4),
                                         Text(
                                           "Bulk Discounts",
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              color: Pallet.primary),
+                                          style: Style.caption1.copyWith(
+                                            color:Pallet.primary
+                                          ),
                                         )
                                       ],
                                     ),

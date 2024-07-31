@@ -150,7 +150,7 @@ class _SecurityState extends State<Security> {
             children: [
               Text(
                 "Login & Security",
-                style: Style.h1,
+                style: Style.title1Emphasized,
               ),
               SizedBox(height: 10),
               Row(

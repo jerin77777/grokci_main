@@ -35,27 +35,31 @@ class _CheckoutState extends State<Checkout> {
                   SizedBox(width: 15),
                   Text(
                     "Checkout",
-                    style: Style.h3,
+                    style: Style.headline.copyWith(
+                      color: Pallet.onBackground
+                    ),
                   ),
                   Expanded(child: SizedBox()),
                   Icon(Icons.notifications_none, size: 22),
                 ],
               ),
             ),
-            Divider(color: Pallet.divider),
-            SizedBox(height: 10),
+            Divider(color: Pallet.outline),
+            const SizedBox(height: 10),
             Expanded(
-                child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               children: [
                 Text(
                   "Delivery Information",
-                  style: Style.h3,
+                  style: Style.footnoteEmphasized.copyWith(
+                    color: Pallet.onBackground
+                  ),
                 ),
                 SizedBox(height: 10),
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                  decoration: BoxDecoration(color: Pallet.inner1, borderRadius: BorderRadius.circular(10)),
+                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                  decoration: BoxDecoration(color: Pallet.surface1, borderRadius: BorderRadius.circular(14)),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     // SizedBox(height: 10),
                     Row(
@@ -66,13 +70,15 @@ class _CheckoutState extends State<Checkout> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             "Deliver To:",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                            style: Style.headline.copyWith(
+                              color: Pallet.onBackground
+                            ),
                           ),
                         ),
                         Button(
                             radius: 30,
                             padding: EdgeInsets.symmetric(vertical: 5),
-                            color: Pallet.inner2,
+                            color: Pallet.tertiaryFill,
                             fontColor: Pallet.primary,
                             label: "Change",
                             onPress: () {})
@@ -80,18 +86,25 @@ class _CheckoutState extends State<Checkout> {
                     ),
                     Text(
                       "Manish Kumar",
-                      style: TextStyle(fontSize: 16),
+                      style: Style.callout.copyWith(
+                        color: Pallet.onBackground
+                      ),
                     ),
-                    Text("X1, 201\nTiruvanthapuram City,\nValay Singh Yadhav Path,\nKhagul Path, 801503\n1234567890"),
-                    SizedBox(height: 5)
+                    Text("X1, 201\nTiruvanthapuram City,\nValay Singh Yadhav Path,\nKhagul Path, 801503\n1234567890",
+                    style: Style.footnote.copyWith(
+                      color: Pallet.onBackground
+                    ),
+                    ),
+                    const SizedBox(height: 5)
                   ]),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                  height: 54,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Pallet.inner1,
+                    borderRadius: BorderRadius.circular(14),
+                    color: Pallet.surface1,
                   ),
                   child: Row(
                     children: [
@@ -99,20 +112,24 @@ class _CheckoutState extends State<Checkout> {
                         Icons.delivery_dining,
                         color: Pallet.primary,
                       ),
-                      SizedBox(width: 15),
+                      const SizedBox(width: 8),
                       Text(
                         "Delivery within a hour",
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                        style: Style.headline.copyWith(
+                          color: Pallet.onBackground
+                        ),
                       )
                     ],
                   ),
                 ),
-                SizedBox(height: 10),
-                Text("Items", style: Style.h3),
-                SizedBox(height: 10),
+                const SizedBox(height: 16),
+                Text("Items", style: Style.footnoteEmphasized.copyWith(
+                  color: Pallet.onBackground
+                )),
+                const SizedBox(height: 8),
                 Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Pallet.inner1),
+                    padding: const EdgeInsets.only(left: 16, right: 14, bottom: 11, top: 11,),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(14), color: Pallet.surface1),
                     child: Column(children: [for (var item in widget.items) product(item)])),
               ],
             ))
@@ -127,46 +144,50 @@ class _CheckoutState extends State<Checkout> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ClipRRect(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(11),
             child: Image.network(
               getUrl(Bucket.products, item["product"]["images"][0]),
-              width: 80,
-              height: 80,
+              width: 65,
+              height: 65,
             )),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Expanded(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               item["product"]["name"],
-              style: TextStyle(fontSize: 16),
+              style: Style.body.copyWith(
+                color: Pallet.onBackground
+              ),
             ),
             Text(
               item["product"]["about"].toString(),
               maxLines: 1,
-              style: Style.ellipsisText,
+              style: Style.ellipsisText.merge(Style.subHeadline).copyWith(
+                color: Pallet.onSurfaceVariant,
+              ),
             ),
-            SizedBox(
-              height: 5,
+            const SizedBox(
+              height: 7,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   item["product"]["originalPrice"].toString(),
-                  style: TextStyle(
-                      color: Pallet.font3,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+                  style: Style.title3Emphasized.copyWith(
+                      color: Pallet.onSurfaceVariant,
                       decoration: TextDecoration.lineThrough),
                 ),
                 Text(
                   "₹ ${item["product"]["sellingPrice"].toString()}",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  style: Style.title2Emphasized.copyWith(
+                    color: Pallet.onBackground
+                  ),
                 ),
                 Container(
-                  decoration: BoxDecoration(color: Pallet.inner2, borderRadius: BorderRadius.circular(5)),
+                  decoration: BoxDecoration(color: Pallet.tertiaryFill, borderRadius: BorderRadius.circular(5)),
                   padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   child: Row(
                     children: [
@@ -175,7 +196,7 @@ class _CheckoutState extends State<Checkout> {
                             item["qty"]++;
                             setState(() {});
                           },
-                          child: Icon(Icons.add, size: 18, color: Pallet.font2)),
+                          child: Icon(Icons.add, size: 18, color: Pallet.onBackground)),
                       SizedBox(width: 10),
                       Text(item["qty"].toString()),
                       SizedBox(width: 10),
@@ -184,7 +205,7 @@ class _CheckoutState extends State<Checkout> {
                             item["qty"]--;
                             setState(() {});
                           },
-                          child: Icon(Icons.remove, size: 18, color: Pallet.font2))
+                          child: Icon(Icons.remove, size: 18, color: Pallet.onBackground))
                     ],
                   ),
                 )

@@ -44,6 +44,8 @@ class ProfileIcon extends StatelessWidget {
   }
 }
 
+// TODO: remove this smallbutton widget and instead use a single button widget with all the variations of size (small, medium, large) and style(borderless, bezeled gray, tonal, filled)
+
 class SmallButton extends StatelessWidget {
   const SmallButton({super.key, required this.label, required this.onPress});
   final String label;
@@ -63,7 +65,7 @@ class SmallButton extends StatelessWidget {
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Pallet.primary),
         child: Text(
           label,
-          style: TextStyle(fontSize: 13, color: Pallet.fontInner),
+          style: TextStyle(fontSize: 13, color: Pallet.tertiaryFill),
         ),
       ),
     );
@@ -121,13 +123,13 @@ class _TextBoxState extends State<TextBox> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
           decoration: BoxDecoration(
-            color: Pallet.inner2,
+            color: Pallet.tertiaryFill,
             borderRadius: BorderRadius.circular(widget.radius ?? 5),
             border: Border.all(
                 color: widget.hasBorder
-                    ? Colors.black
+                    ? Pallet.outlineVariant
                     : (hasError)
-                        ? Colors.red
+                        ? Pallet.error
                         : Colors.transparent),
           ),
           child: TextField(
@@ -155,11 +157,11 @@ class _TextBoxState extends State<TextBox> {
                 }
               },
               controller: widget.controller,
-              style: const TextStyle(fontSize: 12),
+              style: Style.body,
               maxLines: widget.maxLines ?? 1,
               decoration: InputDecoration(
                 hintText: widget.hintText,
-                hintStyle: TextStyle(fontSize: 12, color: Pallet.font3),
+                hintStyle: Style.body.copyWith(color: Pallet.onSurfaceVariant),
                 isDense: true,
                 border: InputBorder.none,
               )),
@@ -167,7 +169,7 @@ class _TextBoxState extends State<TextBox> {
         if (widget.errorText != null)
           Text(
             widget.errorText!,
-            style: TextStyle(fontSize: 10, color: Colors.red),
+            style: Style.caption1.copyWith(color: Pallet.error),
           )
       ],
     );
@@ -265,12 +267,12 @@ class Category extends StatelessWidget {
       child: Container(
         width: 70,
         decoration: BoxDecoration(
-          color: Pallet.inner1,
+          color: Pallet.secondaryFill,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(50),
             topRight: Radius.circular(50),
-            bottomLeft: Radius.circular(10),
-            bottomRight: Radius.circular(10),
+            bottomLeft: Radius.circular(6),
+            bottomRight: Radius.circular(6),
           ),
         ),
         child: Stack(children: [
@@ -281,8 +283,8 @@ class Category extends StatelessWidget {
                   height: 5,
                 ),
                 Image.network(
-                  height: 60,
-                  width: 55,
+                  height: 50,
+                  width: 50,
                   getUrl(Bucket.categories, category["imageId"]),
                   fit: BoxFit.contain,
                 ),
@@ -296,20 +298,22 @@ class Category extends StatelessWidget {
             bottom: 0,
             child: Container(
               width: 70,
-              height: 40,
+              height: 36,
               padding: EdgeInsets.symmetric(horizontal: 2),
               decoration: BoxDecoration(
                 color: Pallet.secondary,
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
+                  bottomLeft: Radius.circular(6),
+                  bottomRight: Radius.circular(6),
                 ),
               ),
               child: Center(
                   child: Text(
                 category["categoryName"],
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Pallet.fontInner, fontSize: 12),
+                style: Style.caption2.copyWith(
+                  color: Pallet.onSecondary
+                ),
               )),
             ),
           )

@@ -1,9 +1,8 @@
 // import 'package:appwrite/appwrite.dart';
 // import 'package:appwrite/models.dart';
-import 'dart:ffi';
-import 'dart:io';
+// import 'dart:ffi';
+// import 'dart:io';
 
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,10 +10,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../widgets.dart';
 import '../backend/server.dart';
-import '../types.dart';
+import "../types.dart";
 import 'package:permission_handler/permission_handler.dart';
 import 'package:readsms/readsms.dart';
-import 'package:path/path.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
 class Login extends StatefulWidget {
@@ -60,8 +58,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     mainContext = context;
     return Scaffold(
-              backgroundColor: Pallet.background,
-
+      backgroundColor: Pallet.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -83,12 +80,15 @@ class _LoginState extends State<Login> {
                   ),
                   SizedBox(height: 50),
                   Text(
-                    "To get the best of us, please Log in",
-                    style:
-                        GoogleFonts.beVietnamPro(fontWeight: FontWeight.w600),
+                    "Login to continue",
+                    style: Style.title1Emphasized
+                        .copyWith(color: Pallet.onBackground),
                   ),
                   Text(
-                    "Enter your phone number to continue",
+                    "Enter your email or phone number",
+                    style: Style.subHeadline.copyWith(
+                      color: Pallet.onBackground,
+                    ),
                     // style: GoogleFonts.beVietnamPro(fontWeight: FontWeight.w600),
                   ),
                   SizedBox(height: 10),
@@ -96,15 +96,16 @@ class _LoginState extends State<Login> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 5),
                       child: Text(phoneError,
-                          style: GoogleFonts.beVietnamPro(
-                              color: Colors.red, fontSize: 12)),
+                          style: Style.caption1.copyWith(
+                            color: Pallet.error
+                          )),
                     ),
                   Container(
                     height: 50,
                     // padding: EdgeInsets.symmetric(vertical: 10),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(width: 0.5)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     child: Row(
                       children: [
                         SizedBox(width: 10),
@@ -121,6 +122,9 @@ class _LoginState extends State<Login> {
                             }
                           },
                           decoration: InputDecoration(border: InputBorder.none),
+                          style: Style.body.copyWith(
+                            color: Pallet.onBackground
+                          ),
                         ))
                       ],
                     ),
@@ -130,13 +134,19 @@ class _LoginState extends State<Login> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Enter otp:"),
+                        Text("Enter otp:",
+                          style: Style.footnoteEmphasized.copyWith(
+                            color: Pallet.onBackground
+                          ),
+                        ),
                         SizedBox(height: 20),
                         OtpTextField(
                           numberOfFields: 4,
-                          fieldWidth: 80,
-
-                          borderColor: Color(0xFF512DA8),
+                          fieldWidth: 60,
+                          fillColor: Pallet.tertiaryFill,
+                          textStyle: Style.body.copyWith(
+                            color: Pallet.onBackground,
+                          ),
                           showFieldAsBox: true,
                           onSubmit: (String verificationCode) {
                             if (int.parse(verificationCode) == checkOtp!) {
@@ -152,16 +162,17 @@ class _LoginState extends State<Login> {
               RichText(
                 text: TextSpan(
                   text: "By continuing, you agree to Grocki's ",
-                  style: GoogleFonts.beVietnamPro(
-                      fontSize: 14, color: Pallet.font1),
+                  style: Style.footnote.copyWith(
+                    color: Pallet.onBackground
+                  ),
                   children: <TextSpan>[
                     TextSpan(
                         text: 'Terms of Use',
-                        style: GoogleFonts.beVietnamPro(color: Pallet.primary)),
+                        style: Style.footnote.copyWith(color: Pallet.onBackground)),
                     TextSpan(text: ' & '),
                     TextSpan(
                         text: 'Privacy Policy!',
-                        style: GoogleFonts.beVietnamPro(color: Pallet.primary)),
+                        style: Style.footnote.copyWith(color: Pallet.onBackground)),
                   ],
                 ),
               ),
@@ -214,8 +225,7 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-              backgroundColor: Pallet.background,
-
+      backgroundColor: Pallet.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -247,8 +257,9 @@ class _SignUpState extends State<SignUp> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 5),
                         child: Text(nameError,
-                            style: GoogleFonts.beVietnamPro(
-                                color: Colors.red, fontSize: 12)),
+                            style: Style.footnote.copyWith(
+                              color: Pallet.error
+                            )),
                       ),
                     Container(
                       height: 50,
@@ -261,7 +272,7 @@ class _SignUpState extends State<SignUp> {
                               width: 0.5,
                               color: nameError.isEmpty
                                   ? Colors.black
-                                  : Colors.red)),
+                                  : Pallet.error)),
                       child: TextField(
                         controller: userName,
                         keyboardType: TextInputType.text,
@@ -275,56 +286,6 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    Text("select language"),
-                    SizedBox(height: 6),
-                    Row(
-                      children: [
-                        Expanded(
-                            child: InkWell(
-                          onTap: () {
-                            language = "english";
-                            setState(() {});
-                          },
-                          child: Container(
-                            height: 150,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: language == "english"
-                                    ? Color(0xFF5BFFA1)
-                                    : Color(0xFFC2FFD1)),
-                            child: Center(
-                              child: Text(
-                                "English",
-                                style: TextStyle(fontSize: 20),
-                              ),
-                            ),
-                          ),
-                        )),
-                        SizedBox(width: 10),
-                        Expanded(
-                            child: InkWell(
-                          onTap: () {
-                            language = "hindi";
-                            setState(() {});
-                          },
-                          child: Container(
-                            height: 150,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: language == "hindi"
-                                    ? Color(0xFF5BFFA1)
-                                    : Color(0xFFC2FFD1)),
-                            child: Center(
-                              child: Text(
-                                "हिंदी",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ),
-                        ))
-                      ],
-                    )
                   ],
                 ),
               ),
@@ -379,7 +340,7 @@ Future<ImageSource?> selectPickerType(BuildContext context) async {
               width: 150,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  color: Pallet.inner1),
+                  color: Pallet.tertiaryFill),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,

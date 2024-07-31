@@ -57,7 +57,9 @@ class _ProfileState extends State<Profile> {
               SizedBox(height: 10),
               Text(
                 "Account",
-                style: Style.h1,
+                style: Style.title1Emphasized.copyWith(
+                  color: Pallet.onBackground,
+                ),
               ),
               SizedBox(height: 30),
               Row(
@@ -102,7 +104,9 @@ class _ProfileState extends State<Profile> {
                     SizedBox(height: 25),
                     Text(
                       "Primary options",
-                      style: Style.h4,
+                      style: Style.footnoteEmphasized.copyWith(
+                        color: Pallet.onBackground
+                      ),
                     ),
                     SizedBox(height: 10),
                     // Padding(
@@ -178,8 +182,9 @@ class _ProfileState extends State<Profile> {
                             Expanded(
                                 child: Text(
                               "Manage Addresses",
-                              style: TextStyle(
-                                  color: Pallet.primary, fontSize: 16),
+                              style: Style.subHeadline.copyWith(
+                                color: Pallet.primary
+                              ),
                             )),
                             Icon(Icons.keyboard_arrow_right_outlined,
                                 color: Pallet.primary, size: 20)

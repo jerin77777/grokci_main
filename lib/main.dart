@@ -4,7 +4,6 @@ import 'package:appwrite/appwrite.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:grokci_main/globals.dart';
 import 'package:grokci_main/screens/address.dart';
 import 'package:grokci_main/screens/bag.dart';
@@ -45,17 +44,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        textTheme: GoogleFonts.beVietnamProTextTheme(TextTheme(
-          displayLarge: GoogleFonts.beVietnamPro(color: Pallet.font1),
-          displayMedium: GoogleFonts.beVietnamPro(color: Pallet.font1),
-          bodyMedium: GoogleFonts.beVietnamPro(color: Pallet.font1),
-          titleMedium: GoogleFonts.beVietnamPro(color: Pallet.font1),
-        )),
-        iconTheme: IconThemeData(color: Pallet.font1),
-        primarySwatch: Colors.blue,
+        iconTheme: IconThemeData(color: Pallet.inverseSurface),
       ),
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Grokci',
       home: (sharedPreferences!.get("phone") == null) ? Login() : Home(),
     );
   }
@@ -138,7 +130,7 @@ class _HomeState extends State<Home> {
                 ],
                 currentIndex: navIdx,
                 selectedItemColor: Pallet.primary,
-                unselectedItemColor: Pallet.font3,
+                unselectedItemColor: Pallet.onSurfaceVariant,
                 onTap: (index) {
                   navIdx = index;
                   if (index == 0) {

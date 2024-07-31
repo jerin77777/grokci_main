@@ -31,7 +31,7 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -42,12 +42,14 @@ class _SearchState extends State<Search> {
           SizedBox(height: 10),
           Text(
             "Search",
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+            style: Style.title1Emphasized.copyWith(
+              color: Pallet.onBackground,
+            ),
           ),
           SizedBox(height: 10),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            decoration: BoxDecoration(color: Pallet.inner1, borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(color: Pallet.tertiaryFill, borderRadius: BorderRadius.circular(10)),
             child: Row(
               children: [
                 Icon(Icons.search),
@@ -69,11 +71,11 @@ class _SearchState extends State<Search> {
             ),
           ),
           SizedBox(height: 10),
-          Text("Categories", style: Style.h3),
+          Text("Categories", style: Style.footnoteEmphasized),
           SizedBox(height: 10),
           if (products.isNotEmpty)
             Container(
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Pallet.inner1),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Pallet.surface1),
               child: Column(
                 children: [
                   for (var product in products)
@@ -102,11 +104,15 @@ class _SearchState extends State<Search> {
                               children: [
                                 Text(
                                   product["name"],
-                                  style: TextStyle(fontSize: 16),
+                                  style: Style.body.copyWith(
+                                    color: Pallet.onBackground
+                                  ),
                                 ),
                                 Text(
                                   product["about"].toString(),
-                                  style: TextStyle(color: Pallet.font2),
+                                  style: Style.subHeadline.copyWith(
+                                    color: Pallet.onSurfaceVariant
+                                  ),
                                 ),
                                 SizedBox(height: 20),
                                 Row(
@@ -116,16 +122,16 @@ class _SearchState extends State<Search> {
                                         padding: const EdgeInsets.only(right: 15),
                                         child: Text(
                                           product["originalPrice"].toString(),
-                                          style: TextStyle(
-                                              color: Pallet.font2,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w600,
+                                          style: Style.title3Emphasized.copyWith(
+                                              color: Pallet.onSurfaceVariant,
                                               decoration: TextDecoration.lineThrough),
                                         ),
                                       ),
                                     Text(
                                       "₹ ${product["sellingPrice"].toString()}",
-                                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                      style: Style.title3Emphasized.copyWith(
+                                        color: Pallet.onBackground
+                                      ),
                                     ),
                                     Expanded(child: SizedBox()),
                                     Button(
@@ -152,8 +158,8 @@ class _SearchState extends State<Search> {
             Expanded(
               child: GridView.count(
                 primary: false,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
                 crossAxisCount: 2,
                 childAspectRatio: 2.2,
                 children: <Widget>[
@@ -170,14 +176,14 @@ class _SearchState extends State<Search> {
                         );
                       },
                       child: Container(
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Pallet.inner1),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Pallet.surface1),
                         padding: const EdgeInsets.all(8),
                         child: Row(
                           children: [
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Container(
-                                color: Colors.white,
+                                color: Pallet.background,
                                 child: Image.network(
                                   getUrl(Bucket.categories, category["imageId"]),
                                   width: 65,
@@ -189,7 +195,9 @@ class _SearchState extends State<Search> {
                             Expanded(
                                 child: Text(
                               category["categoryName"],
-                              style: TextStyle(fontWeight: FontWeight.w500),
+                              style: Style.footnoteEmphasized.copyWith(
+                                color: Pallet.onBackground
+                              ),
                             ))
                           ],
                         ),

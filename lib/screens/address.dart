@@ -121,7 +121,7 @@ class GetAddressState extends State<GetAddress> {
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-              decoration: BoxDecoration(color: Pallet.inner1, borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(color: Pallet.tertiaryFill, borderRadius: BorderRadius.circular(10)),
               child: Row(
                 children: [
                   Icon(Icons.search),
@@ -207,7 +207,9 @@ class _AddressState extends State<Address> {
                   SizedBox(width: 15),
                   Text(
                     "Manage Addresses",
-                    style: Style.h3,
+                    style: Style.headline.copyWith(
+                      color: Pallet.onBackground
+                    ),
                   ),
                   Expanded(child: SizedBox()),
                   Icon(Icons.notifications_none)
@@ -218,7 +220,7 @@ class _AddressState extends State<Address> {
                 child: ListView(
                   children: [
                     Button(
-                        color: Pallet.inner1,
+                        color: Pallet.tertiaryFill,
                         fontColor: Pallet.primary,
                         label: "Add New Addres",
                         onPress: () {
@@ -239,8 +241,8 @@ class _AddressState extends State<Address> {
                     SizedBox(height: 5),
                     if (addresses.isNotEmpty)
                       Container(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Pallet.inner1),
+                        padding: EdgeInsets.symmetric(vertical: 14),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Pallet.secondaryFill),
                         child: Column(
                           children: [
                             SizedBox(width: 5),
@@ -281,7 +283,7 @@ class _AddressState extends State<Address> {
                                   )),
                                   SizedBox(width: 10),
                                   Button(
-                                      color: Pallet.inner2,
+                                      color: Pallet.tertiaryFill,
                                       fontColor: Pallet.primary,
                                       radius: 20,
                                       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),

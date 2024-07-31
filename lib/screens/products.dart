@@ -5,7 +5,8 @@ import 'package:grokci_main/types.dart';
 import 'package:grokci_main/widgets.dart';
 
 class ProductsInCategory extends StatefulWidget {
-  const ProductsInCategory({super.key, required this.categoryId, required this.categoryName});
+  const ProductsInCategory(
+      {super.key, required this.categoryId, required this.categoryName});
   final String categoryId;
   final String categoryName;
   @override
@@ -31,7 +32,6 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-
         backgroundColor: Pallet.background,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,19 +50,21 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
                   SizedBox(width: 15),
                   Text(
                     "Products in ${widget.categoryName}",
-                    style: Style.h3,
+                    style: Style.headline.copyWith(color: Pallet.onBackground),
                   ),
                   Expanded(child: SizedBox()),
                   Icon(Icons.notifications_none, size: 22)
                 ],
               ),
             ),
-            Divider(color: Pallet.divider, height: 1),
+            Divider(color: Pallet.outline, height: 1),
             SizedBox(height: 10),
             if (products.isNotEmpty)
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Pallet.inner1),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14),
+                    color: Pallet.surface1),
                 child: Column(
                   children: [
                     for (var product in products)
@@ -77,13 +79,15 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
                           );
                         },
                         child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 10),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: Image.asset("assets/oil.jpeg", width: 80, height: 80)),
+                                  child: Image.asset("assets/oil.jpeg",
+                                      width: 60, height: 60)),
                               SizedBox(width: 10),
                               Expanded(
                                   child: Column(
@@ -91,43 +95,51 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
                                 children: [
                                   Text(
                                     product["name"],
-                                    style: TextStyle(fontSize: 18),
+                                    style: Style.body.copyWith(
+                                      color: Pallet.onBackground
+                                    ),
                                   ),
                                   Text(
                                     product["about"].toString(),
                                     maxLines: 1,
-                                    style: TextStyle(
-                                      color: Pallet.font2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                                    style: Style.ellipsisText
+                                        .merge(Style.subHeadline)
+                                        .copyWith(
+                                            color: Pallet.onSurfaceVariant),
                                   ),
                                   SizedBox(height: 20),
                                   Row(
                                     children: [
-                                      if (product["originalPrice"] != product["sellingPrice"])
+                                      if (product["originalPrice"] !=
+                                          product["sellingPrice"])
                                         Padding(
-                                          padding: const EdgeInsets.only(right: 15),
+                                          padding:
+                                              const EdgeInsets.only(right: 15),
                                           child: Text(
-                                            product["originalPrice"].toString(),
-                                            style: TextStyle(
-                                                color: Pallet.font2,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
-                                                decoration: TextDecoration.lineThrough),
-                                          ),
+                                              product["originalPrice"]
+                                                  .toString(),
+                                              style: Style.ellipsisText
+                                                  .merge(Style.subHeadline)
+                                                  .copyWith(
+                                                      color: Pallet
+                                                          .onSurfaceVariant)),
                                         ),
                                       Text(
                                         "₹ ${product["sellingPrice"].toString()}",
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                        style: Style.title3Emphasized.copyWith(
+                    color: Pallet.onBackground
+                  ),
                                       ),
                                       Expanded(child: SizedBox()),
                                       Button(
                                           radius: 30,
-                                          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5, vertical: 8),
                                           label: "Add to Bag",
                                           onPress: () {
                                             addToBag(product["id"]);
-                                            showMessage(context, "Added ${product["name"]} to bag");
+                                            showMessage(context,
+                                                "Added ${product["name"]} to bag");
                                           })
                                     ],
                                   )
@@ -173,8 +185,7 @@ class _CategoriesState extends State<Categories> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-                backgroundColor: Pallet.background,
-
+        backgroundColor: Pallet.background,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -191,7 +202,9 @@ class _CategoriesState extends State<Categories> {
                   SizedBox(width: 15),
                   Text(
                     "Categories",
-                    style: Style.h3,
+                    style: Style.footnoteEmphasized.copyWith(
+                      color: Pallet.onBackground
+                    ),
                   ),
                   Expanded(child: SizedBox()),
                   Icon(Icons.notifications_none, size: 22)
@@ -199,29 +212,31 @@ class _CategoriesState extends State<Categories> {
               ),
             ),
             Divider(
-              color: Colors.grey[300],
+              color: Pallet.outline,
               height: 1,
             ),
             SizedBox(height: 10),
             Expanded(
               child: GridView.count(
-                padding: EdgeInsets.symmetric(horizontal: 10),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 primary: false,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
                 crossAxisCount: 2,
                 childAspectRatio: 2.2,
                 children: <Widget>[
                   for (var category in categories)
                     Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Pallet.inner1),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Pallet.surface1),
                       padding: const EdgeInsets.all(8),
                       child: Row(
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Container(
-                              color: Colors.white,
+                              color: Pallet.background,
                               child: Image.network(
                                 getUrl(Bucket.categories, category["imageId"]),
                                 width: 65,
@@ -233,7 +248,9 @@ class _CategoriesState extends State<Categories> {
                           Expanded(
                               child: Text(
                             category["categoryName"],
-                            style: TextStyle(fontWeight: FontWeight.w500),
+                            style: Style.footnoteEmphasized.copyWith(
+                                color: Pallet.onBackground
+                              ),
                           ))
                         ],
                       ),
@@ -284,8 +301,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     }
     return SafeArea(
       child: Scaffold(
-                backgroundColor: Pallet.background,
-
+        backgroundColor: Pallet.background,
         body: Column(
           children: [
             // SizedBox(height: 5),
@@ -301,14 +317,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                   SizedBox(width: 15),
                   Text(
                     productData!["name"],
-                    style: Style.h3,
+                    style: Style.body.copyWith(
+                      color: Pallet.onBackground
+                    ),
                   ),
                   Expanded(child: SizedBox()),
                   Icon(Icons.notifications_none, size: 22)
                 ],
               ),
             ),
-            Divider(color: Pallet.divider, height: 1),
+            Divider(color: Pallet.outline, height: 1),
             Expanded(
                 child: ListView(
               padding: EdgeInsets.symmetric(horizontal: 15),
@@ -342,7 +360,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                         direction = "left";
                       }
                     },
-                    child: Image.network(getUrl(Bucket.products, productData!["images"][imageIdx]))),
+                    child: Image.network(getUrl(
+                        Bucket.products, productData!["images"][imageIdx]))),
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   for (var i = 0; i < productData!["images"].length; i++)
                     Container(
@@ -351,7 +370,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                       height: 10,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: (i == imageIdx) ? Colors.grey : Pallet.divider),
+                          color:
+                              (i == imageIdx) ? Colors.grey : Pallet.outline),
                     )
                 ]),
                 SizedBox(height: 10),
@@ -390,51 +410,60 @@ class _ProductDetailsState extends State<ProductDetails> {
                     SizedBox(width: 15),
                     Text(
                       "4.5 stars (1,089 ratings)",
-                      style: TextStyle(color: Pallet.font2),
+                      style: Style.caption1.copyWith(color: Pallet.onSurfaceVariant),
                     ),
                   ],
                 ),
                 SizedBox(height: 8),
                 Row(
-                  children: [Text("Qunatity:  ${productData!["netContent"]}")],
+                  children: [Text("Quantity:  ${productData!["netContent"]}")],
                 ),
                 SizedBox(height: 5),
                 Row(
                   children: [
                     Text(
                       "${productData!["discountPercentage"].toString()}% off",
-                      style: TextStyle(fontSize: 20, color: Pallet.primary),
+                      style: Style.title3.copyWith(
+                        color: Pallet.primary,
+                      ),
                     ),
                     SizedBox(width: 10),
                     Text(
                       productData!["originalPrice"].toString(),
-                      style: TextStyle(
-                          fontSize: 20,
-                          decoration: TextDecoration.lineThrough,
-                          color: Pallet.font2,
-                          fontWeight: FontWeight.w600),
+                      style: Style.title3Emphasized.copyWith(
+                    decoration: TextDecoration.lineThrough,
+                    color: Pallet.onSurfaceVariant
+                  ),
                     ),
                     SizedBox(width: 10),
                     Text(
                       "₹ ${productData!["sellingPrice"]}",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                      style:Style.title3Emphasized.copyWith(
+                    color: Pallet.onBackground
+                  ),
                     ),
                     Expanded(child: SizedBox()),
                     Text(
                       "@₹${productData!["sellingPrice"]}/I",
-                      style: TextStyle(color: Pallet.font2),
+                      style: Style.caption1.copyWith(
+                        color: Pallet.onSurfaceVariant
+                      ),
                     ),
                   ],
                 ),
                 SizedBox(height: 20),
                 Text(
                   "Product Details",
-                  style: Style.h3,
+                  style: Style.footnoteEmphasized.copyWith(
+                    color: Pallet.onBackground
+                  ),
                 ),
                 SizedBox(height: 10),
                 Container(
                   padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(color: Pallet.inner1, borderRadius: BorderRadius.circular(10)),
+                  decoration: BoxDecoration(
+                      color: Pallet.primaryFill,
+                      borderRadius: BorderRadius.circular(14)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -445,7 +474,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                           SizedBox(width: 10),
                           Text(
                             "Expiry Date: 30 OCT 2024",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                            style: Style.callout.copyWith(
+                              color: Pallet.onBackground
+                            ),
                           )
                         ],
                       ),
@@ -456,7 +487,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                           children: [
                             Text(
                               "About the Product",
-                              style: TextStyle(fontSize: 16),
+                              style: Style.subHeadline.copyWith(
+                                color: Pallet.onBackground
+                              ),
                             ),
                             Icon(Icons.add, size: 18)
                           ],
@@ -475,7 +508,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                           children: [
                             Text(
                               "Ingredients",
-                              style: TextStyle(fontSize: 16),
+                              style: Style.subHeadline.copyWith(
+                                color: Pallet.onBackground
+                              ),
                             ),
                             Icon(Icons.add, size: 18)
                           ],
@@ -488,13 +523,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ),
                         SizedBox(height: 10),
                       ],
-                      if (productData!["eanCode"] != null || productData!["manufacturer"] != null) ...[
+                      if (productData!["eanCode"] != null ||
+                          productData!["manufacturer"] != null) ...[
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               "Other Product Info",
-                              style: TextStyle(fontSize: 16),
+                              style: Style.subHeadline.copyWith(
+                                color: Pallet.onBackground
+                              ),
                             ),
                             Icon(Icons.add, size: 18)
                           ],
@@ -520,10 +558,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                           SizedBox(width: 10),
                           Text(
                             "Additional details",
-                            style: TextStyle(color: Pallet.primary, fontSize: 16),
+                            style: Style.subHeadline.copyWith(
+                              color: Pallet.primary
+                            ),
                           ),
                           Expanded(child: SizedBox()),
-                          Icon(Icons.keyboard_arrow_right_rounded, color: Pallet.primary)
+                          Icon(Icons.keyboard_arrow_right_rounded,
+                              color: Pallet.primary)
                         ],
                       ),
                       SizedBox(height: 10),
@@ -534,7 +575,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               ],
             )),
             Divider(
-              color: Pallet.divider,
+              color: Pallet.outline,
               height: 1,
             ),
 
@@ -546,14 +587,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                       child: Button(
                           padding: EdgeInsets.symmetric(vertical: 10),
                           radius: 30,
-                          color: Pallet.inner2,
+                          color: Pallet.tonal,
                           fontColor: Pallet.primary,
                           label: "Buy Now",
                           onPress: () {})),
                   SizedBox(width: 20),
                   Expanded(
                       child: Button(
-                          padding: EdgeInsets.symmetric(vertical: 10), radius: 30, label: "Add to Bag", onPress: () {}))
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          radius: 30,
+                          label: "Add to Bag",
+                          onPress: () {}))
                 ],
               ),
             )
