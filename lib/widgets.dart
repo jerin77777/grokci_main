@@ -125,7 +125,7 @@ class _TextBoxState extends State<TextBox> {
             borderRadius: BorderRadius.circular(widget.radius ?? 5),
             border: Border.all(
                 color: widget.hasBorder
-                    ? Colors.black
+                    ? Pallet.font1
                     : (hasError)
                         ? Colors.red
                         : Colors.transparent),
@@ -155,7 +155,7 @@ class _TextBoxState extends State<TextBox> {
                 }
               },
               controller: widget.controller,
-              style: const TextStyle(fontSize: 12),
+              style:  TextStyle(fontSize: 12,color: Pallet.font1),
               maxLines: widget.maxLines ?? 1,
               decoration: InputDecoration(
                 hintText: widget.hintText,

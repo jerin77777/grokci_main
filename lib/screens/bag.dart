@@ -6,8 +6,6 @@ import 'package:grokci_main/types.dart';
 import 'package:grokci_main/widgets.dart';
 import 'checkout.dart';
 
-double total = 0;
-
 class Bag extends StatefulWidget {
   const Bag({super.key});
 
@@ -16,8 +14,11 @@ class Bag extends StatefulWidget {
 }
 
 class _BagState extends State<Bag> {
+  double total = 0;
+
   List bag = [];
   List saved = [];
+  bool queried = false;
   @override
   void initState() {
     getData(saveForLater: true);
@@ -26,6 +27,7 @@ class _BagState extends State<Bag> {
   }
 
   getData({bool? saveForLater}) async {
+    total = 0;
     bag = await getBag();
     for (var item in bag) {
       Map product = await getProduct(item["productId"]);
@@ -41,6 +43,7 @@ class _BagState extends State<Bag> {
       }
     }
 
+    queried = true;
     setState(() {});
   }
 
@@ -55,9 +58,9 @@ class _BagState extends State<Bag> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GestureDetector(
-                  // onTap: () {
-                  //   Navigator.pop(context);
-                  // },
+                  onTap: () {
+                    routerSink.add({"route": "dashboard"});
+                  },
                   child: Icon(Icons.arrow_back, size: 22)),
               Icon(Icons.notifications_none, size: 22)
             ],
@@ -68,7 +71,13 @@ class _BagState extends State<Bag> {
             style: Style.h1,
           ),
           SizedBox(height: 10),
-          if (bag.isEmpty && saved.isEmpty)
+          if (!queried)
+            Expanded(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+          else if (bag.isEmpty && saved.isEmpty)
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -89,7 +98,9 @@ class _BagState extends State<Bag> {
                   if (bag.isNotEmpty)
                     Container(
                       padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Pallet.inner1),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: Pallet.inner1),
                       child: Column(
                         children: [
                           for (var item in bag) product(item, false),
@@ -119,19 +130,22 @@ class _BagState extends State<Bag> {
                     children: [
                       Text(
                         "Total Amount:",
-                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 16),
                       ),
                       SizedBox(height: 5),
                       Text(
                         "\$ ${total}",
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w500),
                       ),
                     ],
                   )),
                   Button(
                       label: "Proceed to Buy",
                       radius: 30,
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                       onPress: () {
                         Navigator.push(
                           mainContext,
@@ -139,7 +153,9 @@ class _BagState extends State<Bag> {
                               builder: (context) => Checkout(
                                     items: bag,
                                   )),
-                        );
+                        ).then((_) {
+                          getData();
+                        });
                       })
                 ],
               ),
@@ -191,21 +207,26 @@ class _BagState extends State<Bag> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
                 Container(
-                  decoration: BoxDecoration(color: Pallet.inner2, borderRadius: BorderRadius.circular(5)),
+                  decoration: BoxDecoration(
+                      color: Pallet.inner2,
+                      borderRadius: BorderRadius.circular(5)),
                   padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   child: Row(
                     children: [
                       GestureDetector(
                           onTap: () async {
                             item["qty"] += 1;
-                            total += item["product"]["sellingPrice"];
+                            if (!saved) {
+                              total += item["product"]["sellingPrice"];
+                            }
 
                             setState(() {});
                             updateBag(item["productId"], item["qty"]);
 
                             // getData();
                           },
-                          child: Icon(Icons.add, size: 18, color: Pallet.font2)),
+                          child:
+                              Icon(Icons.add, size: 18, color: Pallet.font2)),
                       SizedBox(width: 10),
                       Text(item["qty"].toString()),
                       SizedBox(width: 10),
@@ -213,7 +234,9 @@ class _BagState extends State<Bag> {
                           onTap: () async {
                             if (item["qty"] > 0) {
                               item["qty"] -= 1;
-                              total -= item["product"]["sellingPrice"];
+                              if (!saved) {
+                                total -= item["product"]["sellingPrice"];
+                              }
 
                               setState(() {});
 
@@ -223,7 +246,8 @@ class _BagState extends State<Bag> {
                               bag.remove(item);
                             }
                           },
-                          child: Icon(Icons.remove, size: 18, color: Pallet.font2))
+                          child:
+                              Icon(Icons.remove, size: 18, color: Pallet.font2))
                     ],
                   ),
                 )

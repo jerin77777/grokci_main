@@ -37,7 +37,14 @@ class _SearchState extends State<Search> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Icon(Icons.arrow_back, size: 22), Icon(Icons.notifications_none, size: 22)],
+            children: [
+              GestureDetector(
+                  onTap: () {
+                    routerSink.add({"route": "dashboard"});
+                  },
+                  child: Icon(Icons.arrow_back, size: 22)),
+              Icon(Icons.notifications_none, size: 22)
+            ],
           ),
           SizedBox(height: 10),
           Text(
@@ -54,6 +61,7 @@ class _SearchState extends State<Search> {
                 SizedBox(width: 10),
                 Expanded(
                   child: TextField(
+                    style: TextStyle(color: Pallet.fontInner),
                     onChanged: (value) async {
                       products = await searchProducts(value);
                       setState(() {});
@@ -134,8 +142,7 @@ class _SearchState extends State<Search> {
                                         label: "Add to Bag",
                                         onPress: () {
                                           addToBag(product["id"]);
-                                                                      showMessage(context, "Added ${product["name"]} to bag");
-
+                                          showMessage(context, "Added ${product["name"]} to bag");
                                         })
                                   ],
                                 )

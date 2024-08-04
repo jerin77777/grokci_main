@@ -5,6 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:grokci_main/types.dart';
 import 'package:local_auth/local_auth.dart';
 
+import '../backend/server.dart';
+
 class Security extends StatefulWidget {
   const Security({super.key});
 
@@ -21,6 +23,10 @@ class _SecurityState extends State<Security> {
   String _authorized = 'Not Authorized';
   bool _isAuthenticating = false;
   bool authenticated = false;
+
+  bool themeEnabled = false;
+
+  bool passageEnabled = false;
 
   @override
   void initState() {
@@ -92,100 +98,131 @@ class _SecurityState extends State<Security> {
       return;
     }
 
-    setState(() => _authorized = authenticated ? 'Authorized' : 'Not Authorized');
+    setState(
+        () => _authorized = authenticated ? 'Authorized' : 'Not Authorized');
   }
-
-  // Future<void> _authenticateWithBiometrics() async {
-  //   bool authenticated = false;
-  //   try {
-  //     setState(() {
-  //       _isAuthenticating = true;
-  //       _authorized = 'Authenticating';
-  //     });
-  //     authenticated = await auth.authenticate(
-  //       localizedReason: 'Scan your fingerprint (or face or whatever) to authenticate',
-  //       options: const AuthenticationOptions(
-  //         stickyAuth: true,
-  //         biometricOnly: true,
-  //       ),
-  //     );
-  //     setState(() {
-  //       _isAuthenticating = false;
-  //       _authorized = 'Authenticating';
-  //     });
-  //   } on PlatformException catch (e) {
-  //     print(e);
-  //     setState(() {
-  //       _isAuthenticating = false;
-  //       _authorized = 'Error - ${e.message}';
-  //     });
-  //     return;
-  //   }
-  //   if (!mounted) {
-  //     return;
-  //   }
-
-  //   final String message = authenticated ? 'Authorized' : 'Not Authorized';
-  //   setState(() {
-  //     _authorized = message;
-  //   });
-  // }
 
   Future<void> _cancelAuthentication() async {
     await auth.stopAuthentication();
     setState(() => _isAuthenticating = false);
   }
 
-  bool enable = false;
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Padding(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Login & Security",
-                style: Style.h1,
-              ),
-              SizedBox(height: 10),
-              Row(
+        backgroundColor: Pallet.background,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(child: Text("Enable finger print")),
-                  Switch(
-                      value: enable,
-                      activeColor: Colors.red,
-                      onChanged: (bool value) async {
-                        enable = value;
-                        if (value) {
-                          await _authenticate();
-                          if (authenticated){
-                            
-                          }
-                        }
-                      }),
+                  GestureDetector(
+                      onTap: () {
+                        // routerSink.add({"route": "dashboard"});
+
+                        Navigator.pop(context);
+                      },
+                      child: Icon(Icons.arrow_back, size: 22)),
+                  SizedBox(width: 15),
+                  Text(
+                    "User Preferences",
+                    style: Style.h3,
+                  ),
+                  Expanded(child: SizedBox()),
+                  Icon(Icons.notifications_none, size: 22)
                 ],
               ),
-              Expanded(
-                child: Stack(
-                  children: [
-                    Positioned(
-                      bottom: 10,
-                      right: 10,
-                      child: SizedBox(
-                        width: 200,
-                        child: Image.asset("assets/finger.gif"),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
+            ),
+            Divider(color: Pallet.divider, height: 1),
+            SizedBox(height: 10),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 10),
+                  Text(
+                    "Theme",
+                    style: Style.h3,
+                  ),
+                  // SizedBox(height: 10),
+
+                  // Text(
+                  //   "Login & Security",
+                  //   style: Style.h2,
+                  // ),
+                  // SizedBox(height: 10),
+                  // Row(
+                  //   children: [
+                  //     Expanded(child: Text("Enable finger print")),
+                  //     Switch(
+                  //         value: passageEnabled,
+                  //         activeColor: Colors.red,
+                  //         onChanged: (bool value) async {
+                  //           passageEnabled = value;
+                  //           if (value) {
+                  //             // await _authenticate();
+                  //             // if (authenticated) {
+                  //             //   sharedPreferences!.setBool("bio_metrics", true);
+                  //             // }
+                  //           } else {
+                  //             // sharedPreferences!.setBool("bio_metrics", false);
+                  //           }
+                  //           setState(() {});
+                  //         }),
+                  //   ],
+                  // ),
+
+                  Row(
+                    children: [
+                      Expanded(child: Text("Enable ligh mode")),
+                      Switch(
+                          thumbIcon: WidgetStateProperty.resolveWith<Icon?>(
+                              (Set<WidgetState> states) {
+                            if (themeEnabled) {
+                              return const Icon(Icons.light_mode);
+                            } else {
+                              return const Icon(Icons.dark_mode);
+                            }
+                          }),
+                          value: themeEnabled,
+                          activeColor: Colors.amber,
+                          inactiveThumbColor: Colors.blue,
+                          inactiveTrackColor: Colors.blue[100],
+                          onChanged: (bool value) async {
+                            themeEnabled = value;
+                            if (value) {
+                              Pallet.lightMode();
+                            } else {
+                              Pallet.darkMode();
+                            }
+
+                            setState(() {});
+                          }),
+                    ],
+                  ),
+                  // Expanded(
+                  //   child: Stack(
+                  //     children: [
+                  //       Positioned(
+                  //         bottom: 10,
+                  //         right: 10,
+                  //         child: SizedBox(
+                  //           width: 200,
+                  //           child: Image.asset("assets/finger2.gif"),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // )
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );

@@ -21,12 +21,15 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   String name = "";
+  TextEditingController _name = TextEditingController();
+  bool edit = false;
   getData() async {
     var doc = await db.getDocument(
         databaseId: AppConfig.database,
         collectionId: AppConfig.users,
         documentId: sharedPreferences!.get("phone").toString());
     name = doc.data["userName"];
+    _name.text = name;
     setState(() {});
   }
 
@@ -46,7 +49,11 @@ class _ProfileState extends State<Profile> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(Icons.arrow_back, size: 22),
+              GestureDetector(
+                  onTap: () {
+                    routerSink.add({"route": "dashboard"});
+                  },
+                  child: Icon(Icons.arrow_back, size: 22)),
               Icon(Icons.notifications_none, size: 22)
             ],
           ),
@@ -69,29 +76,79 @@ class _ProfileState extends State<Profile> {
                     name: "j",
                   ),
                   SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Hi, $name",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w600)),
-                        Text("How are you doing ?",
-                            style: TextStyle(fontSize: 14))
-                      ],
+                  if (edit)
+                    Expanded(
+                        child: TextBox(
+                      controller: _name,
+                      radius: 10,
+                      hasBorder: true,
+                    ))
+                  else
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Hi, $name",
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w600)),
+                          Text("How are you doing ?",
+                              style: TextStyle(fontSize: 14))
+                        ],
+                      ),
                     ),
-                  ),
-                  // Container(
-                  //   padding: EdgeInsets.all(10),
-                  //   decoration: BoxDecoration(color: Pallet.primary, borderRadius: BorderRadius.circular(20)),
-                  //   child: Center(
-                  //     child: Icon(
-                  //       Icons.edit,
-                  //       color: Pallet.fontInner,
-                  //       size: 18,
-                  //     ),
-                  //   ),
-                  // )
+                  if (edit)
+                    GestureDetector(
+                      onTap: () {
+                        edit = false;
+                        String userId =
+                            sharedPreferences!.get("phone").toString();
+
+                        db.updateDocument(
+                            databaseId: AppConfig.database,
+                            collectionId: AppConfig.users,
+                            documentId: userId,
+                            data: {"userName": _name.text});
+
+                        name = _name.text;
+                        setState(() {});
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 10),
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                            color: Pallet.primary,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Center(
+                          child: Icon(
+                            FontAwesomeIcons.check,
+                            color: Pallet.fontInner,
+                            size: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  SizedBox(width: 10),
+                  GestureDetector(
+                    onTap: () {
+                      edit = !edit;
+                      setState(() {});
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                          color: Pallet.primary,
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Center(
+                        child: Icon(
+                          (edit)
+                              ? FontAwesomeIcons.xmark
+                              : FontAwesomeIcons.pen,
+                          color: Pallet.fontInner,
+                          size: 14,
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
               Padding(
@@ -105,30 +162,32 @@ class _ProfileState extends State<Profile> {
                       style: Style.h4,
                     ),
                     SizedBox(height: 10),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(vertical: 10),
-                    //   child: Row(
-                    //     children: [
-                    //       SizedBox(
-                    //         width: 25,
-                    //         child: Center(
-                    //           child: FaIcon(
-                    //             FontAwesomeIcons.box,
-                    //             color: Pallet.primary,
-                    //             size: 22,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       SizedBox(width: 10),
-                    //       Expanded(
-                    //           child: Text(
-                    //         "My Orders",
-                    //         style: TextStyle(color: Pallet.primary, fontSize: 16),
-                    //       )),
-                    //       Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
-                    //     ],
-                    //   ),
-                    // ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 25,
+                            child: Center(
+                              child: FaIcon(
+                                FontAwesomeIcons.box,
+                                color: Pallet.primary,
+                                size: 22,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                              child: Text(
+                            "My Orders",
+                            style:
+                                TextStyle(color: Pallet.primary, fontSize: 16),
+                          )),
+                          Icon(Icons.keyboard_arrow_right_outlined,
+                              color: Pallet.primary, size: 20)
+                        ],
+                      ),
+                    ),
                     // Padding(
                     //   padding: const EdgeInsets.symmetric(vertical: 10),
                     //   child: Row(
@@ -255,11 +314,12 @@ class _ProfileState extends State<Profile> {
                         ),
                       ),
                     ),
+
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
                           mainContext,
-                          MaterialPageRoute(builder: (context) => Support()),
+                          MaterialPageRoute(builder: (context) => Security()),
                         );
                       },
                       child: Padding(
@@ -270,7 +330,7 @@ class _ProfileState extends State<Profile> {
                               width: 25,
                               child: Center(
                                 child: FaIcon(
-                                  FontAwesomeIcons.dragon,
+                                  FontAwesomeIcons.userGear,
                                   color: Pallet.primary,
                                   size: 22,
                                 ),
@@ -279,41 +339,7 @@ class _ProfileState extends State<Profile> {
                             SizedBox(width: 10),
                             Expanded(
                                 child: Text(
-                              "Change Mode",
-                              style: TextStyle(
-                                  color: Pallet.primary, fontSize: 16),
-                            )),
-                            Icon(Icons.keyboard_arrow_right_outlined,
-                                color: Pallet.primary, size: 20)
-                          ],
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          mainContext,
-                          MaterialPageRoute(builder: (context) => Changemode()),
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 25,
-                              child: Center(
-                                child: FaIcon(
-                                  FontAwesomeIcons.key,
-                                  color: Pallet.primary,
-                                  size: 22,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                                child: Text(
-                              "Login & Security",
+                              "User Preferences",
                               style: TextStyle(
                                   color: Pallet.primary, fontSize: 16),
                             )),

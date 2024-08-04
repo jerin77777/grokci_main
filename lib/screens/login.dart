@@ -3,18 +3,21 @@
 import 'dart:ffi';
 import 'dart:io';
 
-import 'package:dotted_border/dotted_border.dart';
+// import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+// import 'package:passage_flutter/passage_flutter_models/authenticator_attachment.dart';
+// import 'package:passage_flutter/passage_flutter_models/passage_social_connection.dart';
+import '../main.dart';
 import '../widgets.dart';
 import '../backend/server.dart';
 import '../types.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:readsms/readsms.dart';
-import 'package:path/path.dart';
+// import 'package:path/path.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
 class Login extends StatefulWidget {
@@ -53,15 +56,13 @@ class _LoginState extends State<Login> {
         login(mainContext, phoneNumber.text);
       }
     });
-    // }
   }
 
   @override
   Widget build(BuildContext context) {
     mainContext = context;
     return Scaffold(
-              backgroundColor: Pallet.background,
-
+      backgroundColor: Pallet.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -75,42 +76,38 @@ class _LoginState extends State<Login> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset(
-                        width: 150,
-                        "assets/logo.svg",
+                      GestureDetector(
+                        onTap: () async {},
+                        child: SvgPicture.asset(
+                          width: 150,
+                          "assets/logo.svg",
+                        ),
                       ),
                     ],
                   ),
                   SizedBox(height: 50),
                   Text(
-                    "To get the best of us, please Log in",
-                    style:
-                        GoogleFonts.beVietnamPro(fontWeight: FontWeight.w600),
-                  ),
-                  Text(
-                    "Enter your phone number to continue",
-                    // style: GoogleFonts.beVietnamPro(fontWeight: FontWeight.w600),
+                    "Login to continue",
+                    style: Style.h1,
                   ),
                   SizedBox(height: 10),
-                  if (phoneError.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 5),
-                      child: Text(phoneError,
-                          style: GoogleFonts.beVietnamPro(
-                              color: Colors.red, fontSize: 12)),
-                    ),
+                  Text(
+                    "Enter your email id to continue",
+                  ),
+                  SizedBox(height: 20),
                   Container(
                     height: 50,
-                    // padding: EdgeInsets.symmetric(vertical: 10),
+                    // padding: EdgeInsets.symmetric(horizontal: 15),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(width: 0.5)),
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(width: 0.5, color: Pallet.font1)),
                     child: Row(
                       children: [
                         SizedBox(width: 10),
                         Text("+91 "),
                         Expanded(
                             child: TextField(
+                          style: TextStyle(color: Pallet.fontInner),
                           enabled: checkOtp == null,
                           controller: phoneNumber,
                           keyboardType: TextInputType.phone,
@@ -125,7 +122,33 @@ class _LoginState extends State<Login> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
+                  if (phoneError.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(phoneError,
+                          style: GoogleFonts.beVietnamPro(
+                              color: Colors.red, fontSize: 12)),
+                    ),
+                  SizedBox(height: 40),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          text: "Dont have an accoount? ",
+                          style: GoogleFonts.beVietnamPro(
+                              fontSize: 14, color: Pallet.font1),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: 'Register here',
+                                style: GoogleFonts.beVietnamPro(
+                                    color: Pallet.primary)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 40),
                   if (checkOtp != null)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,19 +195,15 @@ class _LoginState extends State<Login> {
                     active: !otpSend,
                     label: "Send Otp",
                     onPress: () async {
-                      bool error = false;
-                      RegExp numReg = RegExp(r'^-?[0-9]+$');
-                      if (phoneNumber.text.length != 10 ||
-                          !numReg.hasMatch(phoneNumber.text)) {
-                        phoneError = "invalid number";
-                        error = true;
-                      }
-                      setState(() {});
-                      if (!error) {
+                      print(phoneNumber.text.length);
+                      if (phoneNumber.text.length == 10) {
                         otpSend = true;
                         checkOtp = await sendOtp(phoneNumber.text);
                         setState(() {});
+                      } else {
+                        phoneError = "Enter valid phone";
                       }
+                      setState(() {});
                     }),
               ),
               SizedBox(height: 10),
@@ -214,8 +233,7 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-              backgroundColor: Pallet.background,
-
+      backgroundColor: Pallet.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -236,9 +254,8 @@ class _SignUpState extends State<SignUp> {
                     ),
                     SizedBox(height: 50),
                     Text(
-                      "We need some more information about you",
-                      style:
-                          GoogleFonts.beVietnamPro(fontWeight: FontWeight.w600),
+                      "Login to continue",
+                      style: Style.h2,
                     ),
                     // SizedBox(height: 10),
                     Text("Enter your user name"),
@@ -260,9 +277,10 @@ class _SignUpState extends State<SignUp> {
                           border: Border.all(
                               width: 0.5,
                               color: nameError.isEmpty
-                                  ? Colors.black
+                                  ? Pallet.font1
                                   : Colors.red)),
                       child: TextField(
+                        style: TextStyle(color: Pallet.fontInner),
                         controller: userName,
                         keyboardType: TextInputType.text,
                         onChanged: (_) {
@@ -332,23 +350,23 @@ class _SignUpState extends State<SignUp> {
               Button(
                   label: "Done",
                   onPress: () {
-                    RegExp numReg = RegExp(r'^-?[0-9]+$');
-                    bool error = false;
+                    // RegExp numReg = RegExp(r'^-?[0-9]+$');
+                    // bool error = false;
 
-                    if (userName.text.isEmpty) {
-                      nameError = "required *";
-                      error = true;
-                    }
+                    // if (userName.text.isEmpty) {
+                    //   nameError = "required *";
+                    //   error = true;
+                    // }
 
-                    setState(() {});
+                    // setState(() {});
 
-                    if (!error && !presedDone) {
-                      presedDone = true;
-                      createAccount(
-                          context, widget.phoneNumber, userName.text, language);
+                    // if (!error && !presedDone) {
+                    //   presedDone = true;
+                    //   createAccount(
+                    //       context, widget.phoneNumber, userName.text, language);
 
-                      setState(() {});
-                    }
+                    //   setState(() {});
+                    // }
                   }),
               presedDone
                   ? LoadingAnimationWidget.fallingDot(

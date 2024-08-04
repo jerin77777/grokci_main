@@ -31,6 +31,7 @@ SharedPreferences? sharedPreferences;
 // delivery states picking, delivering, completed
 // order states delivering, delivered, payed
 // all database details used from here
+
 class AppConfig {
   static String endpoint = "***";
   static String project = "***";
@@ -58,29 +59,38 @@ class Bucket {
   static String products = "***";
 }
 
+
+
 createAccount(
   context,
   String phoneNumber,
   String userName,
   String language,
 ) async {
-  var doc = await db
-      .createDocument(databaseId: AppConfig.database, collectionId: AppConfig.users, documentId: phoneNumber, data: {
-    "userName": userName,
-    "phoneNumber": phoneNumber,
-    "language": language,
-  });
+  var doc = await db.createDocument(
+      databaseId: AppConfig.database,
+      collectionId: AppConfig.users,
+      documentId: phoneNumber,
+      data: {
+        "userName": userName,
+        "phoneNumber": phoneNumber,
+        "language": language,
+      });
   sharedPreferences!.setString("phone", phoneNumber);
-  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+  Navigator.of(context)
+      .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
 }
 
 login(context, phoneNumber) async {
   try {
-    Document temp =
-        await db.getDocument(databaseId: AppConfig.database, collectionId: AppConfig.users, documentId: phoneNumber);
+    Document temp = await db.getDocument(
+        databaseId: AppConfig.database,
+        collectionId: AppConfig.users,
+        documentId: phoneNumber);
 
     sharedPreferences!.setString("phone", phoneNumber);
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
   } catch (e) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => SignUp(
@@ -91,11 +101,15 @@ login(context, phoneNumber) async {
 
 Future<int> sendOtp(phoneNumber) async {
   TwilioFlutter twilioFlutter = TwilioFlutter(
-      accountSid: AppConfig.twilloSid, authToken: AppConfig.twilloToken, twilioNumber: AppConfig.twilloNumber);
+      accountSid: AppConfig.twilloSid,
+      authToken: AppConfig.twilloToken,
+      twilioNumber: AppConfig.twilloNumber);
 
   final Random _random = Random();
   int _otp = 1000 + _random.nextInt(9000);
-  await twilioFlutter.sendSMS(toNumber: "+91 ${phoneNumber}", messageBody: "your one time otp is: ${_otp}");
+  await twilioFlutter.sendSMS(
+      toNumber: "+91 ${phoneNumber}",
+      messageBody: "your one time otp is: ${_otp}");
   return _otp;
 }
 
@@ -124,7 +138,10 @@ getCategories({int? limit}) async {
   DocumentList temp = await db.listDocuments(
     databaseId: AppConfig.database,
     collectionId: AppConfig.categories,
-    queries: [Query.equal("deleted", false), if (limit != null) Query.limit(limit)],
+    queries: [
+      Query.equal("deleted", false),
+      if (limit != null) Query.limit(limit)
+    ],
   );
   result = getResult(temp.documents);
   return result;
@@ -133,10 +150,12 @@ getCategories({int? limit}) async {
 getProducts(categoryId) async {
   List<Map> products = [];
 
-  DocumentList result =
-      await db.listDocuments(databaseId: AppConfig.database, collectionId: AppConfig.products, queries: [
-    Query.equal("categoryId", categoryId),
-  ]);
+  DocumentList result = await db.listDocuments(
+      databaseId: AppConfig.database,
+      collectionId: AppConfig.products,
+      queries: [
+        Query.equal("categoryId", categoryId),
+      ]);
 
   products = getResult(result.documents);
 
@@ -145,28 +164,75 @@ getProducts(categoryId) async {
 
 Future<List<Map>> searchProducts(String search) async {
   List<Map> result = [];
-  DocumentList temp =
-      await db.listDocuments(databaseId: AppConfig.database, collectionId: AppConfig.products, queries: [
-    Query.search("name", search),
-  ]);
+  DocumentList temp = await db.listDocuments(
+      databaseId: AppConfig.database,
+      collectionId: AppConfig.products,
+      queries: [
+        Query.search("name", search),
+      ]);
   result = getResult(temp.documents);
   print(result);
   return result;
 }
 
 Future<Map> getProduct(String productId) async {
-  Document temp =
-      await db.getDocument(databaseId: AppConfig.database, collectionId: AppConfig.products, documentId: productId);
+  Document temp = await db.getDocument(
+      databaseId: AppConfig.database,
+      collectionId: AppConfig.products,
+      documentId: productId);
   return getResult([temp])[0];
 }
 
 Future<List> getAddresses() async {
   String userId = sharedPreferences!.get("phone").toString();
 
-  DocumentList temp = await db.listDocuments(databaseId: AppConfig.database, collectionId: AppConfig.address, queries: [
-    Query.equal("userId", userId),
-  ]);
+  DocumentList temp = await db.listDocuments(
+      databaseId: AppConfig.database,
+      collectionId: AppConfig.address,
+      queries: [
+        Query.equal("userId", userId),
+      ]);
   return getResult(temp.documents);
+}
+
+getCartProductIds() async {
+  String userId = sharedPreferences!.get("phone").toString();
+
+  List<String> productIds = [];
+  DocumentList products = await db.listDocuments(
+      databaseId: AppConfig.database,
+      collectionId: AppConfig.cart,
+      queries: [Query.equal("userId", userId)]);
+
+  for (var product in products.documents) {
+    productIds.add(product.data["productId"]);
+  }
+  return productIds;
+  //  getResult(products.documents);
+}
+
+getQty(String productId) async {
+  DocumentList products = await db.listDocuments(
+      databaseId: AppConfig.database,
+      collectionId: AppConfig.cart,
+      queries: [Query.equal("productId", productId)]);
+
+  return getResult(products.documents)[0]["qty"];
+}
+
+getAddress() async {
+  String userId = sharedPreferences!.get("phone").toString();
+  List<Map> result = [];
+
+  DocumentList address = await db.listDocuments(
+      databaseId: AppConfig.database,
+      collectionId: AppConfig.address,
+      queries: [Query.equal("userId", userId), Query.equal("selected", true)]);
+  result = getResult(address.documents);
+  if (result.isEmpty) {
+    return null;
+  }
+  return result[0];
 }
 
 getBag() async {
@@ -176,8 +242,12 @@ getBag() async {
   DocumentList products = await db.listDocuments(
       databaseId: AppConfig.database,
       collectionId: AppConfig.cart,
-      queries: [Query.equal("userId", userId), Query.equal("saveForLater", false)]);
+      queries: [
+        Query.equal("userId", userId),
+        Query.equal("saveForLater", false)
+      ]);
   result = getResult(products.documents);
+
   return result;
 }
 
@@ -188,7 +258,11 @@ getSaveForLater() async {
   DocumentList products = await db.listDocuments(
       databaseId: AppConfig.database,
       collectionId: AppConfig.cart,
-      queries: [Query.equal("userId", userId), Query.equal("saveForLater", true)]);
+      queries: [
+        Query.equal("userId", userId),
+        Query.equal("saveForLater", true)
+      ]);
+
   result = getResult(products.documents);
   return result;
 }
@@ -196,16 +270,41 @@ getSaveForLater() async {
 addToBag(String productId) async {
   String userId = sharedPreferences!.get("phone").toString();
 
-  DocumentList product = await db.listDocuments(databaseId: AppConfig.database, collectionId: AppConfig.cart, queries: [
-    Query.equal("userId", userId),
-    Query.equal("productId", productId),
-    Query.equal("saveForLater", false)
-  ]);
+  DocumentList product = await db.listDocuments(
+      databaseId: AppConfig.database,
+      collectionId: AppConfig.cart,
+      queries: [
+        Query.equal("userId", userId),
+        Query.equal("productId", productId),
+        Query.equal("saveForLater", false)
+      ]);
   if (product.documents.isEmpty) {
-    db.createDocument(databaseId: AppConfig.database, collectionId: AppConfig.cart, documentId: Uuid().v4(), data: {
-      "userId": userId,
-      "productId": productId,
-    });
+    db.createDocument(
+        databaseId: AppConfig.database,
+        collectionId: AppConfig.cart,
+        documentId: Uuid().v4(),
+        data: {
+          "userId": userId,
+          "productId": productId,
+        });
+  }
+}
+
+clearBag() async {
+  String userId = sharedPreferences!.get("phone").toString();
+  DocumentList cart = await db.listDocuments(
+      databaseId: AppConfig.database,
+      collectionId: AppConfig.cart,
+      queries: [
+        Query.equal("userId", userId),
+        Query.equal("saveForLater", false)
+      ]);
+
+  for (var product in cart.documents) {
+    await db.deleteDocument(
+        databaseId: AppConfig.database,
+        collectionId: AppConfig.cart,
+        documentId: product.$id);
   }
 }
 
@@ -214,10 +313,15 @@ updateBag(String productId, int qty) async {
   DocumentList product = await db.listDocuments(
       databaseId: AppConfig.database,
       collectionId: AppConfig.cart,
-      queries: [Query.equal("userId", userId), Query.equal("productId", productId)]);
+      queries: [
+        Query.equal("userId", userId),
+        Query.equal("productId", productId)
+      ]);
   if (qty == 0) {
     db.deleteDocument(
-        databaseId: AppConfig.database, collectionId: AppConfig.cart, documentId: product.documents.first.$id);
+        databaseId: AppConfig.database,
+        collectionId: AppConfig.cart,
+        documentId: product.documents.first.$id);
   } else {
     db.updateDocument(
         databaseId: AppConfig.database,
@@ -233,7 +337,10 @@ saveForLater(String productId, bool saveForLater) async {
   DocumentList product = await db.listDocuments(
       databaseId: AppConfig.database,
       collectionId: AppConfig.cart,
-      queries: [Query.equal("userId", userId), Query.equal("productId", productId)]);
+      queries: [
+        Query.equal("userId", userId),
+        Query.equal("productId", productId)
+      ]);
   await db.updateDocument(
       databaseId: AppConfig.database,
       collectionId: AppConfig.cart,

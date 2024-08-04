@@ -14,8 +14,7 @@ class _SupportState extends State<Support> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-                backgroundColor: Pallet.background,
-
+        backgroundColor: Pallet.background,
         body: Padding(
           padding: EdgeInsets.all(10),
           child: Column(
@@ -39,7 +38,9 @@ class _SupportState extends State<Support> {
                   Button(label: "Start new conversation", onPress: () {}),
                   Text("Recent chats"),
                   Container(
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Pallet.inner1),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Pallet.inner1),
                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                     child: Column(
                       children: [

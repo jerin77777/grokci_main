@@ -5,7 +5,8 @@ import 'package:grokci_main/types.dart';
 import 'package:grokci_main/widgets.dart';
 
 class ProductsInCategory extends StatefulWidget {
-  const ProductsInCategory({super.key, required this.categoryId, required this.categoryName});
+  const ProductsInCategory(
+      {super.key, required this.categoryId, required this.categoryName});
   final String categoryId;
   final String categoryName;
   @override
@@ -14,6 +15,7 @@ class ProductsInCategory extends StatefulWidget {
 
 class _ProductsInCategoryState extends State<ProductsInCategory> {
   List products = [];
+  List<String> cart = [];
 
   @override
   void initState() {
@@ -23,7 +25,17 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
   }
 
   getData() async {
+    print(widget.categoryId);
     products = await getProducts(widget.categoryId);
+    cart = await getCartProductIds();
+    for (var product in products) {
+      if (cart.contains(product["id"])) {
+        product["qty"] = await getQty(product["id"]);
+      }
+    }
+    print(cart);
+    print(products[0]["id"]);
+
     setState(() {});
   }
 
@@ -31,7 +43,6 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-
         backgroundColor: Pallet.background,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +73,9 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
             if (products.isNotEmpty)
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Pallet.inner1),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Pallet.inner1),
                 child: Column(
                   children: [
                     for (var product in products)
@@ -77,13 +90,15 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
                           );
                         },
                         child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 10),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: Image.asset("assets/oil.jpeg", width: 80, height: 80)),
+                                  child: Image.asset("assets/oil.jpeg",
+                                      width: 80, height: 80)),
                               SizedBox(width: 10),
                               Expanded(
                                   child: Column(
@@ -104,31 +119,93 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
                                   SizedBox(height: 20),
                                   Row(
                                     children: [
-                                      if (product["originalPrice"] != product["sellingPrice"])
+                                      if (product["originalPrice"] !=
+                                          product["sellingPrice"])
                                         Padding(
-                                          padding: const EdgeInsets.only(right: 15),
+                                          padding:
+                                              const EdgeInsets.only(right: 15),
                                           child: Text(
                                             product["originalPrice"].toString(),
                                             style: TextStyle(
                                                 color: Pallet.font2,
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w600,
-                                                decoration: TextDecoration.lineThrough),
+                                                decoration:
+                                                    TextDecoration.lineThrough),
                                           ),
                                         ),
                                       Text(
                                         "₹ ${product["sellingPrice"].toString()}",
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600),
                                       ),
                                       Expanded(child: SizedBox()),
-                                      Button(
-                                          radius: 30,
-                                          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
-                                          label: "Add to Bag",
-                                          onPress: () {
-                                            addToBag(product["id"]);
-                                            showMessage(context, "Added ${product["name"]} to bag");
-                                          })
+                                      if (cart.contains(product["id"]))
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              color: Pallet.inner2,
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 5, horizontal: 10),
+                                          child: Row(
+                                            children: [
+                                              GestureDetector(
+                                                  onTap: () async {
+                                                    product["qty"] += 1;
+                                                    // if (!saved) {
+                                                    // total += item["product"]["sellingPrice"];
+                                                    // }
+
+                                                    setState(() {});
+                                                    updateBag(product["id"],
+                                                        product["qty"]);
+
+                                                    // getData();
+                                                  },
+                                                  child: Icon(Icons.add,
+                                                      size: 18,
+                                                      color: Pallet.font2)),
+                                              SizedBox(width: 10),
+                                              Text(product["qty"].toString()),
+                                              SizedBox(width: 10),
+                                              GestureDetector(
+                                                  onTap: () async {
+                                                    if (product["qty"] > 0) {
+                                                      product["qty"] -= 1;
+                                                      // if (!saved) {
+                                                      // total -= item["product"]["sellingPrice"];
+                                                      // }
+
+                                                      setState(() {});
+
+                                                      updateBag(product["id"],
+                                                          product["qty"]);
+                                                    }
+                                                    if (product["qty"] == 0) {
+                                                      cart.remove(
+                                                          product["id"]);
+                                                    }
+                                                  },
+                                                  child: Icon(Icons.remove,
+                                                      size: 18,
+                                                      color: Pallet.font2))
+                                            ],
+                                          ),
+                                        )
+                                      else
+                                        Button(
+                                            radius: 30,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 5, vertical: 8),
+                                            label: "Add to Bag",
+                                            onPress: () {
+                                              product["qty"] = 0;
+                                              addToBag(product["id"]);
+                                              showMessage(context,
+                                                  "Added ${product["name"]} to bag");
+                                            })
                                     ],
                                   )
                                 ],
@@ -173,8 +250,7 @@ class _CategoriesState extends State<Categories> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-                backgroundColor: Pallet.background,
-
+        backgroundColor: Pallet.background,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -214,7 +290,9 @@ class _CategoriesState extends State<Categories> {
                 children: <Widget>[
                   for (var category in categories)
                     Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Pallet.inner1),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Pallet.inner1),
                       padding: const EdgeInsets.all(8),
                       child: Row(
                         children: [
@@ -284,8 +362,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     }
     return SafeArea(
       child: Scaffold(
-                backgroundColor: Pallet.background,
-
+        backgroundColor: Pallet.background,
         body: Column(
           children: [
             // SizedBox(height: 5),
@@ -342,7 +419,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                         direction = "left";
                       }
                     },
-                    child: Image.network(getUrl(Bucket.products, productData!["images"][imageIdx]))),
+                    child: Image.network(getUrl(
+                        Bucket.products, productData!["images"][imageIdx]))),
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   for (var i = 0; i < productData!["images"].length; i++)
                     Container(
@@ -351,7 +429,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                       height: 10,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: (i == imageIdx) ? Colors.grey : Pallet.divider),
+                          color:
+                              (i == imageIdx) ? Colors.grey : Pallet.divider),
                     )
                 ]),
                 SizedBox(height: 10),
@@ -417,7 +496,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                     SizedBox(width: 10),
                     Text(
                       "₹ ${productData!["sellingPrice"]}",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                     ),
                     Expanded(child: SizedBox()),
                     Text(
@@ -434,7 +514,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                 SizedBox(height: 10),
                 Container(
                   padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(color: Pallet.inner1, borderRadius: BorderRadius.circular(10)),
+                  decoration: BoxDecoration(
+                      color: Pallet.inner1,
+                      borderRadius: BorderRadius.circular(10)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -445,7 +527,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                           SizedBox(width: 10),
                           Text(
                             "Expiry Date: 30 OCT 2024",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
                           )
                         ],
                       ),
@@ -488,7 +571,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ),
                         SizedBox(height: 10),
                       ],
-                      if (productData!["eanCode"] != null || productData!["manufacturer"] != null) ...[
+                      if (productData!["eanCode"] != null ||
+                          productData!["manufacturer"] != null) ...[
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -520,10 +604,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                           SizedBox(width: 10),
                           Text(
                             "Additional details",
-                            style: TextStyle(color: Pallet.primary, fontSize: 16),
+                            style:
+                                TextStyle(color: Pallet.primary, fontSize: 16),
                           ),
                           Expanded(child: SizedBox()),
-                          Icon(Icons.keyboard_arrow_right_rounded, color: Pallet.primary)
+                          Icon(Icons.keyboard_arrow_right_rounded,
+                              color: Pallet.primary)
                         ],
                       ),
                       SizedBox(height: 10),
@@ -553,7 +639,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                   SizedBox(width: 20),
                   Expanded(
                       child: Button(
-                          padding: EdgeInsets.symmetric(vertical: 10), radius: 30, label: "Add to Bag", onPress: () {}))
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          radius: 30,
+                          label: "Add to Bag",
+                          onPress: () {}))
                 ],
               ),
             )
