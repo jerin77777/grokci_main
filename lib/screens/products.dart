@@ -15,6 +15,7 @@ class ProductsInCategory extends StatefulWidget {
 
 class _ProductsInCategoryState extends State<ProductsInCategory> {
   List products = [];
+  List<String> cart = [];
 
   @override
   void initState() {
@@ -24,7 +25,17 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
   }
 
   getData() async {
+    print(widget.categoryId);
     products = await getProducts(widget.categoryId);
+    cart = await getCartProductIds();
+    for (var product in products) {
+      if (cart.contains(product["id"])) {
+        product["qty"] = await getQty(product["id"]);
+      }
+    }
+    print(cart);
+    print(products[0]["id"]);
+
     setState(() {});
   }
 
@@ -130,17 +141,73 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
                     color: Pallet.onBackground
                   ),
                                       ),
+                                          
                                       Expanded(child: SizedBox()),
-                                      Button(
-                                          radius: 30,
+                                      if (cart.contains(product["id"]))
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              color: Pallet.tertiaryFill,
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
                                           padding: EdgeInsets.symmetric(
-                                              horizontal: 5, vertical: 8),
-                                          label: "Add to Bag",
-                                          onPress: () {
-                                            addToBag(product["id"]);
-                                            showMessage(context,
-                                                "Added ${product["name"]} to bag");
-                                          })
+                                              vertical: 5, horizontal: 10),
+                                          child: Row(
+                                            children: [
+                                              GestureDetector(
+                                                  onTap: () async {
+                                                    product["qty"] += 1;
+                                                    // if (!saved) {
+                                                    // total += item["product"]["sellingPrice"];
+                                                    // }
+
+                                                    setState(() {});
+                                                    updateBag(product["id"],
+                                                        product["qty"]);
+
+                                                    // getData();
+                                                  },
+                                                  child: Icon(Icons.add,
+                                                      size: 18,
+                                                      color: Pallet.onBackground)),
+                                              SizedBox(width: 10),
+                                              Text(product["qty"].toString()),
+                                              SizedBox(width: 10),
+                                              GestureDetector(
+                                                  onTap: () async {
+                                                    if (product["qty"] > 0) {
+                                                      product["qty"] -= 1;
+                                                      // if (!saved) {
+                                                      // total -= item["product"]["sellingPrice"];
+                                                      // }
+
+                                                      setState(() {});
+
+                                                      updateBag(product["id"],
+                                                          product["qty"]);
+                                                    }
+                                                    if (product["qty"] == 0) {
+                                                      cart.remove(
+                                                          product["id"]);
+                                                    }
+                                                  },
+                                                  child: Icon(Icons.remove,
+                                                      size: 18,
+                                                      color: Pallet.onBackground))
+                                            ],
+                                          ),
+                                        )
+                                      else
+                                        Button(
+                                            radius: 30,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 5, vertical: 8),
+                                            label: "Add to Bag",
+                                            onPress: () {
+                                              product["qty"] = 0;
+                                              addToBag(product["id"]);
+                                              showMessage(context,
+                                                  "Added ${product["name"]} to bag");
+                                            })
                                     ],
                                   )
                                 ],
@@ -371,13 +438,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color:
-                              (i == imageIdx) ? Colors.grey : Pallet.outline),
+                              (i == imageIdx) ? Pallet.tintColor : Pallet.outline),
                     )
                 ]),
                 SizedBox(height: 10),
                 Text(
                   productData!["name"],
-                  style: TextStyle(fontSize: 18),
+                  style: Style.body.copyWith(
+                    color: Pallet.onBackground
+                  ),
                 ),
                 SizedBox(height: 10),
                 Row(

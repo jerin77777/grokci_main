@@ -6,8 +6,6 @@ import 'package:grokci_main/types.dart';
 import 'package:grokci_main/widgets.dart';
 import 'checkout.dart';
 
-double total = 0;
-
 class Bag extends StatefulWidget {
   const Bag({super.key});
 
@@ -16,8 +14,11 @@ class Bag extends StatefulWidget {
 }
 
 class _BagState extends State<Bag> {
+  double total = 0;
+
   List bag = [];
   List saved = [];
+  bool queried = false;
   @override
   void initState() {
     getData(saveForLater: true);
@@ -26,6 +27,7 @@ class _BagState extends State<Bag> {
   }
 
   getData({bool? saveForLater}) async {
+    total = 0;
     bag = await getBag();
     for (var item in bag) {
       Map product = await getProduct(item["productId"]);
@@ -41,6 +43,7 @@ class _BagState extends State<Bag> {
       }
     }
 
+    queried = true;
     setState(() {});
   }
 
@@ -55,9 +58,9 @@ class _BagState extends State<Bag> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GestureDetector(
-                  // onTap: () {
-                  //   Navigator.pop(context);
-                  // },
+                  onTap: () {
+                    routerSink.add({"route": "dashboard"});
+                  },
                   child: Icon(Icons.arrow_back, size: 22)),
               Icon(Icons.notifications_none, size: 22)
             ],
@@ -68,7 +71,13 @@ class _BagState extends State<Bag> {
             style: Style.title1Emphasized,
           ),
           SizedBox(height: 10),
-          if (bag.isEmpty && saved.isEmpty)
+          if (!queried)
+            Expanded(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+          else if (bag.isEmpty && saved.isEmpty)
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -123,7 +132,7 @@ class _BagState extends State<Bag> {
                       ),
                       SizedBox(height: 5),
                       Text(
-                        "\$ ${total}",
+                        "\₹ ${total}",
                         style:Style.title3,
                       ),
                     ],
@@ -131,7 +140,8 @@ class _BagState extends State<Bag> {
                   Button(
                       label: "Proceed to Buy",
                       radius: 30,
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                       onPress: () {
                         Navigator.push(
                           mainContext,
@@ -139,7 +149,9 @@ class _BagState extends State<Bag> {
                               builder: (context) => Checkout(
                                     items: bag,
                                   )),
-                        );
+                        ).then((_) {
+                          getData();
+                        });
                       })
                 ],
               ),
@@ -217,15 +229,38 @@ class _BagState extends State<Bag> {
                       GestureDetector(
                           onTap: () async {
                             item["qty"] += 1;
-                            total += item["product"]["sellingPrice"];
+                            if (!saved) {
+                              total += item["product"]["sellingPrice"];
+                            }
 
                             setState(() {});
                             updateBag(item["productId"], item["qty"]);
 
                             // getData();
                           },
-                          child: Icon(Icons.add, size: 18, color: Pallet.onBackground)),
-                      SizedBox(width: 10),
+                          child:
+                              Icon(Icons.add, size: 18, color: Pallet.onBackground)),
+                      const SizedBox(width: 10),
+                      Text(item["qty"].toString()),
+                      const SizedBox(width: 10),
+                      GestureDetector(
+                          onTap: () async {
+                            if (item["qty"] > 0) {
+                              item["qty"] -= 1;
+                              if (!saved) {
+                                total -= item["product"]["sellingPrice"];
+                              }
+
+                              setState(() {});
+
+                              updateBag(item["productId"], item["qty"]);
+                            }
+                            if (item["qty"] == 0) {
+                              bag.remove(item);
+                            }
+                          },
+                          child:
+                              Icon(Icons.remove, size: 18, color: Pallet.onBackground))
                     ],
                   ),
                 )

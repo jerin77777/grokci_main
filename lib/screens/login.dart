@@ -3,11 +3,15 @@
 // import 'dart:ffi';
 // import 'dart:io';
 
+// import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+// import 'package:passage_flutter/passage_flutter_models/authenticator_attachment.dart';
+// import 'package:passage_flutter/passage_flutter_models/passage_social_connection.dart';
+import '../main.dart';
 import '../widgets.dart';
 import '../backend/server.dart';
 import "../types.dart";
@@ -51,7 +55,6 @@ class _LoginState extends State<Login> {
         login(mainContext, phoneNumber.text);
       }
     });
-    // }
   }
 
   @override
@@ -72,16 +75,19 @@ class _LoginState extends State<Login> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset(
-                        width: 150,
-                        "assets/logo.svg",
+                      GestureDetector(
+                        onTap: () async {},
+                        child: SvgPicture.asset(
+                          width: 150,
+                          "assets/logo.svg",
+                        ),
                       ),
                     ],
                   ),
                   SizedBox(height: 50),
                   Text(
                     "Login to continue",
-                    style: Style.title1Emphasized
+                  style: Style.title1Emphasized
                         .copyWith(color: Pallet.onBackground),
                   ),
                   Text(
@@ -91,27 +97,21 @@ class _LoginState extends State<Login> {
                     ),
                     // style: GoogleFonts.beVietnamPro(fontWeight: FontWeight.w600),
                   ),
-                  SizedBox(height: 10),
-                  if (phoneError.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 5),
-                      child: Text(phoneError,
-                          style: Style.caption1.copyWith(
-                            color: Pallet.error
-                          )),
-                    ),
+                  SizedBox(height: 20),
                   Container(
                     height: 50,
-                    // padding: EdgeInsets.symmetric(vertical: 10),
+                    // padding: EdgeInsets.symmetric(horizontal: 15),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                        // color: Pallet.tertiaryFill,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(width: 0.5, color: Pallet.outlineVariant)),
                     child: Row(
                       children: [
                         SizedBox(width: 10),
                         Text("+91 "),
                         Expanded(
-                            child: TextField(
+                          child: TextField(
+                          // style: TextStyle(color: Pallet.onSurfaceVariant),
                           enabled: checkOtp == null,
                           controller: phoneNumber,
                           keyboardType: TextInputType.phone,
@@ -129,7 +129,36 @@ class _LoginState extends State<Login> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
+                  if (phoneError.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(phoneError,
+                          style: Style.footnote.copyWith(
+                              color: Pallet.error
+                            )),
+                    ),
+                  const SizedBox(height: 40),
+
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     RichText(
+                  //       text: TextSpan(
+                  //         text: "Dont have an accoount? ",
+                  //         style: GoogleFonts.beVietnamPro(
+                  //             fontSize: 14, color: Pallet.font1),
+                  //         children: <TextSpan>[
+                  //           TextSpan(
+                  //               text: 'Register here',
+                  //               style: GoogleFonts.beVietnamPro(
+                  //                   color: Pallet.primary)),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  // SizedBox(height: 40),
+
                   if (checkOtp != null)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,19 +212,15 @@ class _LoginState extends State<Login> {
                     active: !otpSend,
                     label: "Send Otp",
                     onPress: () async {
-                      bool error = false;
-                      RegExp numReg = RegExp(r'^-?[0-9]+$');
-                      if (phoneNumber.text.length != 10 ||
-                          !numReg.hasMatch(phoneNumber.text)) {
-                        phoneError = "invalid number";
-                        error = true;
-                      }
-                      setState(() {});
-                      if (!error) {
+                      print(phoneNumber.text.length);
+                      if (phoneNumber.text.length == 10) {
                         otpSend = true;
                         checkOtp = await sendOtp(phoneNumber.text);
                         setState(() {});
+                      } else {
+                        phoneError = "Enter valid phone";
                       }
+                      setState(() {});
                     }),
               ),
               SizedBox(height: 10),
@@ -246,9 +271,9 @@ class _SignUpState extends State<SignUp> {
                     ),
                     SizedBox(height: 50),
                     Text(
-                      "We need some more information about you",
-                      style:
-                          GoogleFonts.beVietnamPro(fontWeight: FontWeight.w600),
+                      "Login to continue",
+                      style: Style.title1Emphasized
+                        .copyWith(color: Pallet.onBackground),
                     ),
                     // SizedBox(height: 10),
                     Text("Enter your user name"),
@@ -274,6 +299,9 @@ class _SignUpState extends State<SignUp> {
                                   ? Colors.black
                                   : Pallet.error)),
                       child: TextField(
+                        style: Style.body.copyWith(
+                            color: Pallet.onBackground
+                          ),
                         controller: userName,
                         keyboardType: TextInputType.text,
                         onChanged: (_) {
@@ -293,23 +321,23 @@ class _SignUpState extends State<SignUp> {
               Button(
                   label: "Done",
                   onPress: () {
-                    RegExp numReg = RegExp(r'^-?[0-9]+$');
-                    bool error = false;
+                    // RegExp numReg = RegExp(r'^-?[0-9]+$');
+                    // bool error = false;
 
-                    if (userName.text.isEmpty) {
-                      nameError = "required *";
-                      error = true;
-                    }
+                    // if (userName.text.isEmpty) {
+                    //   nameError = "required *";
+                    //   error = true;
+                    // }
 
-                    setState(() {});
+                    // setState(() {});
 
-                    if (!error && !presedDone) {
-                      presedDone = true;
-                      createAccount(
-                          context, widget.phoneNumber, userName.text, language);
+                    // if (!error && !presedDone) {
+                    //   presedDone = true;
+                    //   createAccount(
+                    //       context, widget.phoneNumber, userName.text, language);
 
-                      setState(() {});
-                    }
+                    //   setState(() {});
+                    // }
                   }),
               presedDone
                   ? LoadingAnimationWidget.fallingDot(

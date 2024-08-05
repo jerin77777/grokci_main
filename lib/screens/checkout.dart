@@ -1,8 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:grokci_main/backend/server.dart';
+import 'package:grokci_main/screens/address.dart';
+import 'package:grokci_main/screens/payments.dart';
 import 'package:grokci_main/types.dart';
 import 'package:grokci_main/widgets.dart';
+// import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class Checkout extends StatefulWidget {
   const Checkout({super.key, required this.items});
@@ -13,12 +17,41 @@ class Checkout extends StatefulWidget {
 }
 
 class _CheckoutState extends State<Checkout> {
+  Map? currentAddress;
+  String name = "";
+  bool queried = false;
+  double total = 0;
+  double totalOriginal = 0;
+  @override
+  void initState() {
+    getData();
+
+    // TODO: implement initState
+    super.initState();
+  }
+
+  getData() async {
+    for (var item in widget.items) {
+      totalOriginal += item["product"]["originalPrice"] * item["qty"];
+      total += item["product"]["sellingPrice"] * item["qty"];
+    }
+
+    currentAddress = await getAddress();
+    var doc = await db.getDocument(
+        databaseId: AppConfig.database,
+        collectionId: AppConfig.users,
+        documentId: sharedPreferences!.get("phone").toString());
+
+    name = doc.data["userName"];
+    queried = true;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-                backgroundColor: Pallet.background,
-
+        backgroundColor: Pallet.background,
         body: Column(
           children: [
             SizedBox(height: 10),
@@ -57,51 +90,80 @@ class _CheckoutState extends State<Checkout> {
                   ),
                 ),
                 SizedBox(height: 10),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                  decoration: BoxDecoration(color: Pallet.surface1, borderRadius: BorderRadius.circular(14)),
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    // SizedBox(height: 10),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
+                if (currentAddress != null)
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                    decoration: BoxDecoration(
+                        color: Pallet.surface1,
+                        borderRadius: BorderRadius.circular(14)),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // SizedBox(height: 10),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
                             "Deliver To:",
                             style: Style.headline.copyWith(
                               color: Pallet.onBackground
                             ),
+                                ),
+                              ),
+                              Button(
+                                  radius: 30,
+                                  padding: EdgeInsets.symmetric(vertical: 5),
+                                  color: Pallet.tertiaryFill,
+                                  fontColor: Pallet.primary,
+                                  label: "Change",
+                                  onPress: () {
+                                    Navigator.push(
+                                      mainContext,
+                                      MaterialPageRoute(
+                                          builder: (context) => Address()),
+                                    );
+                                    // Address
+                                  })
+                            ],
                           ),
-                        ),
-                        Button(
-                            radius: 30,
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            color: Pallet.tertiaryFill,
-                            fontColor: Pallet.primary,
-                            label: "Change",
-                            onPress: () {})
-                      ],
-                    ),
-                    Text(
-                      "Manish Kumar",
-                      style: Style.callout.copyWith(
+                          Text(
+                                  currentAddress?["name"],
+                                  style: Style.callout.copyWith(
                         color: Pallet.onBackground
                       ),
-                    ),
-                    Text("X1, 201\nTiruvanthapuram City,\nValay Singh Yadhav Path,\nKhagul Path, 801503\n1234567890",
-                    style: Style.footnote.copyWith(
+                                ),
+                          Text(
+                            name,
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          Text(currentAddress?["address"],
+                            style: Style.footnote.copyWith(
                       color: Pallet.onBackground
-                    ),
-                    ),
-                    const SizedBox(height: 5)
-                  ]),
-                ),
-                const SizedBox(height: 10),
+                    )
+                          ),
+                          SizedBox(height: 5)
+                        ]),
+                  )
+                else if (queried)
+                  Button(
+                      color: Pallet.tertiaryFill,
+                      fontColor: Pallet.primary,
+                      label: "Add New Address",
+                      onPress: () {
+                        Navigator.push(
+                          mainContext,
+                          MaterialPageRoute(builder: (context) => AddAddress()),
+                        ).then((_) {
+                          getData();
+                        });
+                      }),
+                SizedBox(height: 10),
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                  height: 54,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14),
                     color: Pallet.surface1,
@@ -128,11 +190,99 @@ class _CheckoutState extends State<Checkout> {
                 )),
                 const SizedBox(height: 8),
                 Container(
-                    padding: const EdgeInsets.only(left: 16, right: 14, bottom: 11, top: 11,),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(14), color: Pallet.surface1),
-                    child: Column(children: [for (var item in widget.items) product(item)])),
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        color: Pallet.surface1),
+                    child: Column(children: [
+                      for (var item in widget.items) product(item)
+                    ])),
+                SizedBox(height: 10),
               ],
-            ))
+            )),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Pricing Details", style: Style.footnoteEmphasized.copyWith(
+                    color: Pallet.onBackground
+                  )),
+                  SizedBox(height: 10),
+                  Container(
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          color: Pallet.surface1),
+                      child: Column(children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("MRP (4 items)",
+                                style: Style.body.copyWith(
+                                  color: Pallet.onBackground
+                                )),
+                            Text("₹ $totalOriginal",
+                                style: Style.body.copyWith(
+                                  color: Pallet.onBackground
+                                )),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Discounts", style: Style.body.copyWith(
+                              color: Pallet.onBackground
+                            )),
+                            Text("-₹ ${totalOriginal - total}",
+                                style: Style.body.copyWith(color: Pallet.primary)),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Delivery Charges",
+                                style: Style.body.copyWith(
+                                  color: Pallet.onBackground
+                                )),
+                            Text("Free Delivery",
+                                style: Style.body.copyWith(color: Pallet.primary)),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Total Amount",
+                                style: Style.body.copyWith(
+                                  color: Pallet.onBackground
+                                )),
+                            Text("₹ ${total}", style: Style.body.copyWith(
+                              color: Pallet.onBackground
+                            )),
+                          ],
+                        )
+                      ])),
+                  SizedBox(height: 15),
+                  Button(
+                      label: "Proceed to Payment",
+                      onPress: () {
+                        Navigator.push(
+                          mainContext,
+                          MaterialPageRoute(
+                              builder: (context) => Payments(
+                                    // total: total,
+                                    // totalOriginal: totalOriginal,
+                                    // items: widget.items,
+                                  )),
+                        ).then((_){
+                          Navigator.pop(context);
+                        });
+                        // Payments
+                      }),
+                  SizedBox(height: 15),
+                ],
+              ),
+            )
           ],
         ),
       ),
@@ -217,3 +367,65 @@ class _CheckoutState extends State<Checkout> {
     );
   }
 }
+
+// class Payments extends StatefulWidget {
+//   const Payments({super.key});
+
+//   @override
+//   State<Payments> createState() => _PaymentsState();
+// }
+
+// class _PaymentsState extends State<Payments> {
+//   final _razorpay = Razorpay();
+
+//   @override
+//   void initState() {
+//     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+//     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+//     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+//     // TODO: implement initState
+//     super.initState();
+//   }
+
+//   void _handlePaymentSuccess(PaymentSuccessResponse response) {
+//     print("ching ${response}");
+//     // Do something when payment succeeds
+//   }
+
+//   void _handlePaymentError(PaymentFailureResponse response) {
+//     print("chang ${response}");
+//     // Do something when payment fails
+//   }
+
+//   void _handleExternalWallet(ExternalWalletResponse response) {
+//     // Do something when an external wallet was selected
+//   }
+//   var options = {
+//     'key': ' rzp_test_mKFJZWtl4Tzu0k',
+//     'amount': 100,
+//     'currency': 'INR',
+//     'name': 'Acme Corp.',
+//     'description': 'Fine T-Shirt',
+//     'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'}
+//   };
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Column(
+//         children: [
+//           GestureDetector(
+//             onTap: () {
+//               _razorpay.open(options);
+//             },
+//             child: Container(
+//               width: 200,
+//               height: 200,
+//               color: Colors.red,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

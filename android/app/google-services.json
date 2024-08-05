@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "605592584551",
+    "project_id": "grokci-6f967",
+    "storage_bucket": "grokci-6f967.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:605592584551:android:985fa778acaea12d9a2fc2",
+        "android_client_info": {
+          "package_name": "com.example.grokci_main"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlP-2nJPQYvJd_mByIgiiDlXjpIwLqIHk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
