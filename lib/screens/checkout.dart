@@ -270,9 +270,9 @@ class _CheckoutState extends State<Checkout> {
                           mainContext,
                           MaterialPageRoute(
                               builder: (context) => Payments(
-                                    // total: total,
-                                    // totalOriginal: totalOriginal,
-                                    // items: widget.items,
+                                    total: total,
+                                    totalOriginal: totalOriginal,
+                                    items: widget.items,
                                   )),
                         ).then((_){
                           Navigator.pop(context);

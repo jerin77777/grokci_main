@@ -54,10 +54,10 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     if (monthlyPicks.isEmpty) {
-      return Center(child: CircularProgressIndicator());
+      return Center(child: CircularProgressIndicator(color: Pallet.primary,));
     }
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
       child: Column(
         children: [
           // GooglePayButton(
@@ -72,14 +72,14 @@ class _DashboardState extends State<Dashboard> {
           //     child: CircularProgressIndicator(),
           //   ),
           // ),
+          const SizedBox(height: 6,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SvgPicture.asset(
-                width: 100,
+                width: 110,
                 "assets/logo.svg",
               ),
-              Expanded(child: SizedBox()),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -89,15 +89,14 @@ class _DashboardState extends State<Dashboard> {
                   // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Address()));
                 },
                 child: Container(
-                  width: 168,
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                  width: 180,
+                  padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: Pallet.tertiaryFill,
                   ),
                   child: Row(
                     children: [
-                      SizedBox(width: 8),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,6 +107,7 @@ class _DashboardState extends State<Dashboard> {
                                 color: Pallet.onBackground
                               ),
                             ),
+                            const SizedBox(height: 4,),
                             Text(
                               'L2, 204, Tiruvant puram',
                               overflow: TextOverflow.ellipsis,
@@ -126,9 +126,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
               ),
-              SizedBox(
-                width: 10,
-              ),
+              
               Icon(Icons.notifications_none)
             ],
           ),
@@ -137,7 +135,6 @@ class _DashboardState extends State<Dashboard> {
           // SizedBox(height: 20),
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
               children: [
                 const SizedBox(height: 20),
                 Text(
@@ -202,7 +199,7 @@ class _DashboardState extends State<Dashboard> {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: Container(
-                                      color: Pallet.onBackground,
+                                      color: Pallet.background,
                                       child: Image.network(
                                         getUrl(Bucket.categories,
                                             category["imageId"]),

@@ -91,10 +91,13 @@ class _ProfileState extends State<Profile> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Hi, $name",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w600)),
+                              style: Style.title3.copyWith(
+                                color: Pallet.onBackground
+                              )),
                           Text("How are you doing ?",
-                              style: TextStyle(fontSize: 14))
+                              style: Style.body.copyWith(
+                                color: Pallet.onSurfaceVariant
+                              ))
                         ],
                       ),
                     ),
@@ -123,7 +126,7 @@ class _ProfileState extends State<Profile> {
                         child: Center(
                           child: Icon(
                             FontAwesomeIcons.check,
-                            color: Pallet.fontInner,
+                            color: Pallet.onPrimary,
                             size: 14,
                           ),
                         ),
@@ -145,7 +148,7 @@ class _ProfileState extends State<Profile> {
                           (edit)
                               ? FontAwesomeIcons.xmark
                               : FontAwesomeIcons.pen,
-                          color: Pallet.fontInner,
+                          color: Pallet.onPrimary,
                           size: 14,
                         ),
                       ),

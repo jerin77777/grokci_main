@@ -38,14 +38,16 @@ class _PaymentsState extends State<Payments> {
                   SizedBox(width: 15),
                   Text(
                     "Payment Methods",
-                    style: Style.h3,
+                    style: Style.footnoteEmphasized.copyWith(
+                      color: Pallet.onBackground
+                    ),
                   ),
                   Expanded(child: SizedBox()),
                   Icon(Icons.notifications_none, size: 22)
                 ],
               ),
             ),
-            Divider(color: Pallet.divider, height: 1),
+            Divider(color: Pallet.outline, height: 1),
             SizedBox(height: 10),
             Expanded(
                 child: ListView(
@@ -58,8 +60,8 @@ class _PaymentsState extends State<Payments> {
                 SizedBox(height: 10),
                 Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Pallet.inner1),
+                      borderRadius: BorderRadius.circular(14),
+                      color: Pallet.surface1),
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   child: Text(
                     "Payment Interface from Razorpay",
@@ -69,8 +71,8 @@ class _PaymentsState extends State<Payments> {
                 SizedBox(height: 10),
                 Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Pallet.inner1),
+                      borderRadius: BorderRadius.circular(14),
+                      color: Pallet.surface1),
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   child: Text(
                     "Payment on Delivery",
@@ -84,49 +86,61 @@ class _PaymentsState extends State<Payments> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("pricing details", style: Style.h3),
+                  Text("Pricing Details", style: Style.footnoteEmphasized.copyWith(
+                    color: Pallet.onBackground
+                  )),
                   SizedBox(height: 10),
                   Container(
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Pallet.inner1),
+                          borderRadius: BorderRadius.circular(14),
+                          color: Pallet.surface1),
                       child: Column(children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("MRP (4 items)",
-                                style: TextStyle(fontSize: 16)),
+                                style: Style.body.copyWith(
+                                  color: Pallet.onBackground
+                                )),
                             Text("₹ ${widget.totalOriginal}",
-                                style: TextStyle(fontSize: 16)),
+                                style: Style.body.copyWith(
+                                  color: Pallet.onBackground
+                                )),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Discounts", style: TextStyle(fontSize: 16)),
+                            Text("Discounts", style: Style.body.copyWith(
+                              color: Pallet.onBackground
+                            )),
                             Text("-₹ ${widget.totalOriginal - widget.total}",
-                                style: TextStyle(
-                                    fontSize: 16, color: Pallet.primary)),
+                                style: Style.body.copyWith(color: Pallet.primary)),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("Delivery Charges",
-                                style: TextStyle(fontSize: 16)),
+                                style: Style.body.copyWith(
+                                  color: Pallet.onBackground
+                                )),
                             Text("Free Delivery",
-                                style: TextStyle(
-                                    fontSize: 16, color: Pallet.primary)),
+                                style: Style.body.copyWith(color: Pallet.primary)),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("Total Amount",
-                                style: TextStyle(fontSize: 16)),
+                                style: Style.body.copyWith(
+                                  color: Pallet.onBackground
+                                )),
                             Text("₹ ${widget.total}",
-                                style: TextStyle(fontSize: 16)),
+                                style: Style.body.copyWith(
+                              color: Pallet.onBackground
+                            )),
                           ],
                         )
                       ])),

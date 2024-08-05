@@ -90,6 +90,7 @@ class _LoginState extends State<Login> {
                   style: Style.title1Emphasized
                         .copyWith(color: Pallet.onBackground),
                   ),
+                  const SizedBox(height: 6,),
                   Text(
                     "Enter your email or phone number",
                     style: Style.subHeadline.copyWith(
@@ -97,23 +98,23 @@ class _LoginState extends State<Login> {
                     ),
                     // style: GoogleFonts.beVietnamPro(fontWeight: FontWeight.w600),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Container(
                     height: 50,
-                    // padding: EdgeInsets.symmetric(horizontal: 15),
+                    padding: EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
-                        // color: Pallet.tertiaryFill,
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(width: 0.5, color: Pallet.outlineVariant)),
+                        border: Border.all(width: 1, color: Pallet.outlineVariant)),
                     child: Row(
                       children: [
-                        SizedBox(width: 10),
-                        Text("+91 "),
+                        Text("+91 ", style: Style.body.copyWith(color: Pallet.onBackground),),
+                        const SizedBox(width: 4),
                         Expanded(
                           child: TextField(
                           // style: TextStyle(color: Pallet.onSurfaceVariant),
                           enabled: checkOtp == null,
                           controller: phoneNumber,
+                          cursorColor: Pallet.onBackground,
                           keyboardType: TextInputType.phone,
                           onChanged: (_) {
                             if (phoneError.isNotEmpty) {
@@ -133,7 +134,7 @@ class _LoginState extends State<Login> {
                     Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(phoneError,
-                          style: Style.footnote.copyWith(
+                          style: Style.caption2.copyWith(
                               color: Pallet.error
                             )),
                     ),
@@ -164,18 +165,24 @@ class _LoginState extends State<Login> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("Enter otp:",
-                          style: Style.footnoteEmphasized.copyWith(
+                          style: Style.subHeadline.copyWith(
                             color: Pallet.onBackground
                           ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         OtpTextField(
                           numberOfFields: 4,
+                          borderRadius: BorderRadius.circular(12),
                           fieldWidth: 60,
-                          fillColor: Pallet.tertiaryFill,
+                          fieldHeight: 60,
+                          borderColor: Colors.transparent,
+                          focusedBorderColor: Pallet.outline,
                           textStyle: Style.body.copyWith(
                             color: Pallet.onBackground,
                           ),
+                          cursorColor: Pallet.onBackground,
+                          filled: true,
+                          fillColor: Pallet.tertiaryFill,
                           showFieldAsBox: true,
                           onSubmit: (String verificationCode) {
                             if (int.parse(verificationCode) == checkOtp!) {
@@ -282,7 +289,7 @@ class _SignUpState extends State<SignUp> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 5),
                         child: Text(nameError,
-                            style: Style.footnote.copyWith(
+                            style: Style.caption2.copyWith(
                               color: Pallet.error
                             )),
                       ),

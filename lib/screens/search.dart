@@ -31,7 +31,7 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -63,7 +63,10 @@ class _SearchState extends State<Search> {
                 SizedBox(width: 10),
                 Expanded(
                   child: TextField(
-                    style: TextStyle(color: Pallet.fontInner),
+                    cursorColor: Pallet.onBackground,
+                    style: Style.body.copyWith(
+                      color: Pallet.onBackground
+                    ),
                     onChanged: (value) async {
                       products = await searchProducts(value);
                       setState(() {});
@@ -72,6 +75,9 @@ class _SearchState extends State<Search> {
                         isDense: true,
                         contentPadding: EdgeInsets.zero,
                         hintText: "Search for Products...",
+                        hintStyle: Style.body.copyWith(
+                          color: Pallet.onSurfaceVariant
+                        ),
                         border: InputBorder.none),
                   ),
                 )

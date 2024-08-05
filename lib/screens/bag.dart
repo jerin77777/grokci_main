@@ -74,7 +74,7 @@ class _BagState extends State<Bag> {
           if (!queried)
             Expanded(
               child: Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(color: Pallet.primary,),
               ),
             )
           else if (bag.isEmpty && saved.isEmpty)
@@ -224,8 +224,9 @@ class _BagState extends State<Bag> {
                             }
                           },
                           child: Icon(Icons.remove, size: 18, color: Pallet.onBackground)),
+                      const SizedBox(width: 10),
                       Text(item["qty"].toString()),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       GestureDetector(
                           onTap: () async {
                             item["qty"] += 1;
@@ -240,27 +241,6 @@ class _BagState extends State<Bag> {
                           },
                           child:
                               Icon(Icons.add, size: 18, color: Pallet.onBackground)),
-                      const SizedBox(width: 10),
-                      Text(item["qty"].toString()),
-                      const SizedBox(width: 10),
-                      GestureDetector(
-                          onTap: () async {
-                            if (item["qty"] > 0) {
-                              item["qty"] -= 1;
-                              if (!saved) {
-                                total -= item["product"]["sellingPrice"];
-                              }
-
-                              setState(() {});
-
-                              updateBag(item["productId"], item["qty"]);
-                            }
-                            if (item["qty"] == 0) {
-                              bag.remove(item);
-                            }
-                          },
-                          child:
-                              Icon(Icons.remove, size: 18, color: Pallet.onBackground))
                     ],
                   ),
                 )

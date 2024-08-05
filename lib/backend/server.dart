@@ -54,12 +54,11 @@ class AppConfig {
   static String twilloNumber = "***";
 }
 
+
 class Bucket {
   static String categories = "***";
   static String products = "***";
 }
-
-
 
 createAccount(
   context,
@@ -109,7 +108,7 @@ Future<int> sendOtp(phoneNumber) async {
   int _otp = 1000 + _random.nextInt(9000);
   await twilioFlutter.sendSMS(
       toNumber: "+91 ${phoneNumber}",
-      messageBody: "your one time otp is: ${_otp}");
+      messageBody: "Your Grokci otp for login is: ${_otp}.\n");
   return _otp;
 }
 

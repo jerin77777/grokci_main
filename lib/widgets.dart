@@ -121,10 +121,11 @@ class _TextBoxState extends State<TextBox> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
+          height: 50,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
           decoration: BoxDecoration(
             color: Pallet.tertiaryFill,
-            borderRadius: BorderRadius.circular(widget.radius ?? 5),
+            borderRadius: BorderRadius.circular(widget.radius ?? 14),
             border: Border.all(
                 color: widget.hasBorder
                     ? Pallet.outlineVariant
@@ -137,6 +138,8 @@ class _TextBoxState extends State<TextBox> {
               obscureText: widget.isPassword,
               focusNode: widget.focus,
               onSubmitted: widget.onEnter,
+              cursorColor: Pallet.onBackground,
+              cursorOpacityAnimates: true,
               onChanged: (value) {
                 hasError = false;
                 if (widget.type == "time" &&
@@ -157,7 +160,9 @@ class _TextBoxState extends State<TextBox> {
                 }
               },
               controller: widget.controller,
-              style: Style.body,
+              style: Style.body.copyWith(
+                color: Pallet.onBackground
+              ),
               maxLines: widget.maxLines ?? 1,
               decoration: InputDecoration(
                 hintText: widget.hintText,
@@ -215,6 +220,7 @@ class _ButtonState extends State<Button> with TickerProviderStateMixin {
             borderRadius: BorderRadius.circular(widget.radius ?? 10),
           ),
           minimumSize: Size(0, 0),
+          elevation: 0,
           padding: EdgeInsets.zero),
       onPressed: () {
         if (widget.active) {
@@ -266,31 +272,24 @@ class Category extends StatelessWidget {
       },
       child: Container(
         width: 70,
+        height: 90,
         decoration: BoxDecoration(
           color: Pallet.secondaryFill,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(50),
-            topRight: Radius.circular(50),
-            bottomLeft: Radius.circular(6),
-            bottomRight: Radius.circular(6),
-          ),
+          borderRadius: const BorderRadius.all(Radius.circular(50)),
         ),
         child: Stack(children: [
           Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: 5,
-                ),
+                
                 Image.network(
                   height: 50,
                   width: 50,
                   getUrl(Bucket.categories, category["imageId"]),
                   fit: BoxFit.contain,
                 ),
-                SizedBox(
-                  height: 35,
-                ),
+                
               ],
             ),
           ),
@@ -302,7 +301,7 @@ class Category extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 2),
               decoration: BoxDecoration(
                 color: Pallet.secondary,
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(6),
                   bottomRight: Radius.circular(6),
                 ),
