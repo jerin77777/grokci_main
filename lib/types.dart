@@ -45,7 +45,7 @@ class Pallet {
   static Color tintColor = Colors.grey;
   static Color shadowColor = const Color.fromRGBO(0, 0, 0, 0.30);
   static Color tertiaryLabel = const Color.fromRGBO(0, 0, 0, 0.30);
-  static Brightness statusBrightness = Brightness.dark;
+  static Brightness systemBrightness = Brightness.dark;
 
   static lightMode() {
     Pallet.primary = const Color(0xFF006D3C);
@@ -71,7 +71,7 @@ class Pallet {
     Pallet.shadowColor = const Color.fromRGBO(0, 0, 0, 0.30);
     Pallet.tertiaryLabel = const Color.fromRGBO(0, 0, 0, 0.30);
 
-    Pallet.statusBrightness = Brightness.dark;
+    Pallet.systemBrightness = Brightness.dark;
 
     themeSink.add("");
   }
@@ -100,7 +100,7 @@ class Pallet {
     Pallet.shadowColor = const Color.fromRGBO(255, 255, 255, 0.30);
     Pallet.tertiaryLabel = const Color.fromRGBO(235, 245, 241, 0.30);
 
-    Pallet.statusBrightness = Brightness.light;
+    Pallet.systemBrightness = Brightness.light;
 
     themeSink.add("");
   }

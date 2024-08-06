@@ -54,7 +54,10 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     if (monthlyPicks.isEmpty) {
-      return Center(child: CircularProgressIndicator(color: Pallet.primary,));
+      return Center(
+          child: CircularProgressIndicator(
+        color: Pallet.primary,
+      ));
     }
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
@@ -72,7 +75,9 @@ class _DashboardState extends State<Dashboard> {
           //     child: CircularProgressIndicator(),
           //   ),
           // ),
-          const SizedBox(height: 6,),
+          const SizedBox(
+            height: 6,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -90,7 +95,8 @@ class _DashboardState extends State<Dashboard> {
                 },
                 child: Container(
                   width: 180,
-                  padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: Pallet.tertiaryFill,
@@ -103,17 +109,17 @@ class _DashboardState extends State<Dashboard> {
                           children: [
                             Text(
                               'Delivery Address',
-                              style: Style.caption2Emphasized.copyWith(
-                                color: Pallet.onBackground
-                              ),
+                              style: Style.caption2Emphasized
+                                  .copyWith(color: Pallet.onBackground),
                             ),
-                            const SizedBox(height: 4,),
+                            const SizedBox(
+                              height: 4,
+                            ),
                             Text(
                               'L2, 204, Tiruvant puram',
                               overflow: TextOverflow.ellipsis,
-                              style: Style.caption1.copyWith(
-                                color: Pallet.onBackground
-                              ),
+                              style: Style.caption1
+                                  .copyWith(color: Pallet.onBackground),
                             ),
                           ],
                         ),
@@ -126,7 +132,6 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
               ),
-              
               Icon(Icons.notifications_none)
             ],
           ),
@@ -139,25 +144,25 @@ class _DashboardState extends State<Dashboard> {
                 const SizedBox(height: 20),
                 Text(
                   "Shop by Category",
-                  style: Style.headline.copyWith(
-                    color: Pallet.onBackground
-                  ),
+                  style: Style.headline.copyWith(color: Pallet.onBackground),
                 ),
                 const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     for (var category in categories)
-                      Category(category: category),
+                      Container(
+                          margin: const EdgeInsets.only(right: 16),
+                          child: Category(category: category)),
                   ],
                 ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Monthly Picks", style: Style.headline.copyWith(
-                      color: Pallet.onBackground
-                    )),
+                    Text("Monthly Picks",
+                        style: Style.headline
+                            .copyWith(color: Pallet.onBackground)),
                     Button(
                       radius: 20,
                       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
@@ -172,15 +177,17 @@ class _DashboardState extends State<Dashboard> {
                   ],
                 ),
                 SizedBox(height: 10),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Pallet.tertiaryFill,
-                      borderRadius: BorderRadius.circular(14)),
+
+                Material(
+                    color: Pallet.tertiaryFill,
+                    borderRadius: BorderRadius.circular(14),
+                    clipBehavior: Clip.antiAlias,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       for (var category in monthlyPicks)
                         InkWell(
+                          splashColor: Pallet.tertiaryFill,
                           onTap: () {
                             Navigator.push(
                               mainContext,
@@ -192,22 +199,25 @@ class _DashboardState extends State<Dashboard> {
                             );
                           },
                           child: Padding(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
+                                  Material(
+                                    borderRadius: BorderRadius.circular(6),
+                                    color: Pallet.background,
+                                    shadowColor: Pallet.shadowColor,
+                                    elevation: 3,
                                     child: Container(
-                                      color: Pallet.background,
+                                      padding: const EdgeInsets.all(6),
                                       child: Image.network(
                                         getUrl(Bucket.categories,
                                             category["imageId"]),
-                                        width: 65,
-                                        height: 65,
+                                        width: 52,
+                                        height: 52,
+                                        fit: BoxFit.contain,
                                       ),
-                                    ),
-                                  ),
+                                    )),
                                   const SizedBox(width: 10),
                                   Expanded(
                                     child: Column(
@@ -216,16 +226,15 @@ class _DashboardState extends State<Dashboard> {
                                       children: [
                                         Text(
                                           category["categoryName"],
-                                          style: Style.subHeadlineEmphasized.copyWith(
-                                            color: Pallet.onBackground
-                                          ),
+                                          style: Style.subHeadlineEmphasized
+                                              .copyWith(
+                                                  color: Pallet.onBackground),
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
                                           "Bulk Discounts",
-                                          style: Style.caption1.copyWith(
-                                            color:Pallet.primary
-                                          ),
+                                          style: Style.caption1
+                                              .copyWith(color: Pallet.primary),
                                         )
                                       ],
                                     ),
@@ -244,4 +253,3 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 }
-

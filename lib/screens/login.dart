@@ -172,11 +172,13 @@ class _LoginState extends State<Login> {
                         const SizedBox(height: 20),
                         OtpTextField(
                           numberOfFields: 4,
-                          borderRadius: BorderRadius.circular(12),
-                          fieldWidth: 60,
-                          fieldHeight: 60,
-                          borderColor: Colors.transparent,
+                          borderRadius: BorderRadius.circular(14),
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          fieldWidth: 50,
+                          fieldHeight: 50,
+                          borderColor: Pallet.outlineVariant,
                           focusedBorderColor: Pallet.outline,
+                          borderWidth: 1,
                           textStyle: Style.body.copyWith(
                             color: Pallet.onBackground,
                           ),

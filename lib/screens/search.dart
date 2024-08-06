@@ -84,9 +84,9 @@ class _SearchState extends State<Search> {
               ],
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 16),
           Text("Categories", style: Style.footnoteEmphasized),
-          SizedBox(height: 10),
+          const SizedBox(height: 8),
           if (products.isNotEmpty)
             Container(
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Pallet.surface1),
@@ -189,12 +189,12 @@ class _SearchState extends State<Search> {
                         );
                       },
                       child: Container(
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Pallet.surface1),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(14), color: Pallet.surface1),
                         padding: const EdgeInsets.all(8),
                         child: Row(
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(6),
                               child: Container(
                                 color: Pallet.background,
                                 child: Image.network(

@@ -108,7 +108,7 @@ Future<int> sendOtp(phoneNumber) async {
   int _otp = 1000 + _random.nextInt(9000);
   await twilioFlutter.sendSMS(
       toNumber: "+91 ${phoneNumber}",
-      messageBody: "Your Grokci otp for login is: ${_otp}.\n");
+      messageBody: "<#> ${_otp} is your One Time Usable (OTP) code for logging in to your Grokci account.\n\n #GreenerChoice");
   return _otp;
 }
 
