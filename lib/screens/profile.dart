@@ -9,8 +9,10 @@ import 'package:grokci_main/screens/security.dart';
 import 'package:grokci_main/types.dart';
 import 'package:grokci_main/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'address.dart';
+import 'orders.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -64,7 +66,9 @@ class _ProfileState extends State<Profile> {
               SizedBox(height: 10),
               Text(
                 "Account",
-                style: Style.h1,
+                style: Style.title1Emphasized.copyWith(
+                  color: Pallet.onBackground,
+                ),
               ),
               SizedBox(height: 30),
               Row(
@@ -73,7 +77,7 @@ class _ProfileState extends State<Profile> {
                     size: 60,
                     fontSize: 20,
                     color: Colors.red,
-                    name: "j",
+                    name: "${name[0]}",
                   ),
                   SizedBox(width: 10),
                   if (edit)
@@ -89,10 +93,11 @@ class _ProfileState extends State<Profile> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Hi, $name",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w600)),
+                              style: Style.title3
+                                  .copyWith(color: Pallet.onBackground)),
                           Text("How are you doing ?",
-                              style: TextStyle(fontSize: 14))
+                              style: Style.body
+                                  .copyWith(color: Pallet.onSurfaceVariant))
                         ],
                       ),
                     ),
@@ -121,7 +126,7 @@ class _ProfileState extends State<Profile> {
                         child: Center(
                           child: Icon(
                             FontAwesomeIcons.check,
-                            color: Pallet.fontInner,
+                            color: Pallet.onPrimary,
                             size: 14,
                           ),
                         ),
@@ -143,7 +148,7 @@ class _ProfileState extends State<Profile> {
                           (edit)
                               ? FontAwesomeIcons.xmark
                               : FontAwesomeIcons.pen,
-                          color: Pallet.fontInner,
+                          color: Pallet.onPrimary,
                           size: 14,
                         ),
                       ),
@@ -159,35 +164,11 @@ class _ProfileState extends State<Profile> {
                     SizedBox(height: 25),
                     Text(
                       "Primary options",
-                      style: Style.h4,
+                      style: Style.footnoteEmphasized
+                          .copyWith(color: Pallet.onBackground),
                     ),
                     SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 25,
-                            child: Center(
-                              child: FaIcon(
-                                FontAwesomeIcons.box,
-                                color: Pallet.primary,
-                                size: 22,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Expanded(
-                              child: Text(
-                            "My Orders",
-                            style:
-                                TextStyle(color: Pallet.primary, fontSize: 16),
-                          )),
-                          Icon(Icons.keyboard_arrow_right_outlined,
-                              color: Pallet.primary, size: 20)
-                        ],
-                      ),
-                    ),
+
                     // Padding(
                     //   padding: const EdgeInsets.symmetric(vertical: 10),
                     //   child: Row(
@@ -212,254 +193,160 @@ class _ProfileState extends State<Profile> {
                     //     ],
                     //   ),
                     // ),
-                    GestureDetector(
+                    tile(
+                      name: "My Orders",
+                      icon: FontAwesomeIcons.box,
+                      onTap: () {
+                        Navigator.push(
+                          mainContext,
+                          MaterialPageRoute(builder: (context) => Orders()),
+                        );
+                      },
+                    ),
+                    tile(
+                      name: "Manage Addresses",
+                      icon: FontAwesomeIcons.locationDot,
                       onTap: () {
                         Navigator.push(
                           mainContext,
                           MaterialPageRoute(builder: (context) => Address()),
                         );
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 25,
-                              child: Center(
-                                child: FaIcon(
-                                  FontAwesomeIcons.locationDot,
-                                  color: Pallet.primary,
-                                  size: 22,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                                child: Text(
-                              "Manage Addresses",
-                              style: TextStyle(
-                                  color: Pallet.primary, fontSize: 16),
-                            )),
-                            Icon(Icons.keyboard_arrow_right_outlined,
-                                color: Pallet.primary, size: 20)
-                          ],
-                        ),
-                      ),
                     ),
-                    GestureDetector(
+                    tile(
+                      name: "Support",
+                      icon: FontAwesomeIcons.headset,
                       onTap: () {
                         Navigator.push(
                           mainContext,
                           MaterialPageRoute(builder: (context) => Support()),
                         );
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 25,
-                              child: Center(
-                                child: FaIcon(
-                                  FontAwesomeIcons.headset,
-                                  color: Pallet.primary,
-                                  size: 22,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                                child: Text(
-                              "Support",
-                              style: TextStyle(
-                                  color: Pallet.primary, fontSize: 16),
-                            )),
-                            Icon(Icons.keyboard_arrow_right_outlined,
-                                color: Pallet.primary, size: 20)
-                          ],
-                        ),
-                      ),
                     ),
-                    GestureDetector(
+                    tile(
+                      name: "Feed Back",
+                      icon: FontAwesomeIcons.solidMessage,
                       onTap: () {
                         Navigator.push(
                           mainContext,
                           MaterialPageRoute(builder: (context) => Support()),
                         );
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 25,
-                              child: Center(
-                                child: FaIcon(
-                                  FontAwesomeIcons.solidMessage,
-                                  color: Pallet.primary,
-                                  size: 22,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                                child: Text(
-                              "Feed Back",
-                              style: TextStyle(
-                                  color: Pallet.primary, fontSize: 16),
-                            )),
-                            Icon(Icons.keyboard_arrow_right_outlined,
-                                color: Pallet.primary, size: 20)
-                          ],
-                        ),
-                      ),
                     ),
-
-                    GestureDetector(
+                    tile(
+                      name: "User Preferences",
+                      icon: FontAwesomeIcons.userGear,
                       onTap: () {
                         Navigator.push(
                           mainContext,
                           MaterialPageRoute(builder: (context) => Security()),
                         );
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 25,
-                              child: Center(
-                                child: FaIcon(
-                                  FontAwesomeIcons.userGear,
-                                  color: Pallet.primary,
-                                  size: 22,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                                child: Text(
-                              "User Preferences",
-                              style: TextStyle(
-                                  color: Pallet.primary, fontSize: 16),
-                            )),
-                            Icon(Icons.keyboard_arrow_right_outlined,
-                                color: Pallet.primary, size: 20)
-                          ],
-                        ),
-                      ),
+                    ),
+                    tile(
+                      name: "Privacy Policy",
+                      icon: FontAwesomeIcons.lock,
+                      onTap: () async {
+                        final Uri url = Uri.parse(
+                            'https://grokci.com/policies/privacy-policy');
+                        if (!await launchUrl(url)) {
+                          throw Exception('Could not launch url');
+                        }
+                      },
+                    ),
+                    tile(
+                      name: "Terms of Services",
+                      icon: FontAwesomeIcons.userLock,
+                      onTap: () async {
+                        final Uri url = Uri.parse(
+                            'https://grokci.com/policies/terms-of-service');
+                        if (!await launchUrl(url)) {
+                          throw Exception('Could not launch url');
+                        }
+                      },
                     ),
 
-                    GestureDetector(
+                    tile(
+                      name: "Logout",
+                      icon: FontAwesomeIcons.rightFromBracket,
                       onTap: () {
-                        sharedPreferences!.remove("phone");
-                        Navigator.pushReplacement(
-                          mainContext,
-                          MaterialPageRoute(builder: (context) => Login()),
-                        );
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  backgroundColor: Pallet.background,
+                                  title: Text("Do you Really want to log out?",
+                                      style: Style.title3.copyWith(
+                                          color: Pallet.primary)),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          sharedPreferences!.remove("phone");
+                                          Navigator.pushReplacement(
+                                            mainContext,
+                                            MaterialPageRoute(
+                                                builder: (context) => Login()),
+                                          );
+                                        },
+                                        child: Text("Yes",
+                                            style: Style.body.copyWith(
+                                              color: Pallet.primary,
+                                            ))),
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("Cancel",
+                                            style: Style.body.copyWith(
+                                              color: Pallet.error,
+                                            ))),
+                                  ],
+                                ));
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 25,
-                              child: Center(
-                                child: FaIcon(
-                                  FontAwesomeIcons.rightFromBracket,
-                                  color: Pallet.primary,
-                                  size: 22,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                                child: Text(
-                              "Logout",
-                              style: TextStyle(
-                                  color: Pallet.primary, fontSize: 16),
-                            )),
-                            Icon(Icons.keyboard_arrow_right_outlined,
-                                color: Pallet.primary, size: 20)
-                          ],
-                        ),
-                      ),
                     ),
                     SizedBox(height: 10),
-
-                    // Text(
-                    //   "Extra Features",
-                    //   style: Style.h3,
-                    // ),
-                    // SizedBox(height: 10),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(vertical: 5),
-                    //   child: Row(
-                    //     children: [
-                    //       SizedBox(
-                    //         width: 25,
-                    //         child: Center(
-                    //           child: FaIcon(
-                    //             FontAwesomeIcons.solidBell,
-                    //             color: Pallet.primary,
-                    //             size: 22,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       SizedBox(width: 10),
-                    //       Expanded(
-                    //           child: Text(
-                    //         "Login & Security",
-                    //         style: TextStyle(color: Pallet.primary, fontSize: 16),
-                    //       )),
-                    //       Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
-                    //     ],
-                    //   ),
-                    // ),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(vertical: 5),
-                    //   child: Row(
-                    //     children: [
-                    //       FaIcon(
-                    //         FontAwesomeIcons.solidBell,
-                    //         color: Pallet.primary,
-                    //         size: 22,
-                    //       ),
-                    //       SizedBox(width: 10),
-                    //       Expanded(
-                    //           child: Text(
-                    //         "My Reviews",
-                    //         style: TextStyle(color: Pallet.primary, fontSize: 16),
-                    //       )),
-                    //       Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
-                    //     ],
-                    //   ),
-                    // ),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(vertical: 5),
-                    //   child: Row(
-                    //     children: [
-                    //       FaIcon(
-                    //         FontAwesomeIcons.solidCircleQuestion,
-                    //         color: Pallet.primary,
-                    //         size: 22,
-                    //       ),
-                    //       SizedBox(width: 10),
-                    //       Expanded(
-                    //           child: Text(
-                    //         "Frequently Asked Questions",
-                    //         style: TextStyle(color: Pallet.primary, fontSize: 16),
-                    //       )),
-                    //       Icon(Icons.keyboard_arrow_right_outlined, color: Pallet.primary, size: 20)
-                    //     ],
-                    //   ),
-                    // ),
                   ],
                 ),
               )
             ],
           ))
         ],
+      ),
+    );
+  }
+
+  tile(
+      {required String name, required IconData icon, required Function onTap}) {
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        onTap: () => onTap(),
+        child: Container(
+          height: 44,
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 25,
+                child: Center(
+                  child: FaIcon(
+                    icon,
+                    color: Pallet.primary,
+                    size: 22,
+                  ),
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                  child: Text(
+                name,
+                style: Style.subHeadline.copyWith(color: Pallet.primary),
+              )),
+              Icon(FontAwesomeIcons.chevronRight,
+                  color: Pallet.primary, size: 16)
+            ],
+          ),
+        ),
       ),
     );
   }

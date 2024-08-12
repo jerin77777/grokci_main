@@ -44,7 +44,8 @@ Future<void> main() async {
           .setProject(AppConfig.project) // Your project ID
           .setSelfSigned() // Use only on dev mode with a self-signed SSL cert
       ;
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const MyApp());
 }
 
@@ -53,35 +54,57 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Pallet.background,
+        systemNavigationBarColor: Pallet.background,
+        systemNavigationBarIconBrightness: Pallet.systemBrightness,
+        statusBarIconBrightness: Pallet.systemBrightness,
+        statusBarBrightness: Brightness.light));
     return StreamBuilder<Object>(
-        stream: themeStream,
-        builder: (context, snapshot) {
-          return MaterialApp(
-            theme: ThemeData(
-              bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.transparent),
-              inputDecorationTheme: InputDecorationTheme(
-                
-                hintStyle:
-                    TextStyle(color: Pallet.font1), // Placeholder text color
+      stream:
+          themeStream, // Ensure this is properly initialized and emitting ThemeData objects
+
+      builder: (context, snapshot) {
+        // Check if snapshot has data and is not null
+        
+        return MaterialApp(
+          theme: ThemeData(
+            bottomSheetTheme:
+                BottomSheetThemeData(backgroundColor: Colors.transparent),
+            appBarTheme: AppBarTheme(
+              systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: Pallet.background,
+                systemNavigationBarColor: Pallet.background,
+                systemStatusBarContrastEnforced: true,
+                systemNavigationBarContrastEnforced: true,
               ),
-              textTheme: GoogleFonts.beVietnamProTextTheme(TextTheme(
-                displayLarge: GoogleFonts.beVietnamPro(color: Pallet.font1),
-                displayMedium: GoogleFonts.beVietnamPro(color: Pallet.font1),
-                bodyMedium: GoogleFonts.beVietnamPro(color: Pallet.font1),
-                titleMedium: GoogleFonts.beVietnamPro(color: Pallet.font1),
-              )),
-              iconTheme: IconThemeData(color: Pallet.font1),
-              primarySwatch: Colors.blue,
             ),
-            debugShowCheckedModeBanner: false,
-            title: 'Flutter Demo',
-            home: (sharedPreferences!.get("phone") == null)
-                ? Login()
-                : sharedPreferences!.get("bio_metrics") == true
-                    ? Biometric()
-                    : Home(),
-          );
-        });
+            inputDecorationTheme: InputDecorationTheme(
+              hintStyle: TextStyle(
+                  color: Pallet.onSurfaceVariant), // Placeholder text color
+            ),
+            textTheme: GoogleFonts.beVietnamProTextTheme(TextTheme(
+              displayLarge:
+                  GoogleFonts.beVietnamPro(color: Pallet.onBackground),
+              displayMedium:
+                  GoogleFonts.beVietnamPro(color: Pallet.onBackground),
+              bodyMedium: GoogleFonts.beVietnamPro(color: Pallet.onBackground),
+              titleMedium: GoogleFonts.beVietnamPro(color: Pallet.onBackground),
+            )),
+            iconTheme: IconThemeData(color: Pallet.onBackground),
+            primarySwatch: Colors.blue,
+          ),
+          debugShowCheckedModeBanner: false,
+          title: 'Grokci',
+          home: (sharedPreferences?.getString("phone") == null)
+              ? Login()
+              : sharedPreferences?.getBool("bio_metrics") == true
+                  ? Biometric()
+                  : Home(),
+        );
+      },
+    );
+
   }
 }
 
@@ -206,7 +229,7 @@ class _BiometricState extends State<Biometric> {
             children: [
               Text(
                 "Biometric Login",
-                style: Style.h1,
+                style: Style.title1.copyWith(color: Pallet.onBackground),
               ),
               Expanded(
                 child: Stack(
@@ -320,7 +343,7 @@ class _HomeState extends State<Home> {
                 ],
                 currentIndex: navIdx,
                 selectedItemColor: Pallet.primary,
-                unselectedItemColor: Pallet.font3,
+                unselectedItemColor: Pallet.onSurfaceVariant,
                 onTap: (index) {
                   navIdx = index;
                   if (index == 0) {

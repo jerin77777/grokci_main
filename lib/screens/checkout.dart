@@ -6,7 +6,7 @@ import 'package:grokci_main/screens/address.dart';
 import 'package:grokci_main/screens/payments.dart';
 import 'package:grokci_main/types.dart';
 import 'package:grokci_main/widgets.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
+// import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class Checkout extends StatefulWidget {
   const Checkout({super.key, required this.items});
@@ -22,6 +22,8 @@ class _CheckoutState extends State<Checkout> {
   bool queried = false;
   double total = 0;
   double totalOriginal = 0;
+  int qty = 0;
+
   @override
   void initState() {
     getData();
@@ -34,6 +36,7 @@ class _CheckoutState extends State<Checkout> {
     for (var item in widget.items) {
       totalOriginal += item["product"]["originalPrice"] * item["qty"];
       total += item["product"]["sellingPrice"] * item["qty"];
+      qty += item["qty"] as int;
     }
 
     currentAddress = await getAddress();
@@ -68,30 +71,31 @@ class _CheckoutState extends State<Checkout> {
                   SizedBox(width: 15),
                   Text(
                     "Checkout",
-                    style: Style.h3,
+                    style: Style.headline.copyWith(color: Pallet.onBackground),
                   ),
                   Expanded(child: SizedBox()),
                   Icon(Icons.notifications_none, size: 22),
                 ],
               ),
             ),
-            Divider(color: Pallet.divider),
-            SizedBox(height: 10),
+            Divider(color: Pallet.outline),
+            const SizedBox(height: 10),
             Expanded(
                 child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               children: [
                 Text(
                   "Delivery Information",
-                  style: Style.h3,
+                  style: Style.footnoteEmphasized
+                      .copyWith(color: Pallet.onBackground),
                 ),
                 SizedBox(height: 10),
                 if (currentAddress != null)
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                     decoration: BoxDecoration(
-                        color: Pallet.inner1,
-                        borderRadius: BorderRadius.circular(10)),
+                        color: Pallet.surface1,
+                        borderRadius: BorderRadius.circular(14)),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -103,16 +107,15 @@ class _CheckoutState extends State<Checkout> {
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
-                                  currentAddress?["name"],
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600),
+                                  "Deliver To:",
+                                  style: Style.headline
+                                      .copyWith(color: Pallet.onBackground),
                                 ),
                               ),
                               Button(
                                   radius: 30,
                                   padding: EdgeInsets.symmetric(vertical: 5),
-                                  color: Pallet.inner2,
+                                  color: Pallet.tertiaryFill,
                                   fontColor: Pallet.primary,
                                   label: "Change",
                                   onPress: () {
@@ -126,16 +129,23 @@ class _CheckoutState extends State<Checkout> {
                             ],
                           ),
                           Text(
+                            currentAddress?["name"],
+                            style: Style.callout
+                                .copyWith(color: Pallet.onBackground),
+                          ),
+                          Text(
                             name,
                             style: TextStyle(fontSize: 16),
                           ),
-                          Text(currentAddress?["address"]),
+                          Text(currentAddress?["address"],
+                              style: Style.footnote
+                                  .copyWith(color: Pallet.onBackground)),
                           SizedBox(height: 5)
                         ]),
                   )
                 else if (queried)
                   Button(
-                      color: Pallet.inner1,
+                      color: Pallet.tertiaryFill,
                       fontColor: Pallet.primary,
                       label: "Add New Address",
                       onPress: () {
@@ -151,8 +161,8 @@ class _CheckoutState extends State<Checkout> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Pallet.inner1,
+                    borderRadius: BorderRadius.circular(14),
+                    color: Pallet.surface1,
                   ),
                   child: Row(
                     children: [
@@ -160,22 +170,25 @@ class _CheckoutState extends State<Checkout> {
                         Icons.delivery_dining,
                         color: Pallet.primary,
                       ),
-                      SizedBox(width: 15),
+                      const SizedBox(width: 8),
                       Text(
                         "Delivery within a hour",
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                        style:
+                            Style.headline.copyWith(color: Pallet.onBackground),
                       )
                     ],
                   ),
                 ),
-                SizedBox(height: 10),
-                Text("Items", style: Style.h3),
-                SizedBox(height: 10),
+                const SizedBox(height: 16),
+                Text("Items",
+                    style: Style.footnoteEmphasized
+                        .copyWith(color: Pallet.onBackground)),
+                const SizedBox(height: 8),
                 Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Pallet.inner1),
+                        borderRadius: BorderRadius.circular(14),
+                        color: Pallet.surface1),
                     child: Column(children: [
                       for (var item in widget.items) product(item)
                     ])),
@@ -187,48 +200,58 @@ class _CheckoutState extends State<Checkout> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("pricing details", style: Style.h3),
+                  Text("Pricing Details",
+                      style: Style.footnoteEmphasized
+                          .copyWith(color: Pallet.onBackground)),
                   SizedBox(height: 10),
                   Container(
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Pallet.inner1),
+                          borderRadius: BorderRadius.circular(14),
+                          color: Pallet.surface1),
                       child: Column(children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("MRP (4 items)",
-                                style: TextStyle(fontSize: 16)),
-                            Text("₹ ${totalOriginal}",
-                                style: TextStyle(fontSize: 16)),
+                                style: Style.body
+                                    .copyWith(color: Pallet.onBackground)),
+                            Text("₹ $totalOriginal",
+                                style: Style.body
+                                    .copyWith(color: Pallet.onBackground)),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Discounts", style: TextStyle(fontSize: 16)),
+                            Text("Discounts",
+                                style: Style.body
+                                    .copyWith(color: Pallet.onBackground)),
                             Text("-₹ ${totalOriginal - total}",
-                                style: TextStyle(
-                                    fontSize: 16, color: Pallet.primary)),
+                                style:
+                                    Style.body.copyWith(color: Pallet.primary)),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("Delivery Charges",
-                                style: TextStyle(fontSize: 16)),
+                                style: Style.body
+                                    .copyWith(color: Pallet.onBackground)),
                             Text("Free Delivery",
-                                style: TextStyle(
-                                    fontSize: 16, color: Pallet.primary)),
+                                style:
+                                    Style.body.copyWith(color: Pallet.primary)),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("Total Amount",
-                                style: TextStyle(fontSize: 16)),
-                            Text("₹ ${total}", style: TextStyle(fontSize: 16)),
+                                style: Style.body
+                                    .copyWith(color: Pallet.onBackground)),
+                            Text("₹ ${total}",
+                                style: Style.body
+                                    .copyWith(color: Pallet.onBackground)),
                           ],
                         )
                       ])),
@@ -240,11 +263,12 @@ class _CheckoutState extends State<Checkout> {
                           mainContext,
                           MaterialPageRoute(
                               builder: (context) => Payments(
+                                    qty: qty,
                                     total: total,
                                     totalOriginal: totalOriginal,
                                     items: widget.items,
                                   )),
-                        ).then((_){
+                        ).then((_) {
                           Navigator.pop(context);
                         });
                         // Payments
@@ -264,71 +288,55 @@ class _CheckoutState extends State<Checkout> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ClipRRect(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(11),
             child: Image.network(
               getUrl(Bucket.products, item["product"]["images"][0]),
-              width: 80,
-              height: 80,
+              width: 65,
+              height: 65,
             )),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Expanded(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               item["product"]["name"],
-              style: TextStyle(fontSize: 16),
+              style: Style.body.copyWith(color: Pallet.onBackground),
             ),
             Text(
               item["product"]["about"].toString(),
               maxLines: 1,
-              style: Style.ellipsisText,
+              style: Style.ellipsisText.merge(Style.subHeadline).copyWith(
+                    color: Pallet.onSurfaceVariant,
+                  ),
             ),
-            SizedBox(
-              height: 5,
+            const SizedBox(
+              height: 7,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   item["product"]["originalPrice"].toString(),
-                  style: TextStyle(
-                      color: Pallet.font3,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+                  style: Style.title3Emphasized.copyWith(
+                      color: Pallet.onSurfaceVariant,
                       decoration: TextDecoration.lineThrough),
                 ),
                 Text(
                   "₹ ${item["product"]["sellingPrice"].toString()}",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  style: Style.title2Emphasized
+                      .copyWith(color: Pallet.onBackground),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Pallet.inner2,
-                      borderRadius: BorderRadius.circular(5)),
-                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                          onTap: () async {
-                            item["qty"]++;
-                            setState(() {});
-                          },
-                          child:
-                              Icon(Icons.add, size: 18, color: Pallet.font2)),
-                      SizedBox(width: 10),
-                      Text(item["qty"].toString()),
-                      SizedBox(width: 10),
-                      GestureDetector(
-                          onTap: () async {
-                            item["qty"]--;
-                            setState(() {});
-                          },
-                          child:
-                              Icon(Icons.remove, size: 18, color: Pallet.font2))
-                    ],
-                  ),
-                )
+                StepperWidget(
+                    quantity: item["qty"],
+                    incrementFunc: () async {
+                      item["qty"]--;
+                      setState(() {});
+                    },
+                    decrementFunc: () async {
+                      item["qty"]++;
+                      setState(() {});
+                    }),
               ],
             ),
           ],

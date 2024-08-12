@@ -32,33 +32,6 @@ SharedPreferences? sharedPreferences;
 // order states delivering, delivered, payed
 // all database details used from here
 
-class AppConfig {
-  static String endpoint = "***";
-  static String project = "***";
-  static String mapKey = "***";
-  static String database = "***";
-  static String orders = "***";
-  static String products = "***";
-  static String orderProductMap = "***";
-  static String drivers = "***";
-  static String users = "***";
-  static String categories = "***";
-  static String warehouses = "***";
-  static String promotions = "***";
-  static String monthlyPicks = "***";
-  static String cart = "***";
-  static String address = "***";
-
-  static String twilloSid = "***";
-  static String twilloToken = "***";
-  static String twilloNumber = "***";
-}
-
-class Bucket {
-  static String categories = "***";
-  static String products = "***";
-}
-
 
 
 createAccount(
@@ -109,7 +82,8 @@ Future<int> sendOtp(phoneNumber) async {
   int _otp = 1000 + _random.nextInt(9000);
   await twilioFlutter.sendSMS(
       toNumber: "+91 ${phoneNumber}",
-      messageBody: "your one time otp is: ${_otp}");
+      messageBody:
+          "<#> ${_otp} is your One Time Usable (OTP) code for logging in to your Grokci account.\n\n #GreenerChoice");
   return _otp;
 }
 
@@ -171,7 +145,6 @@ Future<List<Map>> searchProducts(String search) async {
         Query.search("name", search),
       ]);
   result = getResult(temp.documents);
-  print(result);
   return result;
 }
 
@@ -212,10 +185,15 @@ getCartProductIds() async {
 }
 
 getQty(String productId) async {
+  String userId = sharedPreferences!.get("phone").toString();
+
   DocumentList products = await db.listDocuments(
       databaseId: AppConfig.database,
       collectionId: AppConfig.cart,
-      queries: [Query.equal("productId", productId)]);
+      queries: [
+        Query.equal("userId", userId),
+        Query.equal("productId", productId)
+      ]);
 
   return getResult(products.documents)[0]["qty"];
 }
@@ -346,6 +324,36 @@ saveForLater(String productId, bool saveForLater) async {
       collectionId: AppConfig.cart,
       documentId: product.documents.first.$id,
       data: {"saveForLater": saveForLater});
+}
+
+
+getOrders() async {
+  String userId = sharedPreferences!.get("phone").toString();
+  List<Map> result = [];
+
+  DocumentList temp = await db.listDocuments(
+      databaseId: AppConfig.database,
+      collectionId: AppConfig.orders,
+      queries: [
+        Query.equal("userId", userId),
+      ]);
+
+  result = getResult(temp.documents);
+  return result;
+}
+
+getOrderProducts(String orderId) async {
+  List<Map> result = [];
+
+  DocumentList temp = await db.listDocuments(
+      databaseId: AppConfig.database,
+      collectionId: AppConfig.orderProductMap,
+      queries: [
+        Query.equal("orderId", orderId),
+      ]);
+
+  result = getResult(temp.documents);
+  return result;
 }
 
 List<Map> getResult(List<Document> documents) {

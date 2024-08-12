@@ -203,7 +203,7 @@ class _AddAddressState extends State<AddAddress> {
               duration: Duration(milliseconds: 300),
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               width: width,
-              height: (addAddress) ? 450 : 0,
+              height: (addAddress) ? 650 : 0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(20),
@@ -228,10 +228,8 @@ class _AddAddressState extends State<AddAddress> {
                       SizedBox(height: 10),
                       Text(
                         "Address name *",
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: Pallet.font1),
+                        style: Style.footnoteEmphasized
+                            .copyWith(color: Pallet.onBackground),
                       ),
                       SizedBox(height: 8),
                       TextBox(
@@ -242,14 +240,12 @@ class _AddAddressState extends State<AddAddress> {
                         },
                       ),
                       Text(nameError,
-                          style: TextStyle(color: Colors.red, fontSize: 12)),
+                          style: Style.caption2.copyWith(color: Pallet.error)),
                       SizedBox(height: 10),
                       Text(
                         "Full name *",
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: Pallet.font1),
+                        style: Style.footnoteEmphasized
+                            .copyWith(color: Pallet.onBackground),
                       ),
                       SizedBox(height: 8),
                       TextBox(
@@ -260,14 +256,12 @@ class _AddAddressState extends State<AddAddress> {
                         },
                       ),
                       Text(nameError,
-                          style: TextStyle(color: Colors.red, fontSize: 12)),
+                          style: Style.caption2.copyWith(color: Pallet.error)),
                       SizedBox(height: 10),
                       Text(
                         "House No. / Block. Building name *",
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: Pallet.font1),
+                        style: Style.footnoteEmphasized
+                            .copyWith(color: Pallet.onBackground),
                       ),
                       SizedBox(height: 8),
                       TextBox(
@@ -278,14 +272,12 @@ class _AddAddressState extends State<AddAddress> {
                         },
                       ),
                       Text(houseNoError,
-                          style: TextStyle(color: Colors.red, fontSize: 12)),
+                          style: Style.caption2.copyWith(color: Pallet.error)),
                       SizedBox(height: 10),
                       Text(
                         "Road Name. Area Locality *",
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: Pallet.font1),
+                        style: Style.footnoteEmphasized
+                            .copyWith(color: Pallet.onBackground),
                       ),
                       SizedBox(height: 8),
                       TextBox(
@@ -296,7 +288,7 @@ class _AddAddressState extends State<AddAddress> {
                         },
                       ),
                       Text(streetError,
-                          style: TextStyle(color: Colors.red, fontSize: 12)),
+                          style: Style.caption2.copyWith(color: Pallet.error)),
                       SizedBox(height: 10),
                       Row(
                         children: [
@@ -306,18 +298,16 @@ class _AddAddressState extends State<AddAddress> {
                               children: [
                                 Text(
                                   "City *",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      color: Pallet.font1),
+                                  style: Style.footnoteEmphasized
+                                      .copyWith(color: Pallet.onBackground),
                                 ),
                                 SizedBox(height: 8),
                                 TextBox(
                                   controller: city,
                                 ),
                                 Text(cityError,
-                                    style: TextStyle(
-                                        color: Colors.red, fontSize: 12)),
+                                    style: Style.caption2
+                                        .copyWith(color: Pallet.error)),
                               ],
                             ),
                           ),
@@ -328,10 +318,8 @@ class _AddAddressState extends State<AddAddress> {
                               children: [
                                 Text(
                                   "Pincode *",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      color: Pallet.font1),
+                                  style: Style.footnoteEmphasized
+                                      .copyWith(color: Pallet.onBackground),
                                 ),
                                 SizedBox(height: 8),
                                 TextBox(
@@ -342,8 +330,8 @@ class _AddAddressState extends State<AddAddress> {
                                   },
                                 ),
                                 Text(pincodeError,
-                                    style: TextStyle(
-                                        color: Colors.red, fontSize: 12)),
+                                    style: Style.caption2
+                                        .copyWith(color: Pallet.error)),
                               ],
                             ),
                           )
@@ -352,10 +340,8 @@ class _AddAddressState extends State<AddAddress> {
                       SizedBox(height: 10),
                       Text(
                         "Phone number *",
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: Pallet.font1),
+                        style: Style.footnoteEmphasized
+                            .copyWith(color: Pallet.onBackground),
                       ),
                       SizedBox(height: 8),
                       TextBox(
@@ -366,7 +352,7 @@ class _AddAddressState extends State<AddAddress> {
                         },
                       ),
                       Text(phoneError,
-                          style: TextStyle(color: Colors.red, fontSize: 12)),
+                          style: Style.caption2.copyWith(color: Pallet.error)),
                       SizedBox(height: 10),
                       GestureDetector(
                         onTap: () async {
@@ -375,7 +361,7 @@ class _AddAddressState extends State<AddAddress> {
                         child: Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
-                              color: Pallet.inner1),
+                              color: Pallet.tertiaryFill),
                           child: Text("Make this default address"),
                         ),
                       )
@@ -461,7 +447,7 @@ class _AddAddressState extends State<AddAddress> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                     decoration: BoxDecoration(
-                        color: Pallet.inner1,
+                        color: Pallet.surface1,
                         borderRadius: BorderRadius.circular(10)),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -614,7 +600,7 @@ class _AddressState extends State<Address> {
                   SizedBox(width: 15),
                   Text(
                     "Manage Addresses",
-                    style: Style.h3,
+                    style: Style.headline.copyWith(color: Pallet.onBackground),
                   ),
                   Expanded(child: SizedBox()),
                   Icon(Icons.notifications_none)
@@ -625,9 +611,9 @@ class _AddressState extends State<Address> {
                 child: ListView(
                   children: [
                     Button(
-                        color: Pallet.inner1,
+                        color: Pallet.tertiaryFill,
                         fontColor: Pallet.primary,
-                        label: "Add New Addres",
+                        label: "Add New Address",
                         onPress: () {
                           Navigator.push(
                             mainContext,
@@ -642,10 +628,10 @@ class _AddressState extends State<Address> {
                     SizedBox(height: 5),
                     if (addresses.isNotEmpty)
                       Container(
-                        padding: EdgeInsets.symmetric(vertical: 10),
+                        padding: EdgeInsets.symmetric(vertical: 14),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Pallet.inner1),
+                            color: Pallet.secondaryFill),
                         child: Column(
                           children: [
                             SizedBox(width: 5),
@@ -690,7 +676,7 @@ class _AddressState extends State<Address> {
                                   )),
                                   SizedBox(width: 10),
                                   Button(
-                                      color: Pallet.inner2,
+                                      color: Pallet.tertiaryFill,
                                       fontColor: Pallet.primary,
                                       radius: 20,
                                       padding: EdgeInsets.symmetric(
@@ -839,26 +825,29 @@ class _SearchWidgetState extends State<SearchWidget> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 2),
-                child: Icon(Icons.search, size: 22),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Icon(Icons.search, size: 22),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: TextField(
+                      cursorColor: Pallet.onBackground,
+                      controller: controller,
+                      style: Style.body.copyWith(color: Pallet.onBackground),
+                      onChanged: onSearchableTextChanged,
+                      decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.zero,
+                          hintText: "Search Address...",
+                          hintStyle: Style.body
+                              .copyWith(color: Pallet.onSurfaceVariant),
+                          border: InputBorder.none),
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(width: 10),
-              Expanded(
-                child: TextField(
-                  controller: controller,
-                  style: TextStyle(color: Pallet.fontInner),
-                  onChanged: onSearchableTextChanged,
-                  decoration: InputDecoration(
-                      isDense: true,
-                      contentPadding: EdgeInsets.zero,
-                      hintText: "Search Address...",
-                      border: InputBorder.none),
-                ),
-              ),
-            ],
-          ),
           ValueListenableBuilder<bool>(
             valueListenable: notifierAutoCompletion,
             builder: (ctx, isVisible, child) {
@@ -873,7 +862,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                   margin: const EdgeInsets.only(top: 10),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Pallet.inner1),
+                      color: Pallet.surface1),
                   child: child!,
                 ),
               );
@@ -928,7 +917,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                 if (snap.connectionState == ConnectionState.waiting) {
                   return Center(
                     child: CircularProgressIndicator(
-                      color: Theme.of(context).primaryColor,
+                      color: Pallet.primary,
                     ),
                   );
                 }

@@ -35,7 +35,7 @@ class _SupportState extends State<Support> {
               Button(label: "Start new conversation", onPress: () {}),
               Text("Recent chats"),
               Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Pallet.inner1),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Pallet.secondaryFill),
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 child: Column(
                   children: [
@@ -47,7 +47,9 @@ class _SupportState extends State<Support> {
                         Text("Date: 21/05/2024"),
                         Text(
                           "Status: in-review",
-                          style: TextStyle(color: Pallet.font3),
+                          style: Style.subHeadline.copyWith(
+                            color: Pallet.onSurfaceVariant,
+                          ),
                         )
                       ],
                     ),

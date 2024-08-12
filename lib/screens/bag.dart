@@ -68,13 +68,13 @@ class _BagState extends State<Bag> {
           SizedBox(height: 10),
           Text(
             "Bag",
-            style: Style.h1,
+            style: Style.title1Emphasized,
           ),
           SizedBox(height: 10),
           if (!queried)
             Expanded(
               child: Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(color: Pallet.primary,),
               ),
             )
           else if (bag.isEmpty && saved.isEmpty)
@@ -85,7 +85,7 @@ class _BagState extends State<Bag> {
                   Image.asset("assets/no_items.jpg"),
                   Text(
                     "No items found",
-                    style: TextStyle(color: Pallet.font3),
+                    style: TextStyle(color: Pallet.onSurfaceVariant),
                   )
                 ],
               ),
@@ -98,9 +98,7 @@ class _BagState extends State<Bag> {
                   if (bag.isNotEmpty)
                     Container(
                       padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Pallet.inner1),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(14), color: Pallet.surface1),
                       child: Column(
                         children: [
                           for (var item in bag) product(item, false),
@@ -111,7 +109,7 @@ class _BagState extends State<Bag> {
                   if (saved.isNotEmpty)
                     Text(
                       "Saved for later",
-                      style: Style.h3,
+                      style: Style.footnoteEmphasized,
                     ),
                   SizedBox(height: 10),
                   for (var item in saved) product(item, true)
@@ -130,14 +128,12 @@ class _BagState extends State<Bag> {
                     children: [
                       Text(
                         "Total Amount:",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 16),
+                        style: Style.subHeadlineEmphasized,
                       ),
                       SizedBox(height: 5),
                       Text(
-                        "\$ ${total}",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w500),
+                        "\₹ ${total}",
+                        style:Style.title3,
                       ),
                     ],
                   )),
@@ -176,19 +172,21 @@ class _BagState extends State<Bag> {
               width: 80,
               height: 80,
             )),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Expanded(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               item["product"]["name"],
-              style: TextStyle(fontSize: 16),
+              style: Style.body,
             ),
             Text(
               item["product"]["about"].toString(),
               maxLines: 1,
-              style: Style.ellipsisText,
+              style: Style.ellipsisText.merge(Style.subHeadline).copyWith(
+                      color: Pallet.onSurfaceVariant
+              ),
             ),
             SizedBox(height: 5),
             Row(
@@ -196,25 +194,18 @@ class _BagState extends State<Bag> {
               children: [
                 Text(
                   item["product"]["originalPrice"].toString(),
-                  style: TextStyle(
-                      color: Pallet.font3,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      decoration: TextDecoration.lineThrough),
+                  style: Style.title3Emphasized.copyWith(
+                    decoration: TextDecoration.lineThrough,
+                    color: Pallet.onSurfaceVariant
+                  )
                 ),
                 Text(
                   "₹ ${item["product"]["sellingPrice"].toString()}",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  style: Style.title3Emphasized.copyWith(
+                    color: Pallet.onBackground
+                  ),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Pallet.inner2,
-                      borderRadius: BorderRadius.circular(5)),
-                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                          onTap: () async {
+                StepperWidget(quantity: item["qty"], incrementFunc: () async {
                             item["qty"] += 1;
                             if (!saved) {
                               total += item["product"]["sellingPrice"];
@@ -224,33 +215,18 @@ class _BagState extends State<Bag> {
                             updateBag(item["productId"], item["qty"]);
 
                             // getData();
-                          },
-                          child:
-                              Icon(Icons.add, size: 18, color: Pallet.font2)),
-                      SizedBox(width: 10),
-                      Text(item["qty"].toString()),
-                      SizedBox(width: 10),
-                      GestureDetector(
-                          onTap: () async {
+                          }, decrementFunc: () async {
                             if (item["qty"] > 0) {
                               item["qty"] -= 1;
-                              if (!saved) {
-                                total -= item["product"]["sellingPrice"];
-                              }
+                              total -= item["product"]["sellingPrice"];
 
                               setState(() {});
-
                               updateBag(item["productId"], item["qty"]);
                             }
                             if (item["qty"] == 0) {
                               bag.remove(item);
                             }
-                          },
-                          child:
-                              Icon(Icons.remove, size: 18, color: Pallet.font2))
-                    ],
-                  ),
-                )
+                          }),
               ],
             ),
             SizedBox(height: 10),
@@ -261,8 +237,8 @@ class _BagState extends State<Bag> {
                     radius: 30,
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                     label: "Remove",
-                    color: Pallet.inner2,
-                    fontColor: Color(0xFFBA1A1A),
+                    color: Pallet.tertiaryFill,
+                    fontColor: Pallet.error,
                     onPress: () async {
                       await updateBag(item["productId"], 0);
 

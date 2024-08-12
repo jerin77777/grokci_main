@@ -130,14 +130,16 @@ class _SecurityState extends State<Security> {
                   SizedBox(width: 15),
                   Text(
                     "User Preferences",
-                    style: Style.h3,
+                    style: Style.headline.copyWith(
+                      color: Pallet.onBackground
+                    ),
                   ),
                   Expanded(child: SizedBox()),
                   Icon(Icons.notifications_none, size: 22)
                 ],
               ),
             ),
-            Divider(color: Pallet.divider, height: 1),
+            Divider(color: Pallet.outline, height: 1),
             SizedBox(height: 10),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
@@ -147,7 +149,9 @@ class _SecurityState extends State<Security> {
                   SizedBox(height: 10),
                   Text(
                     "Theme",
-                    style: Style.h3,
+                    style: Style.headline.copyWith(
+                      color: Pallet.onBackground
+                    ),
                   ),
                   // SizedBox(height: 10),
 
