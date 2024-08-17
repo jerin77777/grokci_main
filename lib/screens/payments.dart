@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 import '../backend/server.dart';
 import '../widgets.dart';
 import '../types.dart';
+import 'notifications.dart';
 
 class Payments extends StatefulWidget {
   const Payments(
@@ -11,7 +12,7 @@ class Payments extends StatefulWidget {
       required this.total,
       required this.totalOriginal,
       required this.items});
-      
+
   final int qty;
   final double total;
   final double totalOriginal;
@@ -25,31 +26,51 @@ class _PaymentsState extends State<Payments> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Pallet.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: AppBar(
+          leadingWidth: 30,
+          title: Text(
+            "Payment Methods",
+            style: Style.headline
+                .copyWith(color: Theme.of(context).colorScheme.onSurface),
+          ),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.notifications_none),
+              onPressed: () {
+                Navigator.push(
+                  mainContext,
+                  MaterialPageRoute(builder: (context) => Notifications()),
+                );
+              },
+            ),
+          ],
+        ),
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(Icons.arrow_back, size: 22)),
-                  SizedBox(width: 15),
-                  Text(
-                    "Payment Methods",
-                    style: Style.footnoteEmphasized
-                        .copyWith(color: Pallet.onBackground),
-                  ),
-                  Expanded(child: SizedBox()),
-                  Icon(Icons.notifications_none, size: 22)
-                ],
-              ),
-            ),
-            Divider(color: Pallet.outline, height: 1),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       GestureDetector(
+            //           onTap: () {
+            //             Navigator.pop(context);
+            //           },
+            //           child: Icon(Icons.arrow_back, size: 22)),
+            //       SizedBox(width: 15),
+            //       Text(
+            //         "Payment Methods",
+            //         style: Style.footnoteEmphasized.copyWith(
+            //           color: Theme.of(context).colorScheme.onSurface
+            //         ),
+            //       ),
+            //       Expanded(child: SizedBox()),
+            //       Icon(Icons.notifications_none, size: 22)
+            //     ],
+            //   ),
+            // ),
+            Divider(color: Theme.of(context).colorScheme.outline, height: 1),
             SizedBox(height: 10),
             Expanded(
                 child: ListView(
@@ -63,7 +84,7 @@ class _PaymentsState extends State<Payments> {
                 Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(14),
-                      color: Pallet.surface1),
+                      color: Theme.of(context).colorScheme.surfaceContainerLow),
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   child: Text(
                     "Payment Interface from Razorpay",
@@ -74,7 +95,7 @@ class _PaymentsState extends State<Payments> {
                 Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(14),
-                      color: Pallet.surface1),
+                      color: Theme.of(context).colorScheme.surfaceContainerLow),
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   child: Text(
                     "Payment on Delivery",
@@ -89,62 +110,80 @@ class _PaymentsState extends State<Payments> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text("Pricing Details",
-                      style: Style.footnoteEmphasized
-                          .copyWith(color: Pallet.onBackground)),
+                      style: Style.footnoteEmphasized.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface)),
                   SizedBox(height: 10),
                   Container(
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
-                          color: Pallet.surface1),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .surfaceContainerLow),
                       child: Column(children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("MRP (4 items)",
-                                style: Style.body
-                                    .copyWith(color: Pallet.onBackground)),
+                                style: Style.body.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface)),
                             Text("₹ ${widget.totalOriginal}",
-                                style: Style.body
-                                    .copyWith(color: Pallet.onBackground)),
+                                style: Style.body.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface)),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("Discounts",
-                                style: Style.body
-                                    .copyWith(color: Pallet.onBackground)),
+                                style: Style.body.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface)),
                             Text("-₹ ${widget.totalOriginal - widget.total}",
-                                style:
-                                    Style.body.copyWith(color: Pallet.primary)),
+                                style: Style.body.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.primary)),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("Delivery Charges",
-                                style: Style.body
-                                    .copyWith(color: Pallet.onBackground)),
+                                style: Style.body.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface)),
                             Text("Free Delivery",
-                                style:
-                                    Style.body.copyWith(color: Pallet.primary)),
+                                style: Style.body.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.primary)),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("Total Amount",
-                                style: Style.body
-                                    .copyWith(color: Pallet.onBackground)),
+                                style: Style.body.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface)),
                             Text("₹ ${widget.total}",
-                                style: Style.body
-                                    .copyWith(color: Pallet.onBackground)),
+                                style: Style.body.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface)),
                           ],
                         )
                       ])),
                   SizedBox(height: 15),
                   Button(
+                      size: ButtonSize.large,
+                      type: ButtonType.filled,
                       label: "Continue",
                       onPress: () async {
                         String userId =

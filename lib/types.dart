@@ -22,89 +22,64 @@ showMessage(BuildContext context, String message) {
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 
-class Pallet {
-  static Color primary = const Color(0xFF006D3C);
-  static Color onPrimary = const Color(0xFFFFFFFF);
-  static Color secondary = const Color(0xFF00696E);
-  static Color onSecondary = const Color(0xFFFFFFFF);
-  static Color background = const Color(0xFFFBFDF8);
-  static Color onBackground = const Color(0xFF191C19);
-  static Color error = const Color(0xFFBA1A1A);
-  static Color onError = const Color(0xFFFFFFFF);
-  static Color outline = const Color(0xFF717971);
-  static Color outlineVariant = const Color(0xFFC0C9BF);
-  static Color surfaceVariant = const Color(0xFFDDE5DB);
-  static Color onSurfaceVariant = const Color(0xFF414942);
-  static Color inverseSurface = const Color(0xFF2E312E);
-  static Color onInverseSurface = const Color(0xFFF0F1EC);
-  static Color surface1 = const Color(0xFFEEF6EF);
-  static Color tonal = const Color(0x26006D3C);
-  static Color primaryFill = const Color(0x336C897C);
-  static Color secondaryFill = const Color(0x296C897C);
-  static Color tertiaryFill = const Color(0x1F6C897C);
-  static Color tintColor = Colors.grey;
-  static Color shadowColor = const Color.fromRGBO(0, 0, 0, 0.30);
-  static Color tertiaryLabel = const Color.fromRGBO(0, 0, 0, 0.30);
-  static Brightness systemBrightness = Brightness.dark;
+ThemeData lightMode = ThemeData(
+  brightness: Brightness.light,
+  useMaterial3: true,
+  colorScheme: const ColorScheme.light(
 
-  static lightMode() {
-    Pallet.primary = const Color(0xFF006D3C);
-    Pallet.onPrimary = const Color(0xFFFFFFFF);
-    Pallet.secondary = const Color(0xFF00696E);
-    Pallet.onSecondary = const Color(0xFFFFFFFF);
-    Pallet.background = const Color(0xFFFBFDF8);
-    Pallet.onBackground = const Color(0xFF191C19);
-    Pallet.error = const Color(0xFFBA1A1A);
-    Pallet.onError = const Color(0xFFFFFFFF);
-    Pallet.outline = const Color(0xFF717971);
-    Pallet.outlineVariant = const Color(0xFFC0C9BF);
-    Pallet.surfaceVariant = const Color(0xFFDDE5DB);
-    Pallet.onSurfaceVariant = const Color(0xFF414942);
-    Pallet.inverseSurface = const Color(0xFF2E312E);
-    Pallet.onInverseSurface = const Color(0xFFF0F1EC);
-    Pallet.surface1 = const Color(0xFFEEF6EF);
-    Pallet.tonal = const Color(0x26006D3C);
-    Pallet.primaryFill = const Color(0x336C897C);
-    Pallet.secondaryFill = const Color(0x296C897C);
-    Pallet.tertiaryFill = const Color(0x1F6C897C);
-    Pallet.tintColor = Colors.grey;
-    Pallet.shadowColor = const Color.fromRGBO(0, 0, 0, 0.30);
-    Pallet.tertiaryLabel = const Color.fromRGBO(0, 0, 0, 0.30);
+    primary : Color(0xFF006D3C),
+    onPrimary : Color(0xFFFFFFFF),
+    secondary : Color(0xFF00696E),
+    onSecondary : Color(0xFFFFFFFF),
+    surface : Color(0xFFFBFDF8),
+    onSurface : Color(0xFF191C19),
+    error : Color(0xFFBA1A1A),
+    onError : Color(0xFFFFFFFF),
+    outline : Color(0xFF717971),
+    outlineVariant : Color(0xFFC0C9BF),
+    surfaceContainerHighest : Color(0xFFDDE5DB),
+    surfaceContainerHigh: Color(0x296C897C),
+    surfaceContainer: Color(0x1F6C897C),
+    onSurfaceVariant : Color(0xFF414942),
+    inverseSurface : Color(0xFF2E312E),
+    onInverseSurface : Color(0xFFF0F1EC),
+    surfaceContainerLow  : Color(0xFFEEF6EF),
+    shadow: Color.fromRGBO(0, 0, 0, 0.30),
+    secondaryContainer: Color(0x26006D3C),
+    surfaceTint: Colors.grey,
+    scrim:Color.fromRGBO(0, 0, 0, 0.30)
+  )
+);
 
-    Pallet.systemBrightness = Brightness.dark;
+ThemeData darkMode = ThemeData(
+  brightness: Brightness.dark,
+  useMaterial3: true,
+  colorScheme: ColorScheme.dark(
 
-    themeSink.add("");
-  }
+    primary : const Color(0xFF30E287),
+    onPrimary : const Color(0xFF00391D),
+    secondary : const Color(0xFF36DAE3),
+    onSecondary : const Color(0xFF003739),
+    surface : const Color(0xFF191C19),
+    onSurface : const Color(0xFFE1E3DE),
+    error : const Color(0xFFFFB4AB),
+    onError : const Color(0xFF690005),
+    outline : const Color(0xFF8B938A),
+    outlineVariant : const Color(0xFF414942),
+    surfaceContainerHighest : const Color(0xFF414942),
+    surfaceContainerHigh: const Color(0x526C897C),
+    surfaceContainer: const Color(0x3D6C897C),
+    onSurfaceVariant : const Color(0xFFC0C9BF),
+    inverseSurface : const Color(0xFFE1E3DE),
+    onInverseSurface : const Color(0xFF191C19),
+    surfaceContainerLow: const Color(0xFF1A261F),
+    shadow: const Color.fromRGBO(255, 255, 255, 0.30),
+    secondaryContainer: const Color(0x2630E287),
+    surfaceTint: Colors.grey.shade300,
+    scrim:const Color.fromRGBO(235, 245, 241, 0.30)
+  )
+);
 
-  static darkMode() {
-    Pallet.primary = const Color(0xFF30E287);
-    Pallet.onPrimary = const Color(0xFF00391D);
-    Pallet.secondary = const Color(0xFF36DAE3);
-    Pallet.onSecondary = const Color(0xFF003739);
-    Pallet.background = const Color(0xFF191C19);
-    Pallet.onBackground = const Color(0xFFE1E3DE);
-    Pallet.error = const Color(0xFFFFB4AB);
-    Pallet.onError = const Color(0xFF690005);
-    Pallet.outline = const Color(0xFF8B938A);
-    Pallet.outlineVariant = const Color(0xFF414942);
-    Pallet.surfaceVariant = const Color(0xFF414942);
-    Pallet.onSurfaceVariant = const Color(0xFFC0C9BF);
-    Pallet.inverseSurface = const Color(0xFFE1E3DE);
-    Pallet.onInverseSurface = const Color(0xFF191C19);
-    Pallet.surface1 = const Color(0xFF1A261F);
-    Pallet.tonal = const Color(0x2630E287);
-    Pallet.primaryFill = const Color(0x5C6C897C);
-    Pallet.secondaryFill = const Color(0x526C897C);
-    Pallet.tertiaryFill = const Color(0x3D6C897C);
-    Pallet.tintColor = Colors.grey.shade300;
-    Pallet.shadowColor = const Color.fromRGBO(255, 255, 255, 0.30);
-    Pallet.tertiaryLabel = const Color.fromRGBO(235, 245, 241, 0.30);
-
-    Pallet.systemBrightness = Brightness.light;
-
-    themeSink.add("");
-  }
-}
 
 class Style {
   static TextStyle largeTitle = GoogleFonts.beVietnamPro(

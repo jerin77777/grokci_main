@@ -5,6 +5,7 @@ import 'package:grokci_main/backend/server.dart';
 import 'package:grokci_main/types.dart';
 import 'package:grokci_main/widgets.dart';
 import 'checkout.dart';
+import 'notifications.dart';
 
 class Bag extends StatefulWidget {
   const Bag({super.key});
@@ -49,74 +50,97 @@ class _BagState extends State<Bag> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              GestureDetector(
-                  onTap: () {
-                    routerSink.add({"route": "dashboard"});
-                  },
-                  child: Icon(Icons.arrow_back, size: 22)),
-              Icon(Icons.notifications_none, size: 22)
-            ],
-          ),
-          SizedBox(height: 10),
-          Text(
-            "Bag",
-            style: Style.title1Emphasized,
-          ),
-          SizedBox(height: 10),
-          if (!queried)
-            Expanded(
-              child: Center(
-                child: CircularProgressIndicator(color: Pallet.primary,),
-              ),
-            )
-          else if (bag.isEmpty && saved.isEmpty)
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset("assets/no_items.jpg"),
-                  Text(
-                    "No items found",
-                    style: TextStyle(color: Pallet.onSurfaceVariant),
+          Expanded(
+            child: CustomScrollView(
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              slivers: [
+                SliverAppBar.medium(
+                  leading: IconButton(
+                    onPressed: () {
+                      routerSink.add({"route": "dashboard"});
+                    },
+                    icon: Icon(Icons.arrow_back),
+                  ),
+                  title: Text(
+                    "Bag",
+                    style: Style.title1Emphasized,
+                  ),
+                  actions: <Widget>[
+                    IconButton(
+                      icon: const Icon(Icons.notifications_none),
+                      onPressed: () {
+                        Navigator.push(
+                          mainContext,
+                          MaterialPageRoute(
+                              builder: (context) => Notifications()),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                if (!queried)
+                  SliverToBoxAdapter(
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
                   )
-                ],
-              ),
-            )
-          else
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                children: [
-                  if (bag.isNotEmpty)
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(14), color: Pallet.surface1),
+                else if (bag.isEmpty && saved.isEmpty)
+                  SliverToBoxAdapter(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset("assets/no_items.jpg"),
+                        Text(
+                          "No items found",
+                          style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant),
+                        )
+                      ],
+                    ),
+                  )
+                else
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Column(
                         children: [
-                          for (var item in bag) product(item, false),
+                          if (bag.isNotEmpty)
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainerLow),
+                              child: Column(
+                                children: [
+                                  for (var item in bag) product(item, false),
+                                ],
+                              ),
+                            ),
+                          SizedBox(height: 10),
+                          if (saved.isNotEmpty)
+                            Text(
+                              "Saved for later",
+                              style: Style.footnoteEmphasized,
+                            ),
+                          SizedBox(height: 10),
+                          for (var item in saved) product(item, true)
                         ],
                       ),
                     ),
-                  SizedBox(height: 10),
-                  if (saved.isNotEmpty)
-                    Text(
-                      "Saved for later",
-                      style: Style.footnoteEmphasized,
-                    ),
-                  SizedBox(height: 10),
-                  for (var item in saved) product(item, true)
-                ],
-              ),
+                  ),
+              ],
             ),
-          SizedBox(height: 10),
+          ),
           if (total != 0)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -133,15 +157,14 @@ class _BagState extends State<Bag> {
                       SizedBox(height: 5),
                       Text(
                         "\₹ ${total}",
-                        style:Style.title3,
+                        style: Style.title3,
                       ),
                     ],
                   )),
                   Button(
+                      size: ButtonSize.medium,
+                      type: ButtonType.filled,
                       label: "Proceed to Buy",
-                      radius: 30,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                       onPress: () {
                         Navigator.push(
                           mainContext,
@@ -185,48 +208,46 @@ class _BagState extends State<Bag> {
               item["product"]["about"].toString(),
               maxLines: 1,
               style: Style.ellipsisText.merge(Style.subHeadline).copyWith(
-                      color: Pallet.onSurfaceVariant
-              ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
             SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  item["product"]["originalPrice"].toString(),
-                  style: Style.title3Emphasized.copyWith(
-                    decoration: TextDecoration.lineThrough,
-                    color: Pallet.onSurfaceVariant
-                  )
-                ),
+                Text(item["product"]["originalPrice"].toString(),
+                    style: Style.title3Emphasized.copyWith(
+                        decoration: TextDecoration.lineThrough,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant)),
                 Text(
                   "₹ ${item["product"]["sellingPrice"].toString()}",
-                  style: Style.title3Emphasized.copyWith(
-                    color: Pallet.onBackground
-                  ),
+                  style: Style.title3Emphasized
+                      .copyWith(color: Theme.of(context).colorScheme.onSurface),
                 ),
-                StepperWidget(quantity: item["qty"], incrementFunc: () async {
-                            item["qty"] += 1;
-                            if (!saved) {
-                              total += item["product"]["sellingPrice"];
-                            }
+                StepperWidget(
+                    quantity: item["qty"],
+                    incrementFunc: () async {
+                      item["qty"] += 1;
+                      if (!saved) {
+                        total += item["product"]["sellingPrice"];
+                      }
 
-                            setState(() {});
-                            updateBag(item["productId"], item["qty"]);
+                      setState(() {});
+                      updateBag(item["productId"], item["qty"]);
 
-                            // getData();
-                          }, decrementFunc: () async {
-                            if (item["qty"] > 0) {
-                              item["qty"] -= 1;
-                              total -= item["product"]["sellingPrice"];
+                      // getData();
+                    },
+                    decrementFunc: () async {
+                      if (item["qty"] > 0) {
+                        item["qty"] -= 1;
+                        total -= item["product"]["sellingPrice"];
 
-                              setState(() {});
-                              updateBag(item["productId"], item["qty"]);
-                            }
-                            if (item["qty"] == 0) {
-                              bag.remove(item);
-                            }
-                          }),
+                        setState(() {});
+                        updateBag(item["productId"], item["qty"]);
+                      }
+                      if (item["qty"] == 0) {
+                        bag.remove(item);
+                      }
+                    }),
               ],
             ),
             SizedBox(height: 10),
@@ -234,11 +255,11 @@ class _BagState extends State<Bag> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Button(
-                    radius: 30,
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    size: ButtonSize.medium,
+                    type: ButtonType.gray,
                     label: "Remove",
-                    color: Pallet.tertiaryFill,
-                    fontColor: Pallet.error,
+                    labelStyle:
+                        TextStyle(color: Theme.of(context).colorScheme.error),
                     onPress: () async {
                       await updateBag(item["productId"], 0);
 
@@ -246,8 +267,8 @@ class _BagState extends State<Bag> {
                     }),
                 SizedBox(width: 10),
                 Button(
-                    radius: 30,
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    size: ButtonSize.medium,
+                    type: ButtonType.filled,
                     label: saved ? "Move to Bag" : "Save for later",
                     onPress: () async {
                       await saveForLater(item["productId"], !saved);

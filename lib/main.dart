@@ -30,14 +30,26 @@ Future<void> main() async {
   db = Databases(client);
   storage = Storage(client);
 
-  var brightness =
-      SchedulerBinding.instance.platformDispatcher.platformBrightness;
 
-  if (brightness == Brightness.light) {
-    Pallet.lightMode();
-  } else {
-    Pallet.darkMode();
-  }
+  // changes status and system navigation color based on theme
+  SchedulerBinding.instance.platformDispatcher.onPlatformBrightnessChanged =
+      () async {
+
+    Brightness _brightness =
+        SchedulerBinding.instance.platformDispatcher.platformBrightness;
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: _brightness == Brightness.dark
+          ? darkMode.colorScheme.surface
+          : lightMode.colorScheme.surface,
+      systemNavigationBarColor: _brightness == Brightness.dark
+          ? darkMode.colorScheme.surface
+          : lightMode.colorScheme.surface,
+      statusBarIconBrightness: _brightness == Brightness.dark ? Brightness.light : Brightness.dark,
+      systemNavigationBarIconBrightness: _brightness == Brightness.dark ? Brightness.light : Brightness.dark,
+      statusBarBrightness: _brightness,
+    ));
+  };
 
   client
           .setEndpoint(AppConfig.endpoint) // Your Appwrite Endpoint
@@ -54,57 +66,37 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: Pallet.background,
-        systemNavigationBarColor: Pallet.background,
-        systemNavigationBarIconBrightness: Pallet.systemBrightness,
-        statusBarIconBrightness: Pallet.systemBrightness,
-        statusBarBrightness: Brightness.light));
     return StreamBuilder<Object>(
-      stream:
-          themeStream, // Ensure this is properly initialized and emitting ThemeData objects
-
-      builder: (context, snapshot) {
-        // Check if snapshot has data and is not null
-        
-        return MaterialApp(
-          theme: ThemeData(
-            bottomSheetTheme:
-                BottomSheetThemeData(backgroundColor: Colors.transparent),
-            appBarTheme: AppBarTheme(
-              systemOverlayStyle: SystemUiOverlayStyle(
-                statusBarColor: Pallet.background,
-                systemNavigationBarColor: Pallet.background,
-                systemStatusBarContrastEnforced: true,
-                systemNavigationBarContrastEnforced: true,
+        stream: themeStream,
+        builder: (context, snapshot) {
+          return MaterialApp(
+            theme: lightMode.copyWith(
+              appBarTheme: AppBarTheme(
+                systemOverlayStyle: SystemUiOverlayStyle(
+                  statusBarColor: Theme.of(context).colorScheme.surface,
+                  systemNavigationBarColor:
+                      Theme.of(context).colorScheme.surface,
+                  systemStatusBarContrastEnforced: true,
+                  systemNavigationBarContrastEnforced: true,
+                ),
+              ),
+              inputDecorationTheme: InputDecorationTheme(
+                hintStyle: TextStyle(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurfaceVariant), // Placeholder text color
               ),
             ),
-            inputDecorationTheme: InputDecorationTheme(
-              hintStyle: TextStyle(
-                  color: Pallet.onSurfaceVariant), // Placeholder text color
-            ),
-            textTheme: GoogleFonts.beVietnamProTextTheme(TextTheme(
-              displayLarge:
-                  GoogleFonts.beVietnamPro(color: Pallet.onBackground),
-              displayMedium:
-                  GoogleFonts.beVietnamPro(color: Pallet.onBackground),
-              bodyMedium: GoogleFonts.beVietnamPro(color: Pallet.onBackground),
-              titleMedium: GoogleFonts.beVietnamPro(color: Pallet.onBackground),
-            )),
-            iconTheme: IconThemeData(color: Pallet.onBackground),
-            primarySwatch: Colors.blue,
-          ),
-          debugShowCheckedModeBanner: false,
-          title: 'Grokci',
-          home: (sharedPreferences?.getString("phone") == null)
-              ? Login()
-              : sharedPreferences?.getBool("bio_metrics") == true
-                  ? Biometric()
-                  : Home(),
-        );
-      },
-    );
-
+            debugShowCheckedModeBanner: false,
+            darkTheme: darkMode,
+            title: 'Grokci',
+            home: (sharedPreferences!.get("phone") == null)
+                ? Login()
+                : sharedPreferences!.get("bio_metrics") == true
+                    ? Biometric()
+                    : Home(),
+          );
+        });
   }
 }
 
@@ -221,7 +213,7 @@ class _BiometricState extends State<Biometric> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Pallet.background,
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: Padding(
           padding: EdgeInsets.all(10),
           child: Column(
@@ -229,7 +221,8 @@ class _BiometricState extends State<Biometric> {
             children: [
               Text(
                 "Biometric Login",
-                style: Style.title1.copyWith(color: Pallet.onBackground),
+                style: Style.title1.copyWith(
+                    color: Theme.of(context).colorScheme.onBackground),
               ),
               Expanded(
                 child: Stack(
@@ -281,7 +274,7 @@ class _HomeState extends State<Home> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Pallet.background,
+        backgroundColor: Theme.of(context).colorScheme.background,
         bottomNavigationBar: Platform.isIOS
             ? CupertinoTabBar(
                 onTap: (index) {
@@ -320,7 +313,7 @@ class _HomeState extends State<Home> {
                 showUnselectedLabels: true,
                 selectedFontSize: 12,
                 unselectedFontSize: 12,
-                backgroundColor: Pallet.background,
+                backgroundColor: Theme.of(context).colorScheme.surface,
                 landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
                 type: BottomNavigationBarType.fixed,
                 items: const <BottomNavigationBarItem>[
@@ -342,8 +335,8 @@ class _HomeState extends State<Home> {
                   ),
                 ],
                 currentIndex: navIdx,
-                selectedItemColor: Pallet.primary,
-                unselectedItemColor: Pallet.onSurfaceVariant,
+                selectedItemColor: Theme.of(context).colorScheme.primary,
+                unselectedItemColor: Theme.of(context).colorScheme.surfaceTint,
                 onTap: (index) {
                   navIdx = index;
                   if (index == 0) {

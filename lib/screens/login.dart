@@ -34,6 +34,7 @@ class _LoginState extends State<Login> {
   String phoneError = "";
   int? checkOtp;
   bool otpSend = false;
+  bool buttonDisabled = true;
   bool otpVerified = false;
 
   @override
@@ -53,7 +54,7 @@ class _LoginState extends State<Login> {
 
     print("listening"); // if (granted) {
     plugin.smsStream.listen((sms) {
-      if (int.parse(sms.body.toString().split(":")[1].trim()) == checkOtp) {
+      if (int.parse(sms.body.toString().split("<#>")[0].trim()) == checkOtp) {
         login(mainContext, phoneNumber.text);
       }
     });
@@ -63,7 +64,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     mainContext = context;
     return Scaffold(
-      backgroundColor: Pallet.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -90,7 +91,7 @@ class _LoginState extends State<Login> {
                   Text(
                     "Login to continue",
                     style: Style.title1Emphasized
-                        .copyWith(color: Pallet.onBackground),
+                        .copyWith(color: Theme.of(context).colorScheme.onSurface),
                   ),
                   const SizedBox(
                     height: 6,
@@ -98,7 +99,7 @@ class _LoginState extends State<Login> {
                   Text(
                     "Enter your email or phone number",
                     style: Style.subHeadline.copyWith(
-                      color: Pallet.onBackground,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                     // style: GoogleFonts.beVietnamPro(fontWeight: FontWeight.w600),
                   ),
@@ -109,31 +110,41 @@ class _LoginState extends State<Login> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
                         border:
-                            Border.all(width: 1, color: Pallet.outlineVariant)),
+                            Border.all(width: 1, color: Theme.of(context).colorScheme.outlineVariant)),
                     child: Row(
                       children: [
                         Text(
                           "+91 ",
                           style:
-                              Style.body.copyWith(color: Pallet.onBackground),
+                              Style.body.copyWith(color: Theme.of(context).colorScheme.onSurface),
                         ),
                         const SizedBox(width: 4),
                         Expanded(
                             child: TextField(
-                          // style: TextStyle(color: Pallet.onSurfaceVariant),
+                          // style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                           enabled: checkOtp == null,
                           controller: phoneNumber,
-                          cursorColor: Pallet.onBackground,
+                          maxLength: 10,
+                          cursorColor: Theme.of(context).colorScheme.primary,
                           keyboardType: TextInputType.phone,
                           onChanged: (_) {
                             if (phoneError.isNotEmpty) {
                               phoneError = "";
                               setState(() {});
                             }
+                            if (phoneNumber.text.length == 10) {
+                              buttonDisabled = false;
+                              setState(() {});
+                            } else {
+                              buttonDisabled = true;
+                              setState(() {});
+
+                            }
                           },
-                          decoration: InputDecoration(border: InputBorder.none),
+                          decoration: const InputDecoration(
+                              border: InputBorder.none, counter: Offstage()),
                           style:
-                              Style.body.copyWith(color: Pallet.onBackground),
+                              Style.body.copyWith(color: Theme.of(context).colorScheme.onSurface),
                         ))
                       ],
                     ),
@@ -142,27 +153,29 @@ class _LoginState extends State<Login> {
                     Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(phoneError,
-                          style: Style.caption2.copyWith(color: Pallet.error)),
+                          style: Style.caption2.copyWith(color: Theme.of(context).colorScheme.error)),
                     ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          text: "Dont have an accoount? ",
-                          style: GoogleFonts.beVietnamPro(
-                              fontSize: 14, color: Pallet.onBackground),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: 'Register here',
-                                style: GoogleFonts.beVietnamPro(
-                                    color: Pallet.primary)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  const SizedBox(height: 40),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     RichText(
+                  //       text: TextSpan(
+                  //         text: "Dont have an accoount? ",
+                  //         style: GoogleFonts.beVietnamPro(
+                  //             fontSize: 14, color: Theme.of(context).colorScheme.font1),
+                  //         children: <TextSpan>[
+                  //           TextSpan(
+                  //               text: 'Register here',
+                  //               style: GoogleFonts.beVietnamPro(
+                  //                   color: Theme.of(context).colorScheme.primary)),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  // SizedBox(height: 40),
+
                   if (checkOtp != null)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,7 +184,7 @@ class _LoginState extends State<Login> {
                         Text(
                           "Enter otp:",
                           style: Style.subHeadline
-                              .copyWith(color: Pallet.onBackground),
+                              .copyWith(color: Theme.of(context).colorScheme.onSurface),
                         ),
                         const SizedBox(height: 20),
                         OtpTextField(
@@ -180,15 +193,15 @@ class _LoginState extends State<Login> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           fieldWidth: 50,
                           fieldHeight: 50,
-                          borderColor: Pallet.outlineVariant,
-                          focusedBorderColor: Pallet.outline,
+                          borderColor: Theme.of(context).colorScheme.outlineVariant,
+                          focusedBorderColor: Theme.of(context).colorScheme.outline,
                           borderWidth: 1,
                           textStyle: Style.body.copyWith(
-                            color: Pallet.onBackground,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
-                          cursorColor: Pallet.onBackground,
+                          cursorColor: Theme.of(context).colorScheme.onSurface,
                           filled: true,
-                          fillColor: Pallet.tertiaryFill,
+                          fillColor: Theme.of(context).colorScheme.surfaceContainer,
                           showFieldAsBox: true,
                           onSubmit: (String verificationCode) {
                             if (int.parse(verificationCode) == checkOtp!) {
@@ -204,7 +217,7 @@ class _LoginState extends State<Login> {
               RichText(
                 text: TextSpan(
                   text: "By continuing, you agree to Grocki's ",
-                  style: Style.footnote.copyWith(color: Pallet.onBackground),
+                  style: Style.footnote.copyWith(color: Theme.of(context).colorScheme.onSurface),
                   children: <TextSpan>[
                     TextSpan(
                         text: 'Terms of Use',
@@ -216,8 +229,7 @@ class _LoginState extends State<Login> {
                               throw Exception('Could not launch url');
                             }
                           },
-                        style: Style.footnote
-                            .copyWith(color: Pallet.onBackground)),
+                        style: Style.footnote.copyWith(color: Theme.of(context).colorScheme.primary)),
                     TextSpan(text: ' & '),
                     TextSpan(
                         text: 'Privacy Policy!',
@@ -229,8 +241,7 @@ class _LoginState extends State<Login> {
                               throw Exception('Could not launch url');
                             }
                           },
-                        style: Style.footnote
-                            .copyWith(color: Pallet.onBackground)),
+                        style: Style.footnote.copyWith(color: Theme.of(context).colorScheme.primary)),
                   ],
                 ),
               ),
@@ -238,12 +249,15 @@ class _LoginState extends State<Login> {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 20,
                 child: Button(
-                    active: !otpSend,
+                    disabled: buttonDisabled,
+                    size: ButtonSize.large,
+                    type: ButtonType.filled,
                     label: "Send Otp",
                     onPress: () async {
                       print(phoneNumber.text.length);
                       if (phoneNumber.text.length == 10) {
                         otpSend = true;
+                        buttonDisabled = true;
                         checkOtp = await sendOtp(phoneNumber.text);
                         setState(() {});
                       } else {
@@ -279,7 +293,7 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Pallet.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -302,7 +316,7 @@ class _SignUpState extends State<SignUp> {
                     Text(
                       "Login to continue",
                       style: Style.title1Emphasized
-                          .copyWith(color: Pallet.onBackground),
+                          .copyWith(color: Theme.of(context).colorScheme.onSurface),
                     ),
                     // SizedBox(height: 10),
                     Text("Enter your user name"),
@@ -312,7 +326,7 @@ class _SignUpState extends State<SignUp> {
                         padding: const EdgeInsets.only(bottom: 5),
                         child: Text(nameError,
                             style:
-                                Style.caption2.copyWith(color: Pallet.error)),
+                                Style.caption2.copyWith(color: Theme.of(context).colorScheme.error)),
                       ),
                     Container(
                       height: 50,
@@ -325,9 +339,9 @@ class _SignUpState extends State<SignUp> {
                               width: 0.5,
                               color: nameError.isEmpty
                                   ? Colors.black
-                                  : Pallet.error)),
+                                  : Theme.of(context).colorScheme.error)),
                       child: TextField(
-                        style: Style.body.copyWith(color: Pallet.onBackground),
+                        style: Style.body.copyWith(color: Theme.of(context).colorScheme.onSurface),
                         controller: userName,
                         keyboardType: TextInputType.text,
                         onChanged: (_) {
@@ -345,6 +359,8 @@ class _SignUpState extends State<SignUp> {
               ),
               SizedBox(height: 20),
               Button(
+                  size: ButtonSize.large,
+                  type: ButtonType.gray,
                   label: "Done",
                   onPress: () {
                     // RegExp numReg = RegExp(r'^-?[0-9]+$');
@@ -394,7 +410,7 @@ Future<ImageSource?> selectPickerType(BuildContext context) async {
               width: 150,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  color: Pallet.tertiaryFill),
+                  color: Theme.of(context).colorScheme.surfaceContainer),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -409,18 +425,18 @@ Future<ImageSource?> selectPickerType(BuildContext context) async {
                           EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Pallet.primary)),
+                          border: Border.all(color: Theme.of(context).colorScheme.primary)),
                       child: Row(
                         children: [
                           Expanded(
                               child: Text(
                             "Camera",
                             style:
-                                GoogleFonts.beVietnamPro(color: Pallet.primary),
+                                GoogleFonts.beVietnamPro(color: Theme.of(context).colorScheme.primary),
                           )),
                           Icon(
                             Icons.camera_alt,
-                            color: Pallet.primary,
+                            color: Theme.of(context).colorScheme.primary,
                           )
                         ],
                       ),
@@ -437,18 +453,18 @@ Future<ImageSource?> selectPickerType(BuildContext context) async {
                           EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Pallet.primary)),
+                          border: Border.all(color: Theme.of(context).colorScheme.primary)),
                       child: Row(
                         children: [
                           Expanded(
                               child: Text(
                             "Gallery",
                             style:
-                                GoogleFonts.beVietnamPro(color: Pallet.primary),
+                                GoogleFonts.beVietnamPro(color: Theme.of(context).colorScheme.primary),
                           )),
                           Icon(
                             Icons.photo,
-                            color: Pallet.primary,
+                            color: Theme.of(context).colorScheme.primary,
                           )
                         ],
                       ),

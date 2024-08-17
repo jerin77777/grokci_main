@@ -32,13 +32,41 @@ SharedPreferences? sharedPreferences;
 // order states delivering, delivered, payed
 // all database details used from here
 
+class AppConfig {
+  static String endpoint = "***";
+  static String project = "***";
+  static String mapKey = "***";
+  static String geoCode = "***";
+  static String database = "***";
+  static String orders = "***";
+  static String products = "***";
+  static String orderProductMap = "***";
+  static String drivers = "***";
+  static String users = "***";
+  static String categories = "***";
+  static String warehouses = "***";
+  static String promotions = "***";
+  static String monthlyPicks = "***";
+  static String cart = "***";
+  static String address = "***";
+  static String notifications = "***";
+  static String support = "***";
+  static String feedback = "***";
 
+  static String twilloSid = "***";
+  static String twilloToken = "***";
+  static String twilloNumber = "***";
+}
+
+class Bucket {
+  static String categories = "6650a1990032c806f041";
+  static String products = "66432daf000dc57d6cf0";
+}
 
 createAccount(
   context,
   String phoneNumber,
   String userName,
-  String language,
 ) async {
   var doc = await db.createDocument(
       databaseId: AppConfig.database,
@@ -47,7 +75,6 @@ createAccount(
       data: {
         "userName": userName,
         "phoneNumber": phoneNumber,
-        "language": language,
       });
   sharedPreferences!.setString("phone", phoneNumber);
   Navigator.of(context)
@@ -83,7 +110,7 @@ Future<int> sendOtp(phoneNumber) async {
   await twilioFlutter.sendSMS(
       toNumber: "+91 ${phoneNumber}",
       messageBody:
-          "<#> ${_otp} is your One Time Usable (OTP) code for logging in to your Grokci account.\n\n #GreenerChoice");
+          "$_otp<#> is your One Time Usable (OTP) code for logging in to your Grokci account.\n\n #GreenerChoice");
   return _otp;
 }
 
@@ -326,7 +353,6 @@ saveForLater(String productId, bool saveForLater) async {
       data: {"saveForLater": saveForLater});
 }
 
-
 getOrders() async {
   String userId = sharedPreferences!.get("phone").toString();
   List<Map> result = [];
@@ -353,6 +379,57 @@ getOrderProducts(String orderId) async {
       ]);
 
   result = getResult(temp.documents);
+  return result;
+}
+
+getSupport() async {
+  String userId = sharedPreferences!.get("phone").toString();
+
+  List<Map> result = [];
+
+  DocumentList temp = await db.listDocuments(
+      databaseId: AppConfig.database,
+      collectionId: AppConfig.support,
+      queries: [
+        Query.equal("userId", userId),
+      ]);
+
+  result = getResult(temp.documents);
+
+  return result;
+}
+
+getFeedBack() async {
+  String userId = sharedPreferences!.get("phone").toString();
+
+  List<Map> result = [];
+
+  DocumentList temp = await db.listDocuments(
+      databaseId: AppConfig.database,
+      collectionId: AppConfig.feedback,
+      queries: [
+        Query.equal("userId", userId),
+      ]);
+
+  result = getResult(temp.documents);
+
+  return result;
+}
+
+getNotifications() async {
+  String userId = sharedPreferences!.get("phone").toString();
+
+  List<Map> result = [];
+
+  DocumentList temp = await db.listDocuments(
+      databaseId: AppConfig.database,
+      collectionId: AppConfig.notifications,
+      queries: [
+        Query.equal("userId", userId),
+      ]);
+
+  result = getResult(temp.documents);
+
   return result;
 }
 

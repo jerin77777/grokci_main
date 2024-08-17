@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grokci_main/backend/server.dart';
+import 'package:grokci_main/screens/notifications.dart';
 import 'package:grokci_main/types.dart';
 import 'package:grokci_main/widgets.dart';
 
@@ -44,185 +45,217 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Pallet.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: AppBar(
+          leadingWidth: 30,
+          title: Text(
+            "Products in ${widget.categoryName}",
+            style: Style.headline
+                .copyWith(color: Theme.of(context).colorScheme.onSurface),
+          ),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.notifications_none),
+              onPressed: () {
+                Navigator.push(
+                  mainContext,
+                  MaterialPageRoute(builder: (context) => Notifications()),
+                );
+              },
+            ),
+          ],
+        ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(Icons.arrow_back, size: 22)),
-                  SizedBox(width: 15),
-                  Text(
-                    "Products in ${widget.categoryName}",
-                    style: Style.headline.copyWith(color: Pallet.onBackground),
-                  ),
-                  Expanded(child: SizedBox()),
-                  Icon(Icons.notifications_none, size: 22)
-                ],
-              ),
-            ),
-            Divider(color: Pallet.outline, height: 1),
+            Divider(color: Theme.of(context).colorScheme.outline, height: 1),
             SizedBox(height: 10),
             if (products.isNotEmpty)
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14),
-                    color: Pallet.surface1),
+                    color: Theme.of(context).colorScheme.surfaceContainerLow),
                 child: Column(
                   children: [
                     for (var product in products)
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            mainContext,
-                            MaterialPageRoute(
-                                builder: (context) => ProductDetails(
-                                      productId: product["id"],
-                                    )),
-                          );
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 10),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.asset("assets/oil.jpeg",
-                                      width: 60, height: 60)),
-                              SizedBox(width: 10),
-                              Expanded(
-                                  child: Column(
+                      Material(
+                          color:
+                              Theme.of(context).colorScheme.surfaceContainerLow,
+                          borderRadius: BorderRadius.circular(14),
+                          clipBehavior: Clip.antiAlias,
+                          child: InkWell(
+                            splashColor:
+                                Theme.of(context).colorScheme.surfaceContainer,
+                            onTap: () {
+                              Navigator.push(
+                                mainContext,
+                                MaterialPageRoute(
+                                    builder: (context) => ProductDetails(
+                                          productId: product["id"],
+                                        )),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 16),
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    product["name"],
-                                    style: Style.body
-                                        .copyWith(color: Pallet.onBackground),
-                                  ),
-                                  Text(
-                                    product["about"].toString(),
-                                    maxLines: 1,
-                                    style: Style.ellipsisText
-                                        .merge(Style.subHeadline)
-                                        .copyWith(
-                                            color: Pallet.onSurfaceVariant),
-                                  ),
-                                  SizedBox(height: 20),
-                                  Row(
+                                  ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.asset("assets/oil.jpeg",
+                                          width: 60, height: 60)),
+                                  SizedBox(width: 10),
+                                  Expanded(
+                                      child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      if (product["originalPrice"] !=
-                                          product["sellingPrice"])
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 15),
-                                          child: Text(
-                                              product["originalPrice"]
-                                                  .toString(),
-                                              style: Style.ellipsisText
-                                                  .merge(Style.subHeadline)
-                                                  .copyWith(
-                                                      color: Pallet
-                                                          .onSurfaceVariant)),
-                                        ),
                                       Text(
-                                        "₹ ${product["sellingPrice"].toString()}",
-                                        style: Style.title3Emphasized.copyWith(
-                                            color: Pallet.onBackground),
+                                        product["name"],
+                                        style: Style.body.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface),
                                       ),
-                                      Expanded(child: SizedBox()),
-                                      if (cart.contains(product["id"]))
-                                        Container(
-                                          height: 32,
-                                          decoration: BoxDecoration(
-                                              color: Pallet.tertiaryFill,
-                                              borderRadius:
-                                                  BorderRadius.circular(8)),
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 8, horizontal: 8),
-                                          child: Row(
-                                            children: [
-                                              GestureDetector(
-                                                  onTap: () async {
-                                                    if (product["qty"] > 0) {
-                                                      product["qty"] -= 1;
-                                                      // if (!saved) {
-                                                      // total -= item["product"]["sellingPrice"];
-                                                      // }
-
-                                                      setState(() {});
-
-                                                      updateBag(product["id"],
-                                                          product["qty"]);
-                                                    }
-                                                    if (product["qty"] == 0) {
-                                                      cart.remove(
-                                                          product["id"]);
-                                                    }
-                                                  },
-                                                  child: Icon(
-                                                      FontAwesomeIcons.minus,
-                                                      size: 20,
-                                                      color:
-                                                          Pallet.onBackground)),
-                                              SizedBox(width: 8),
-                                              Text(product["qty"].toString(),style: Style.subHeadline.copyWith(
-                                                color: Pallet.onBackground
-                                              ),),
-                                              SizedBox(width: 8),
-                                              GestureDetector(
-                                                  onTap: () async {
-                                                    product["qty"] += 1;
-                                                    // if (!saved) {
-                                                    // total += item["product"]["sellingPrice"];
-                                                    // }
-
-                                                    setState(() {});
-                                                    updateBag(product["id"],
-                                                        product["qty"]);
-
-                                                    // getData();
-                                                  },
-                                                  child: Icon(
-                                                      FontAwesomeIcons.plus,
-                                                      size: 20,
-                                                      color:
-                                                          Pallet.onBackground)),
-                                            ],
+                                      Text(
+                                        product["about"].toString(),
+                                        maxLines: 1,
+                                        style: Style.ellipsisText
+                                            .merge(Style.subHeadline)
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurfaceVariant),
+                                      ),
+                                      SizedBox(height: 20),
+                                      Row(
+                                        children: [
+                                          if (product["originalPrice"] !=
+                                              product["sellingPrice"])
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 15),
+                                              child: Text(
+                                                  product["originalPrice"]
+                                                      .toString(),
+                                                  style: Style.title3Emphasized
+                                                      .copyWith(
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .lineThrough,
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .colorScheme
+                                                              .onSurfaceVariant)),
+                                            ),
+                                          Text(
+                                            "₹ ${product["sellingPrice"].toString()}",
+                                            style: Style.title3Emphasized
+                                                .copyWith(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onSurface),
                                           ),
-                                        )
-                                      else
-                                        Button(
-                                            radius: 30,
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5, vertical: 8),
-                                            label: "Add to Bag",
-                                            onPress: () {
-                                              product["qty"] = 1;
-                                              cart.add(product["id"]);
-                                              addToBag(product["id"]);
-                                              showMessage(context,
-                                                  "Added ${product["name"]} to bag");
-                                              setState(() {});
-                                            })
+                                          Expanded(child: SizedBox()),
+                                          if (cart.contains(product["id"]))
+                                            Container(
+                                              height: 32,
+                                              decoration: BoxDecoration(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .surfaceContainer,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8)),
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 8, horizontal: 8),
+                                              child: Row(
+                                                children: [
+                                                  GestureDetector(
+                                                      onTap: () async {
+                                                        if (product["qty"] >
+                                                            0) {
+                                                          product["qty"] -= 1;
+                                                          // if (!saved) {
+                                                          // total -= item["product"]["sellingPrice"];
+                                                          // }
+
+                                                          setState(() {});
+
+                                                          updateBag(
+                                                              product["id"],
+                                                              product["qty"]);
+                                                        }
+                                                        if (product["qty"] ==
+                                                            0) {
+                                                          cart.remove(
+                                                              product["id"]);
+                                                        }
+                                                      },
+                                                      child: Icon(
+                                                          FontAwesomeIcons
+                                                              .minus,
+                                                          size: 20,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .onSurface)),
+                                                  SizedBox(width: 8),
+                                                  Text(
+                                                    product["qty"].toString(),
+                                                    style: Style.subHeadline
+                                                        .copyWith(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .onSurface),
+                                                  ),
+                                                  SizedBox(width: 8),
+                                                  GestureDetector(
+                                                      onTap: () async {
+                                                        product["qty"] += 1;
+                                                        // if (!saved) {
+                                                        // total += item["product"]["sellingPrice"];
+                                                        // }
+
+                                                        setState(() {});
+                                                        updateBag(product["id"],
+                                                            product["qty"]);
+
+                                                        // getData();
+                                                      },
+                                                      child: Icon(
+                                                          FontAwesomeIcons.plus,
+                                                          size: 20,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .onSurface)),
+                                                ],
+                                              ),
+                                            )
+                                          else
+                                            Button(
+                                                size: ButtonSize.medium,
+                                                type: ButtonType.filled,
+                                                label: "Add to Bag",
+                                                onPress: () {
+                                                  product["qty"] = 1;
+                                                  cart.add(product["id"]);
+                                                  addToBag(product["id"]);
+                                                  showMessage(context,
+                                                      "Added ${product["name"]} to bag");
+                                                  setState(() {});
+                                                })
+                                        ],
+                                      )
                                     ],
-                                  )
+                                  ))
                                 ],
-                              ))
-                            ],
-                          ),
-                        ),
-                      )
+                              ),
+                            ),
+                          ))
                   ],
                 ),
               )
@@ -259,7 +292,7 @@ class _CategoriesState extends State<Categories> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Pallet.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -276,8 +309,8 @@ class _CategoriesState extends State<Categories> {
                   SizedBox(width: 15),
                   Text(
                     "Categories",
-                    style: Style.footnoteEmphasized
-                        .copyWith(color: Pallet.onBackground),
+                    style: Style.footnoteEmphasized.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface),
                   ),
                   Expanded(child: SizedBox()),
                   Icon(Icons.notifications_none, size: 22)
@@ -285,7 +318,7 @@ class _CategoriesState extends State<Categories> {
               ),
             ),
             Divider(
-              color: Pallet.outline,
+              color: Theme.of(context).colorScheme.outline,
               height: 1,
             ),
             SizedBox(height: 10),
@@ -302,14 +335,16 @@ class _CategoriesState extends State<Categories> {
                     Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Pallet.surface1),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .surfaceContainerLow),
                       padding: const EdgeInsets.all(8),
                       child: Row(
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Container(
-                              color: Pallet.background,
+                              color: Theme.of(context).colorScheme.surface,
                               child: Image.network(
                                 getUrl(Bucket.categories, category["imageId"]),
                                 width: 65,
@@ -321,8 +356,8 @@ class _CategoriesState extends State<Categories> {
                           Expanded(
                               child: Text(
                             category["categoryName"],
-                            style: Style.footnoteEmphasized
-                                .copyWith(color: Pallet.onBackground),
+                            style: Style.footnoteEmphasized.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface),
                           ))
                         ],
                       ),
@@ -373,30 +408,50 @@ class _ProductDetailsState extends State<ProductDetails> {
     }
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Pallet.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: AppBar(
+          leadingWidth: 30,
+          title: Text(
+            productData!["name"],
+            style: Style.body
+                .copyWith(color: Theme.of(context).colorScheme.onSurface),
+          ),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.notifications_none),
+              onPressed: () {
+                Navigator.push(
+                  mainContext,
+                  MaterialPageRoute(builder: (context) => Notifications()),
+                );
+              },
+            ),
+          ],
+        ),
         body: Column(
           children: [
             // SizedBox(height: 5),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-              child: Row(
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(Icons.arrow_back, size: 22)),
-                  SizedBox(width: 15),
-                  Text(
-                    productData!["name"],
-                    style: Style.body.copyWith(color: Pallet.onBackground),
-                  ),
-                  Expanded(child: SizedBox()),
-                  Icon(Icons.notifications_none, size: 22)
-                ],
-              ),
-            ),
-            Divider(color: Pallet.outline, height: 1),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+            //   child: Row(
+            //     children: [
+            //       GestureDetector(
+            //           onTap: () {
+            //             Navigator.pop(context);
+            //           },
+            //           child: Icon(Icons.arrow_back, size: 22)),
+            //       SizedBox(width: 15),
+            //       Text(
+            //         productData!["name"],
+            //         style: Style.body.copyWith(
+            //             color: Theme.of(context).colorScheme.onSurface),
+            //       ),
+            //       Expanded(child: SizedBox()),
+            //       Icon(Icons.notifications_none, size: 22)
+            //     ],
+            //   ),
+            // ),
+            Divider(color: Theme.of(context).colorScheme.outline, height: 1),
             Expanded(
                 child: ListView(
               padding: EdgeInsets.symmetric(horizontal: 15),
@@ -441,48 +496,50 @@ class _ProductDetailsState extends State<ProductDetails> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: (i == imageIdx)
-                              ? Pallet.tintColor
-                              : Pallet.outline),
+                              ? Theme.of(context).colorScheme.surfaceTint
+                              : Theme.of(context).colorScheme.outline),
                     )
                 ]),
                 SizedBox(height: 10),
                 Text(
                   productData!["name"],
-                  style: Style.body.copyWith(color: Pallet.onBackground),
+                  style: Style.body
+                      .copyWith(color: Theme.of(context).colorScheme.onSurface),
                 ),
                 SizedBox(height: 10),
                 Row(
                   children: [
                     Icon(
                       Icons.star,
-                      color: Pallet.primary,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 16,
                     ),
                     Icon(
                       Icons.star,
-                      color: Pallet.primary,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 16,
                     ),
                     Icon(
                       Icons.star,
-                      color: Pallet.primary,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 16,
                     ),
                     Icon(
                       Icons.star,
-                      color: Pallet.primary,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 16,
                     ),
                     Icon(
                       Icons.star,
-                      color: Pallet.primary,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 16,
                     ),
                     SizedBox(width: 15),
                     Text(
                       "4.5 stars (1,089 ratings)",
-                      style: Style.caption1
-                          .copyWith(color: Pallet.onSurfaceVariant),
+                      style: Style.caption1.copyWith(
+                          color:
+                              Theme.of(context).colorScheme.onSurfaceVariant),
                     ),
                   ],
                 ),
@@ -496,7 +553,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     Text(
                       "${productData!["discountPercentage"].toString()}% off",
                       style: Style.title3.copyWith(
-                        color: Pallet.primary,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                     SizedBox(width: 10),
@@ -504,19 +561,21 @@ class _ProductDetailsState extends State<ProductDetails> {
                       productData!["originalPrice"].toString(),
                       style: Style.title3Emphasized.copyWith(
                           decoration: TextDecoration.lineThrough,
-                          color: Pallet.onSurfaceVariant),
+                          color:
+                              Theme.of(context).colorScheme.onSurfaceVariant),
                     ),
                     SizedBox(width: 10),
                     Text(
                       "₹ ${productData!["sellingPrice"]}",
-                      style: Style.title3Emphasized
-                          .copyWith(color: Pallet.onBackground),
+                      style: Style.title3Emphasized.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface),
                     ),
                     Expanded(child: SizedBox()),
                     Text(
                       "@₹${productData!["sellingPrice"]}/I",
-                      style: Style.caption1
-                          .copyWith(color: Pallet.onSurfaceVariant),
+                      style: Style.caption1.copyWith(
+                          color:
+                              Theme.of(context).colorScheme.onSurfaceVariant),
                     ),
                   ],
                 ),
@@ -524,13 +583,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                 Text(
                   "Product Details",
                   style: Style.footnoteEmphasized
-                      .copyWith(color: Pallet.onBackground),
+                      .copyWith(color: Theme.of(context).colorScheme.onSurface),
                 ),
                 SizedBox(height: 10),
                 Container(
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      color: Pallet.primaryFill,
+                      color:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(14)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -538,12 +598,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                       SizedBox(height: 10),
                       Row(
                         children: [
-                          Icon(Icons.access_time_filled, color: Pallet.primary),
+                          Icon(Icons.access_time_filled,
+                              color: Theme.of(context).colorScheme.primary),
                           SizedBox(width: 10),
                           Text(
                             "Expiry Date: 30 OCT 2024",
-                            style: Style.callout
-                                .copyWith(color: Pallet.onBackground),
+                            style: Style.callout.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface),
                           )
                         ],
                       ),
@@ -554,8 +615,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                           children: [
                             Text(
                               "About the Product",
-                              style: Style.subHeadline
-                                  .copyWith(color: Pallet.onBackground),
+                              style: Style.subHeadline.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
                             ),
                             Icon(Icons.add, size: 18)
                           ],
@@ -574,8 +636,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                           children: [
                             Text(
                               "Ingredients",
-                              style: Style.subHeadline
-                                  .copyWith(color: Pallet.onBackground),
+                              style: Style.subHeadline.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
                             ),
                             Icon(Icons.add, size: 18)
                           ],
@@ -595,8 +658,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                           children: [
                             Text(
                               "Other Product Info",
-                              style: Style.subHeadline
-                                  .copyWith(color: Pallet.onBackground),
+                              style: Style.subHeadline.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
                             ),
                             Icon(Icons.add, size: 18)
                           ],
@@ -618,16 +682,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                       SizedBox(height: 20),
                       Row(
                         children: [
-                          Icon(Icons.info, color: Pallet.primary),
+                          Icon(Icons.info,
+                              color: Theme.of(context).colorScheme.primary),
                           SizedBox(width: 10),
                           Text(
                             "Additional details",
-                            style: Style.subHeadline
-                                .copyWith(color: Pallet.primary),
+                            style: Style.subHeadline.copyWith(
+                                color: Theme.of(context).colorScheme.primary),
                           ),
                           Expanded(child: SizedBox()),
                           Icon(Icons.keyboard_arrow_right_rounded,
-                              color: Pallet.primary)
+                              color: Theme.of(context).colorScheme.primary)
                         ],
                       ),
                       SizedBox(height: 10),
@@ -638,7 +703,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               ],
             )),
             Divider(
-              color: Pallet.outline,
+              color: Theme.of(context).colorScheme.outline,
               height: 1,
             ),
 
@@ -648,17 +713,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                 children: [
                   Expanded(
                       child: Button(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          radius: 30,
-                          color: Pallet.tonal,
-                          fontColor: Pallet.primary,
+                          size: ButtonSize.medium,
+                          type: ButtonType.tonal,
                           label: "Buy Now",
                           onPress: () {})),
                   SizedBox(width: 20),
                   Expanded(
                       child: Button(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          radius: 30,
+                          size: ButtonSize.medium,
+                          type: ButtonType.filled,
                           label: "Add to Bag",
                           onPress: () {}))
                 ],

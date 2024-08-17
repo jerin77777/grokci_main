@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grokci_main/backend/server.dart';
 import 'package:grokci_main/screens/products.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 import '../types.dart';
 
@@ -51,35 +53,6 @@ class ProfileIcon extends StatelessWidget {
         ),
       );
     }
-  }
-}
-
-// TODO: remove this smallbutton widget and instead use a single button widget with all the variations of size (small, medium, large) and style(borderless, bezeled gray, tonal, filled)
-
-class SmallButton extends StatelessWidget {
-  const SmallButton({super.key, required this.label, required this.onPress});
-  final String label;
-  final Function onPress;
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      style: TextButton.styleFrom(
-        padding: EdgeInsets.all(0),
-        minimumSize: Size(30, 30),
-      ),
-      onPressed: () {
-        onPress();
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 13),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20), color: Pallet.primary),
-        child: Text(
-          label,
-          style: TextStyle(fontSize: 13, color: Pallet.tertiaryFill),
-        ),
-      ),
-    );
   }
 }
 
@@ -135,13 +108,13 @@ class _TextBoxState extends State<TextBox> {
           height: 50,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
           decoration: BoxDecoration(
-            color: Pallet.tertiaryFill,
+            color: Theme.of(context).colorScheme.surfaceContainer,
             borderRadius: BorderRadius.circular(widget.radius ?? 14),
             border: Border.all(
                 color: widget.hasBorder
-                    ? Pallet.outlineVariant
+                    ? Theme.of(context).colorScheme.outlineVariant
                     : (hasError)
-                        ? Pallet.error
+                        ? Theme.of(context).colorScheme.error
                         : Colors.transparent),
           ),
           child: TextField(
@@ -149,7 +122,7 @@ class _TextBoxState extends State<TextBox> {
               obscureText: widget.isPassword,
               focusNode: widget.focus,
               onSubmitted: widget.onEnter,
-              cursorColor: Pallet.onBackground,
+              cursorColor: Theme.of(context).colorScheme.onSurface,
               cursorOpacityAnimates: true,
               onChanged: (value) {
                 hasError = false;
@@ -176,11 +149,11 @@ class _TextBoxState extends State<TextBox> {
                 }
               },
               controller: widget.controller,
-              style: Style.body.copyWith(color: Pallet.onBackground),
+              style: Style.body.copyWith(color: Theme.of(context).colorScheme.onSurface),
               maxLines: widget.maxLines ?? 1,
               decoration: InputDecoration(
                 hintText: widget.hintText,
-                hintStyle: Style.body.copyWith(color: Pallet.onSurfaceVariant),
+                hintStyle: Style.body.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                 isDense: true,
                 border: InputBorder.none,
               )),
@@ -188,12 +161,13 @@ class _TextBoxState extends State<TextBox> {
         if (widget.errorText != null)
           Text(
             widget.errorText!,
-            style: Style.caption1.copyWith(color: Pallet.error),
+            style: Style.caption1.copyWith(color: Theme.of(context).colorScheme.error),
           )
       ],
     );
   }
 }
+
 class Category extends StatelessWidget {
   const Category({
     super.key,
@@ -219,7 +193,7 @@ class Category extends StatelessWidget {
         width: 70,
         height: 90,
         decoration: BoxDecoration(
-          color: Pallet.secondaryFill,
+          color: Theme.of(context).colorScheme.surfaceContainerHigh,
           borderRadius: const BorderRadius.all(Radius.circular(50)),
         ),
         child: Stack(children: [
@@ -243,7 +217,7 @@ class Category extends StatelessWidget {
               height: 36,
               padding: EdgeInsets.symmetric(horizontal: 2),
               decoration: BoxDecoration(
-                color: Pallet.secondary,
+                color: Theme.of(context).colorScheme.secondary,
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(6),
                   bottomRight: Radius.circular(6),
@@ -253,7 +227,7 @@ class Category extends StatelessWidget {
                   child: Text(
                 category["categoryName"],
                 textAlign: TextAlign.center,
-                style: Style.caption2.copyWith(color: Pallet.onSecondary),
+                style: Style.caption2.copyWith(color: Theme.of(context).colorScheme.onSecondary),
               )),
             ),
           )
@@ -282,27 +256,29 @@ class _StepperWidgetState extends State<StepperWidget> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: Pallet.tertiaryFill, borderRadius: BorderRadius.circular(8)),
+          color: Theme.of(context).colorScheme.surfaceContainer, borderRadius: BorderRadius.circular(8)),
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       child: Row(
         children: [
           GestureDetector(
               onTap: widget.decrementFunc,
-              child: Icon(Icons.remove, size: 18, color: Pallet.onBackground)),
+              child: Icon(Icons.remove, size: 18, color: Theme.of(context).colorScheme.onSurface)),
           const SizedBox(width: 10),
           Text(
             widget.quantity.toString(),
-            style: Style.subHeadline.copyWith(color: Pallet.onBackground),
+            style: Style.subHeadline.copyWith(color: Theme.of(context).colorScheme.onSurface),
           ),
           const SizedBox(width: 10),
           GestureDetector(
               onTap: widget.incrementFunc,
-              child: Icon(Icons.add, size: 18, color: Pallet.onBackground)),
+              child: Icon(Icons.add, size: 18, color: Theme.of(context).colorScheme.onSurface)),
         ],
       ),
     );
   }
 }
+
+// TODO : there is some tweaking that is needed to be done in the searchbar widget; in the textenabled state
 
 class SearchBarWidget extends StatefulWidget {
   String label;
@@ -315,7 +291,7 @@ class SearchBarWidget extends StatefulWidget {
       {super.key,
       required this.label,
       this.onPress,
-      this.textEnabled,
+      this.textEnabled = false,
       required this.onTextChanged,
       this.onSearchPress,
       this.style});
@@ -327,52 +303,88 @@ class SearchBarWidget extends StatefulWidget {
 class _SearchBarWidgetState extends State<SearchBarWidget> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onPress,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-        decoration: BoxDecoration(
-            color: Pallet.tertiaryFill, borderRadius: BorderRadius.circular(10)),
-        child: Row(
-          children: [
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: widget.onSearchPress != null
-                  ? () => widget.onSearchPress!()
-                  : () => {},
+    return (widget.textEnabled == false)
+        ? (Material(
+            borderRadius: BorderRadius.circular(10),
+            color: Theme.of(context).colorScheme.surfaceContainer,
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+                onTap: widget.onPress,
+                splashColor: Theme.of(context).colorScheme.surfaceContainer,
+                child: Container(
+                  height: 40,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
+                  child: Row(
+                    children: [
+                      Icon(
+                        FeatherIcons.search,
+                        size: 20,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                          child: Text(widget.label,
+                              style: Style.body
+                                  .copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)))
+                    ],
+                  ),
+                ))))
+        : (Container(
+            height: 40,
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
+            decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainer,
+                borderRadius: BorderRadius.circular(10)),
+            child: Row(
+              children: [
+                GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(
+                      Icons.arrow_back,
+                      size: 20,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    )),
+                const SizedBox(width: 10),
+                Expanded(
+                    child: TextField(
+                        cursorColor: Theme.of(context).colorScheme.primary,
+                        style: Style.body.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                        onChanged: (value) => widget.onTextChanged(value),
+                        decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding: EdgeInsets.zero,
+                            hintText: widget.label,
+                            hintStyle: Style.body
+                                .copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                            border: InputBorder.none))),
+                const SizedBox(width: 10),
+                GestureDetector(
+                    onTap: widget.onSearchPress,
+                    child: Icon(
+                      FeatherIcons.search,
+                      size: 20,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    )),
+              ],
             ),
-            SizedBox(width: 10),
-            Expanded(
-              child: TextField(
-                enabled: widget.textEnabled,
-                cursorColor: Pallet.onBackground,
-                style: Style.body.copyWith(color: Pallet.onBackground),
-                onChanged: (value) => widget.onTextChanged(value),
-                decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding: EdgeInsets.zero,
-                    hintText: widget.label,
-                    hintStyle: Style.body.copyWith(color: Pallet.onBackground),
-                    border: InputBorder.none),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+          ));
   }
 }
 
 enum ButtonSize { small, medium, large }
+
 enum ButtonType { borderless, gray, tonal, filled }
 
 class ButtonConfig {
   static double getBorderRadius(ButtonSize size) {
     switch (size) {
       case ButtonSize.small:
-        return 4.0;
+        return 40;
       case ButtonSize.medium:
-        return 7.0;
+        return 40;
       case ButtonSize.large:
         return 12.0;
       default:
@@ -396,26 +408,26 @@ class ButtonConfig {
   static EdgeInsets getButtonEdgeInset(ButtonSize size) {
     switch (size) {
       case ButtonSize.small:
-        return const EdgeInsets.fromLTRB(6, 6, 6, 6);
+        return const EdgeInsets.fromLTRB(6, 4, 10, 4);
       case ButtonSize.medium:
-        return const EdgeInsets.fromLTRB(10, 8, 10, 8);
+        return const EdgeInsets.fromLTRB(10, 7, 14, 7);
       case ButtonSize.large:
-        return const EdgeInsets.fromLTRB(16, 12, 16, 12);
+        return const EdgeInsets.fromLTRB(16, 14, 20, 14);
       default:
         return const EdgeInsets.all(8);
     }
   }
 
-  static Color getFillColor(ButtonType type) {
+  static Color getFillColor(ButtonType type, BuildContext context ) {
     switch (type) {
       case ButtonType.borderless:
         return Colors.transparent;
       case ButtonType.gray:
-        return Pallet.tertiaryFill;
+        return Theme.of(context).colorScheme.surfaceContainer;
       case ButtonType.tonal:
-        return Pallet.tonal;
+        return Theme.of(context).colorScheme.secondaryContainer;
       case ButtonType.filled:
-        return Pallet.primary;
+        return Theme.of(context).colorScheme.primary;
       default:
         return Colors.blue; // default fill color
     }
@@ -426,30 +438,66 @@ class Button extends StatelessWidget {
   final ButtonSize size;
   final ButtonType type;
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback onPress;
+  final bool disabled;
+  final IconData? icon;
+  final TextStyle? labelStyle;
+  final ButtonStyle? buttonStyle;
 
   const Button({
     Key? key,
     required this.size,
     required this.type,
+    required this.onPress,
     required this.label,
-    required this.onPressed,
+    this.disabled = false,
+    this.icon,
+    this.labelStyle,
+    this.buttonStyle,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: ButtonConfig.getHeight(size),
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: ButtonConfig.getFillColor(type),
+      child: FilledButton(
+        onPressed: disabled? null : onPress,
+        style: FilledButton.styleFrom(
+          enableFeedback: true,
+          backgroundColor: ButtonConfig.getFillColor(type, context),
+          surfaceTintColor: type == ButtonType.filled
+              ? Theme.of(context).colorScheme.inverseSurface
+              : Theme.of(context).colorScheme.surfaceContainer,
+          disabledBackgroundColor: type == ButtonType.borderless
+              ? Colors.transparent
+              : Theme.of(context).colorScheme.surfaceContainer,
+          disabledForegroundColor: Theme.of(context).colorScheme.scrim,
+          disabledIconColor: Theme.of(context).colorScheme.scrim,
+          foregroundColor: type == ButtonType.filled ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.primary,
+          iconColor: type == ButtonType.filled ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(ButtonConfig.getBorderRadius(size)),
+            borderRadius:
+                BorderRadius.circular(ButtonConfig.getBorderRadius(size)),
           ),
           padding: ButtonConfig.getButtonEdgeInset(size),
+        ).merge(buttonStyle),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            FaIcon(
+              icon,
+              size: icon !=null ? (size == ButtonSize.large ? 17 : 15): 0,
+            ),
+            const SizedBox(
+              width: 4,
+            ),
+            Text(
+              label,
+              style: (size == ButtonSize.large ? Style.body : Style.subHeadline).merge(labelStyle),
+            )
+          ],
         ),
-        child: Text(label),
       ),
     );
   }

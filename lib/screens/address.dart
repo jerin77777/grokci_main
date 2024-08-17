@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
+// import 'dart:io';
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+// import 'package:flutter_animate/flutter_animate.dart';
+// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -22,15 +22,17 @@ import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:permission_handler/permission_handler.dart' as local;
 import 'package:google_geocoding/google_geocoding.dart';
 
+import 'notifications.dart';
+
 Future<bool> makeDefault(BuildContext context) async {
   bool selected = false;
   await showDialog(
       context: context,
       builder: (context) => AlertDialog(
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10))),
+                borderRadius: BorderRadius.all(Radius.circular(15))),
             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            backgroundColor: Pallet.background,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             content: SizedBox(
               width: 150,
               child: Column(
@@ -45,14 +47,18 @@ Future<bool> makeDefault(BuildContext context) async {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      SmallButton(
+                      Button(
+                        size: ButtonSize.small,
+                        type: ButtonType.gray,
                         label: "Cancel",
                         onPress: () {
                           Navigator.of(context).pop();
                         },
                       ),
                       SizedBox(width: 10),
-                      SmallButton(
+                      Button(
+                        size: ButtonSize.small,
+                        type: ButtonType.filled,
                         label: "Done",
                         onPress: () async {
                           selected = true;
@@ -182,7 +188,7 @@ class _AddAddressState extends State<AddAddress> {
 
     return SafeArea(
         child: Scaffold(
-      backgroundColor: Pallet.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       bottomSheet: SizedBox(
         width: width,
         height: addAddress ? height : 0,
@@ -209,7 +215,7 @@ class _AddAddressState extends State<AddAddress> {
                     topRight: Radius.circular(20),
                     topLeft: Radius.circular(20),
                   ),
-                  color: Pallet.background,
+                  color: Theme.of(context).colorScheme.surface,
                   boxShadow: [
                     if (addAddress)
                       BoxShadow(
@@ -228,8 +234,8 @@ class _AddAddressState extends State<AddAddress> {
                       SizedBox(height: 10),
                       Text(
                         "Address name *",
-                        style: Style.footnoteEmphasized
-                            .copyWith(color: Pallet.onBackground),
+                        style: Style.footnoteEmphasized.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface),
                       ),
                       SizedBox(height: 8),
                       TextBox(
@@ -240,12 +246,13 @@ class _AddAddressState extends State<AddAddress> {
                         },
                       ),
                       Text(nameError,
-                          style: Style.caption2.copyWith(color: Pallet.error)),
+                          style: Style.caption2.copyWith(
+                              color: Theme.of(context).colorScheme.error)),
                       SizedBox(height: 10),
                       Text(
                         "Full name *",
-                        style: Style.footnoteEmphasized
-                            .copyWith(color: Pallet.onBackground),
+                        style: Style.footnoteEmphasized.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface),
                       ),
                       SizedBox(height: 8),
                       TextBox(
@@ -256,12 +263,13 @@ class _AddAddressState extends State<AddAddress> {
                         },
                       ),
                       Text(nameError,
-                          style: Style.caption2.copyWith(color: Pallet.error)),
+                          style: Style.caption2.copyWith(
+                              color: Theme.of(context).colorScheme.error)),
                       SizedBox(height: 10),
                       Text(
                         "House No. / Block. Building name *",
-                        style: Style.footnoteEmphasized
-                            .copyWith(color: Pallet.onBackground),
+                        style: Style.footnoteEmphasized.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface),
                       ),
                       SizedBox(height: 8),
                       TextBox(
@@ -272,12 +280,13 @@ class _AddAddressState extends State<AddAddress> {
                         },
                       ),
                       Text(houseNoError,
-                          style: Style.caption2.copyWith(color: Pallet.error)),
+                          style: Style.caption2.copyWith(
+                              color: Theme.of(context).colorScheme.error)),
                       SizedBox(height: 10),
                       Text(
                         "Road Name. Area Locality *",
-                        style: Style.footnoteEmphasized
-                            .copyWith(color: Pallet.onBackground),
+                        style: Style.footnoteEmphasized.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface),
                       ),
                       SizedBox(height: 8),
                       TextBox(
@@ -288,7 +297,8 @@ class _AddAddressState extends State<AddAddress> {
                         },
                       ),
                       Text(streetError,
-                          style: Style.caption2.copyWith(color: Pallet.error)),
+                          style: Style.caption2.copyWith(
+                              color: Theme.of(context).colorScheme.error)),
                       SizedBox(height: 10),
                       Row(
                         children: [
@@ -298,16 +308,20 @@ class _AddAddressState extends State<AddAddress> {
                               children: [
                                 Text(
                                   "City *",
-                                  style: Style.footnoteEmphasized
-                                      .copyWith(color: Pallet.onBackground),
+                                  style: Style.footnoteEmphasized.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface),
                                 ),
                                 SizedBox(height: 8),
                                 TextBox(
                                   controller: city,
                                 ),
                                 Text(cityError,
-                                    style: Style.caption2
-                                        .copyWith(color: Pallet.error)),
+                                    style: Style.caption2.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .error)),
                               ],
                             ),
                           ),
@@ -318,8 +332,10 @@ class _AddAddressState extends State<AddAddress> {
                               children: [
                                 Text(
                                   "Pincode *",
-                                  style: Style.footnoteEmphasized
-                                      .copyWith(color: Pallet.onBackground),
+                                  style: Style.footnoteEmphasized.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface),
                                 ),
                                 SizedBox(height: 8),
                                 TextBox(
@@ -330,8 +346,10 @@ class _AddAddressState extends State<AddAddress> {
                                   },
                                 ),
                                 Text(pincodeError,
-                                    style: Style.caption2
-                                        .copyWith(color: Pallet.error)),
+                                    style: Style.caption2.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .error)),
                               ],
                             ),
                           )
@@ -340,8 +358,8 @@ class _AddAddressState extends State<AddAddress> {
                       SizedBox(height: 10),
                       Text(
                         "Phone number *",
-                        style: Style.footnoteEmphasized
-                            .copyWith(color: Pallet.onBackground),
+                        style: Style.footnoteEmphasized.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface),
                       ),
                       SizedBox(height: 8),
                       TextBox(
@@ -352,7 +370,8 @@ class _AddAddressState extends State<AddAddress> {
                         },
                       ),
                       Text(phoneError,
-                          style: Style.caption2.copyWith(color: Pallet.error)),
+                          style: Style.caption2.copyWith(
+                              color: Theme.of(context).colorScheme.error)),
                       SizedBox(height: 10),
                       GestureDetector(
                         onTap: () async {
@@ -361,65 +380,71 @@ class _AddAddressState extends State<AddAddress> {
                         child: Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
-                              color: Pallet.tertiaryFill),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .surfaceContainer),
                           child: Text("Make this default address"),
                         ),
                       )
                     ],
                   )),
                   SizedBox(height: 20),
-                  Button(
-                      label: "Save Address",
-                      onPress: () async {
-                        if (name.text.isEmpty) {
-                          nameError = "required";
-                        }
-                        if (userName.text.isEmpty) {
-                          userNameError = "required";
-                        }
-                        if (houseNo.text.isEmpty) {
-                          houseNoError = "required";
-                        }
+                  Expanded(
+                    child: Button(
+                        size: ButtonSize.large,
+                        type: ButtonType.filled,
+                        label: "Save Address",
+                        onPress: () async {
+                          if (name.text.isEmpty) {
+                            nameError = "required";
+                          }
+                          if (userName.text.isEmpty) {
+                            userNameError = "required";
+                          }
+                          if (houseNo.text.isEmpty) {
+                            houseNoError = "required";
+                          }
 
-                        if (street.text.isEmpty) {
-                          streetError = "required";
-                        }
-                        if (city.text.isEmpty) {
-                          cityError = "required";
-                        }
-                        if (pincode.text.isEmpty) {
-                          pincodeError = "required";
-                        }
-                        selected = addressCount == 0;
-                        if (nameError.isEmpty &&
-                            userNameError.isEmpty &&
-                            houseNoError.isEmpty &&
-                            streetError.isEmpty &&
-                            cityError.isEmpty &&
-                            pincodeError.isEmpty) {
-                          await db.createDocument(
-                              databaseId: AppConfig.database,
-                              collectionId: AppConfig.address,
-                              documentId: Uuid().v4(),
-                              data: {
-                                "userId": userId,
-                                "name": name.text,
-                                "address":
-                                    "${houseNo.text}, ${street.text}, ${city.text}, ${pincode.text}",
-                                "userName": userName.text,
-                                "lat": marker.latitude,
-                                "lng": marker.longitude,
-                                "houseNumber": houseNo.text,
-                                "street": street.text,
-                                "city": city.text,
-                                "pincode": pincode.text,
-                                "phone": phone.text,
-                                "selected": selected
-                              });
-                        }
-                        Navigator.pop(context);
-                        setState(() {});
-                      }),
+                          if (street.text.isEmpty) {
+                            streetError = "required";
+                          }
+                          if (city.text.isEmpty) {
+                            cityError = "required";
+                          }
+                          if (pincode.text.isEmpty) {
+                            pincodeError = "required";
+                          }
+                          selected = addressCount == 0;
+                          if (nameError.isEmpty &&
+                              userNameError.isEmpty &&
+                              houseNoError.isEmpty &&
+                              streetError.isEmpty &&
+                              cityError.isEmpty &&
+                              pincodeError.isEmpty) {
+                            await db.createDocument(
+                                databaseId: AppConfig.database,
+                                collectionId: AppConfig.address,
+                                documentId: Uuid().v4(),
+                                data: {
+                                  "userId": userId,
+                                  "name": name.text,
+                                  "address":
+                                      "${houseNo.text}, ${street.text}, ${city.text}, ${pincode.text}",
+                                  "userName": userName.text,
+                                  "lat": marker.latitude,
+                                  "lng": marker.longitude,
+                                  "houseNumber": houseNo.text,
+                                  "street": street.text,
+                                  "city": city.text,
+                                  "pincode": pincode.text,
+                                  "phone": phone.text,
+                                  "selected": selected
+                                });
+                          }
+                          Navigator.pop(context);
+                          setState(() {});
+                        }),
+                  )
                 ],
               ),
             ),
@@ -447,7 +472,8 @@ class _AddAddressState extends State<AddAddress> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                     decoration: BoxDecoration(
-                        color: Pallet.surface1,
+                        color:
+                            Theme.of(context).colorScheme.surfaceContainerLow,
                         borderRadius: BorderRadius.circular(10)),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -510,41 +536,48 @@ class _AddAddressState extends State<AddAddress> {
               Expanded(
                 child: Center(
                   child: CircularProgressIndicator(
-                    color: Pallet.primary,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ),
             SizedBox(height: 20),
-            Button(
-                label: "Continue",
-                onPress: () async {
-                  var googleGeocoding = GoogleGeocoding(
-                      "AIzaSyCbU5_ADBeu0-SXrzaTRsAfFkRrLq5TigI");
-                  var result = await googleGeocoding.geocoding
-                      .getReverse(LatLon(marker.latitude, marker.longitude));
+            Row(children: [
+              Expanded(
+                child: Button(
+                    size: ButtonSize.large,
+                    type: ButtonType.filled,
+                    label: "Continue",
+                    onPress: () async {
+                      var googleGeocoding = GoogleGeocoding(
+                          "AIzaSyCbU5_ADBeu0-SXrzaTRsAfFkRrLq5TigI");
+                      var result = await googleGeocoding.geocoding.getReverse(
+                          LatLon(marker.latitude, marker.longitude));
 
-                  if (result?.results != null) {
-                    for (var result in result!.results![0].addressComponents!) {
-                      if (result.types!.contains('street_number') ||
-                          result.types!.contains('route')) {
-                        if (result.longName != null) {
-                          street.text = result.longName!;
-                        }
-                      } else if (result.types!.contains('locality')) {
-                        if (result.longName != null) {
-                          city.text = result.longName!;
-                        }
-                      } else if (result.types!.contains('postal_code')) {
-                        if (result.longName != null) {
-                          pincode.text = result.longName!;
+                      if (result?.results != null) {
+                        for (var result
+                            in result!.results![0].addressComponents!) {
+                          if (result.types!.contains('street_number') ||
+                              result.types!.contains('route')) {
+                            if (result.longName != null) {
+                              street.text = result.longName!;
+                            }
+                          } else if (result.types!.contains('locality')) {
+                            if (result.longName != null) {
+                              city.text = result.longName!;
+                            }
+                          } else if (result.types!.contains('postal_code')) {
+                            if (result.longName != null) {
+                              pincode.text = result.longName!;
+                            }
+                          }
                         }
                       }
-                    }
-                  }
 
-                  addAddress = true;
-                  setState(() {});
-                }),
+                      addAddress = true;
+                      setState(() {});
+                    }),
+              )
+            ]),
           ],
         ),
       ),
@@ -584,54 +617,84 @@ class _AddressState extends State<Address> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Pallet.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: AppBar(
+          leadingWidth: 30,
+          title: Text(
+            "Checkout",
+            style: Style.headline
+                .copyWith(color: Theme.of(context).colorScheme.onSurface),
+          ),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.notifications_none),
+              onPressed: () {
+                  Navigator.push(
+                  mainContext,
+                  MaterialPageRoute(builder: (context) => Notifications()),
+                );
+              },
+            ),
+          ],
+        ),
         body: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
-              SizedBox(height: 5),
-              Row(
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(Icons.arrow_back)),
-                  SizedBox(width: 15),
-                  Text(
-                    "Manage Addresses",
-                    style: Style.headline.copyWith(color: Pallet.onBackground),
-                  ),
-                  Expanded(child: SizedBox()),
-                  Icon(Icons.notifications_none)
-                ],
-              ),
-              SizedBox(height: 15),
+              // SizedBox(height: 5),
+              // Row(
+              //   children: [
+              //     GestureDetector(
+              //         onTap: () {
+              //           Navigator.pop(context);
+              //         },
+              //         child: Icon(Icons.arrow_back)),
+              //     SizedBox(width: 15),
+              //     Text(
+              //       "Manage Addresses",
+              //       style: Style.headline.copyWith(
+              //           color: Theme.of(context).colorScheme.onSurface),
+              //     ),
+              //     Expanded(child: SizedBox()),
+              //     Icon(Icons.notifications_none)
+              //   ],
+              // ),
+              // SizedBox(height: 15),
               Expanded(
                 child: ListView(
                   children: [
-                    Button(
-                        color: Pallet.tertiaryFill,
-                        fontColor: Pallet.primary,
-                        label: "Add New Address",
-                        onPress: () {
-                          Navigator.push(
-                            mainContext,
-                            MaterialPageRoute(
-                                builder: (context) => AddAddress()),
-                          ).then((_) {
-                            getData();
-                          });
-                        }),
-                    SizedBox(height: 10),
-                    Text("Default Address"),
-                    SizedBox(height: 5),
+                    Row(children: [
+                      Expanded(
+                        child: Button(
+                            size: ButtonSize.large,
+                            type: ButtonType.gray,
+                            label: "Add New Address",
+                            onPress: () {
+                              Navigator.push(
+                                mainContext,
+                                MaterialPageRoute(
+                                    builder: (context) => AddAddress()),
+                              ).then((_) {
+                                getData();
+                              });
+                            }),
+                      )
+                    ]),
+                    const SizedBox(height: 24),
+                    Text(
+                      "Default address",
+                      style: Style.footnoteEmphasized.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface),
+                    ),
+                    const SizedBox(height: 8),
                     if (addresses.isNotEmpty)
                       Container(
                         padding: EdgeInsets.symmetric(vertical: 14),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Pallet.secondaryFill),
+                            borderRadius: BorderRadius.circular(14),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .surfaceContainerHigh),
                         child: Column(
                           children: [
                             SizedBox(width: 5),
@@ -640,6 +703,8 @@ class _AddressState extends State<Address> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Radio(
+                                    activeColor:
+                                        Theme.of(context).colorScheme.primary,
                                     value: address["id"],
                                     groupValue: selected,
                                     onChanged: (value) async {
@@ -669,18 +734,27 @@ class _AddressState extends State<Address> {
                                     children: [
                                       Text(
                                         address["name"],
-                                        style: TextStyle(fontSize: 16),
+                                        style: Style.callout.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface),
                                       ),
-                                      Text(address["address"]),
+                                      const SizedBox(
+                                        height: 4,
+                                      ),
+                                      Text(
+                                        address["address"],
+                                        style: Style.footnote.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface),
+                                      ),
                                     ],
                                   )),
-                                  SizedBox(width: 10),
+                                  const SizedBox(width: 10),
                                   Button(
-                                      color: Pallet.tertiaryFill,
-                                      fontColor: Pallet.primary,
-                                      radius: 20,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 5),
+                                      size: ButtonSize.small,
+                                      type: ButtonType.gray,
                                       label: "Edit",
                                       onPress: () {
                                         Navigator.push(
@@ -825,29 +899,31 @@ class _SearchWidgetState extends State<SearchWidget> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 2),
-                    child: Icon(Icons.search, size: 22),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: TextField(
-                      cursorColor: Pallet.onBackground,
-                      controller: controller,
-                      style: Style.body.copyWith(color: Pallet.onBackground),
-                      onChanged: onSearchableTextChanged,
-                      decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding: EdgeInsets.zero,
-                          hintText: "Search Address...",
-                          hintStyle: Style.body
-                              .copyWith(color: Pallet.onSurfaceVariant),
-                          border: InputBorder.none),
-                    ),
-                  ),
-                ],
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Icon(Icons.search, size: 22),
               ),
+              SizedBox(width: 10),
+              Expanded(
+                child: TextField(
+                  cursorColor: Theme.of(context).colorScheme.onSurface,
+                  controller: controller,
+                  style: Style.body
+                      .copyWith(color: Theme.of(context).colorScheme.onSurface),
+                  onChanged: onSearchableTextChanged,
+                  decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
+                      hintText: "Search Address...",
+                      hintStyle: Style.body.copyWith(
+                          color:
+                              Theme.of(context).colorScheme.onSurfaceVariant),
+                      border: InputBorder.none),
+                ),
+              ),
+            ],
+          ),
           ValueListenableBuilder<bool>(
             valueListenable: notifierAutoCompletion,
             builder: (ctx, isVisible, child) {
@@ -862,7 +938,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                   margin: const EdgeInsets.only(top: 10),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Pallet.surface1),
+                      color: Theme.of(context).colorScheme.surfaceContainerLow),
                   child: child!,
                 ),
               );
@@ -917,7 +993,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                 if (snap.connectionState == ConnectionState.waiting) {
                   return Center(
                     child: CircularProgressIndicator(
-                      color: Pallet.primary,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   );
                 }

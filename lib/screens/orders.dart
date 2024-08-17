@@ -3,6 +3,7 @@ import 'package:grokci_main/backend/server.dart';
 
 import '../types.dart';
 import '../widgets.dart';
+import 'notifications.dart';
 
 class Orders extends StatefulWidget {
   const Orders({super.key});
@@ -31,32 +32,51 @@ class _OrdersState extends State<Orders> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          backgroundColor: Pallet.background,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          appBar: AppBar(
+            leadingWidth: 30,
+            title: Text(
+              "My Orders",
+              style: Style.headline
+                  .copyWith(color: Theme.of(context).colorScheme.onSurface),
+            ),
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.notifications_none),
+                onPressed: () {
+                    Navigator.push(
+                  mainContext,
+                  MaterialPageRoute(builder: (context) => Notifications()),
+                );
+                },
+              ),
+            ],
+          ),
           body: Column(
             children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Icon(Icons.arrow_back, size: 22)),
-                    SizedBox(width: 15),
-                    Text(
-                      "My Orders",
-                      style:
-                          Style.headline.copyWith(color: Pallet.onBackground),
-                    ),
-                    Expanded(child: SizedBox()),
-                    Icon(Icons.notifications_none, size: 22)
-                  ],
-                ),
-              ),
-              Divider(color: Pallet.outline, height: 1),
+              // Padding(
+              //   padding:
+              //       const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       GestureDetector(
+              //           onTap: () {
+              //             Navigator.pop(context);
+              //           },
+              //           child: Icon(Icons.arrow_back, size: 22)),
+              //       SizedBox(width: 15),
+              //       Text(
+              //         "My Orders",
+              //         style: Style.headline.copyWith(
+              //             color: Theme.of(context).colorScheme.onSurface),
+              //       ),
+              //       Expanded(child: SizedBox()),
+              //       Icon(Icons.notifications_none, size: 22)
+              //     ],
+              //   ),
+              // ),
+              Divider(color: Theme.of(context).colorScheme.outline, height: 1),
               SizedBox(height: 10),
               Expanded(
                 child: ListView(
@@ -76,7 +96,9 @@ class _OrdersState extends State<Orders> {
                           padding: EdgeInsets.symmetric(
                               vertical: 10, horizontal: 10),
                           decoration: BoxDecoration(
-                            color: Pallet.primaryFill,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .surfaceContainerHigh,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Row(
@@ -168,31 +190,30 @@ class _OrderDetailsState extends State<OrderDetails> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Pallet.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+         appBar: AppBar(
+            leadingWidth: 30,
+            title: Text(
+                    "Order Details",
+              style: Style.headline
+                  .copyWith(color: Theme.of(context).colorScheme.onSurface),
+            ),
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.notifications_none),
+                onPressed: () {
+                    Navigator.push(
+                  mainContext,
+                  MaterialPageRoute(builder: (context) => Notifications()),
+                );
+                },
+              ),
+            ],
+          ),
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(Icons.arrow_back, size: 22)),
-                  SizedBox(width: 15),
-                  Text(
-                    "Order Details",
-                    style: Style.footnoteEmphasized
-                        .copyWith(color: Pallet.onBackground),
-                  ),
-                  Expanded(child: SizedBox()),
-                  Icon(Icons.notifications_none, size: 22)
-                ],
-              ),
-            ),
-            Divider(color: Pallet.outline, height: 1),
+          
+            Divider(color: Theme.of(context).colorScheme.outline, height: 1),
             SizedBox(height: 10),
             Expanded(
                 child: ListView(
@@ -201,14 +222,17 @@ class _OrderDetailsState extends State<OrderDetails> {
                 Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Pallet.primaryFill),
+                      color:
+                          Theme.of(context).colorScheme.surfaceContainerHigh),
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   child: Column(
                     children: [
                       Text("Order ID: ${widget.order["id"]}",
                           maxLines: 1, overflow: TextOverflow.clip),
                       SizedBox(height: 5),
-                      Divider(color: Pallet.outline, height: 1),
+                      Divider(
+                          color: Theme.of(context).colorScheme.outline,
+                          height: 1),
                       for (var product in products)
                         Padding(
                           padding: const EdgeInsets.only(top: 10),
@@ -238,7 +262,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                           ),
                         ),
                       SizedBox(height: 10),
-                      Divider(color: Pallet.outline, height: 1),
+                      Divider(
+                          color: Theme.of(context).colorScheme.outline,
+                          height: 1),
                       SizedBox(height: 10),
                       Row(
                         children: [
@@ -258,10 +284,12 @@ class _OrderDetailsState extends State<OrderDetails> {
                     SizedBox(width: 5),
                     Text(
                       "Download Invoice",
-                      style: TextStyle(color: Pallet.primary),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary),
                     ),
                     Expanded(child: SizedBox()),
-                    Icon(Icons.arrow_forward_ios, color: Pallet.primary)
+                    Icon(Icons.arrow_forward_ios,
+                        color: Theme.of(context).colorScheme.primary)
                   ],
                 ),
                 SizedBox(height: 10),
@@ -271,7 +299,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
-                        color: Pallet.primaryFill),
+                        color:
+                            Theme.of(context).colorScheme.surfaceContainerHigh),
                     child: Column(children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -289,7 +318,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                           Text(
                               "-₹ ${widget.order["originalPrice"] - widget.order["sellingPrice"]}",
                               style: TextStyle(
-                                  fontSize: 16, color: Pallet.primary)),
+                                  fontSize: 16,
+                                  color:
+                                      Theme.of(context).colorScheme.primary)),
                         ],
                       ),
                       Row(
@@ -299,7 +330,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                               style: TextStyle(fontSize: 16)),
                           Text("Free Delivery",
                               style: TextStyle(
-                                  fontSize: 16, color: Pallet.primary)),
+                                  fontSize: 16,
+                                  color:
+                                      Theme.of(context).colorScheme.primary)),
                         ],
                       ),
                       Row(
@@ -313,6 +346,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                     ])),
                 SizedBox(height: 15),
                 Button(
+                    size: ButtonSize.large,
+                    type: ButtonType.filled,
                     label: "Proceed to Payment",
                     onPress: () {
                       // Navigator.push(
