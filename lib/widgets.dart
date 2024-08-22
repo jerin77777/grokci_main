@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grokci_main/backend/server.dart';
@@ -149,11 +150,13 @@ class _TextBoxState extends State<TextBox> {
                 }
               },
               controller: widget.controller,
-              style: Style.body.copyWith(color: Theme.of(context).colorScheme.onSurface),
+              style: Style.body
+                  .copyWith(color: Theme.of(context).colorScheme.onSurface),
               maxLines: widget.maxLines ?? 1,
               decoration: InputDecoration(
                 hintText: widget.hintText,
-                hintStyle: Style.body.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                hintStyle: Style.body.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant),
                 isDense: true,
                 border: InputBorder.none,
               )),
@@ -161,7 +164,8 @@ class _TextBoxState extends State<TextBox> {
         if (widget.errorText != null)
           Text(
             widget.errorText!,
-            style: Style.caption1.copyWith(color: Theme.of(context).colorScheme.error),
+            style: Style.caption1
+                .copyWith(color: Theme.of(context).colorScheme.error),
           )
       ],
     );
@@ -227,7 +231,8 @@ class Category extends StatelessWidget {
                   child: Text(
                 category["categoryName"],
                 textAlign: TextAlign.center,
-                style: Style.caption2.copyWith(color: Theme.of(context).colorScheme.onSecondary),
+                style: Style.caption2
+                    .copyWith(color: Theme.of(context).colorScheme.onSecondary),
               )),
             ),
           )
@@ -256,22 +261,26 @@ class _StepperWidgetState extends State<StepperWidget> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainer, borderRadius: BorderRadius.circular(8)),
+          color: Theme.of(context).colorScheme.surfaceContainer,
+          borderRadius: BorderRadius.circular(8)),
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       child: Row(
         children: [
           GestureDetector(
               onTap: widget.decrementFunc,
-              child: Icon(Icons.remove, size: 18, color: Theme.of(context).colorScheme.onSurface)),
+              child: Icon(Icons.remove,
+                  size: 18, color: Theme.of(context).colorScheme.onSurface)),
           const SizedBox(width: 10),
           Text(
             widget.quantity.toString(),
-            style: Style.subHeadline.copyWith(color: Theme.of(context).colorScheme.onSurface),
+            style: Style.subHeadline
+                .copyWith(color: Theme.of(context).colorScheme.onSurface),
           ),
           const SizedBox(width: 10),
           GestureDetector(
               onTap: widget.incrementFunc,
-              child: Icon(Icons.add, size: 18, color: Theme.of(context).colorScheme.onSurface)),
+              child: Icon(Icons.add,
+                  size: 18, color: Theme.of(context).colorScheme.onSurface)),
         ],
       ),
     );
@@ -285,7 +294,7 @@ class SearchBarWidget extends StatefulWidget {
   VoidCallback? onPress;
   bool? textEnabled;
   Function(String value) onTextChanged;
-  Function()? onSearchPress;
+  Function(String value)? onSearchPress;
   Style? style;
   SearchBarWidget(
       {super.key,
@@ -301,6 +310,7 @@ class SearchBarWidget extends StatefulWidget {
 }
 
 class _SearchBarWidgetState extends State<SearchBarWidget> {
+  TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return (widget.textEnabled == false)
@@ -325,8 +335,10 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                       const SizedBox(width: 10),
                       Expanded(
                           child: Text(widget.label,
-                              style: Style.body
-                                  .copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)))
+                              style: Style.body.copyWith(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant)))
                     ],
                   ),
                 ))))
@@ -350,19 +362,27 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                 const SizedBox(width: 10),
                 Expanded(
                     child: TextField(
+                        controller: controller,
                         cursorColor: Theme.of(context).colorScheme.primary,
-                        style: Style.body.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                        style: Style.body.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface),
                         onChanged: (value) => widget.onTextChanged(value),
                         decoration: InputDecoration(
                             isDense: true,
                             contentPadding: EdgeInsets.zero,
                             hintText: widget.label,
-                            hintStyle: Style.body
-                                .copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                            hintStyle: Style.body.copyWith(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant),
                             border: InputBorder.none))),
                 const SizedBox(width: 10),
                 GestureDetector(
-                    onTap: widget.onSearchPress,
+                    onTap: () {
+                      if (widget.onSearchPress != null) {
+                        widget.onSearchPress!(controller.text);
+                      }
+                    },
                     child: Icon(
                       FeatherIcons.search,
                       size: 20,
@@ -418,7 +438,7 @@ class ButtonConfig {
     }
   }
 
-  static Color getFillColor(ButtonType type, BuildContext context ) {
+  static Color getFillColor(ButtonType type, BuildContext context) {
     switch (type) {
       case ButtonType.borderless:
         return Colors.transparent;
@@ -461,7 +481,7 @@ class Button extends StatelessWidget {
     return SizedBox(
       height: ButtonConfig.getHeight(size),
       child: FilledButton(
-        onPressed: disabled? null : onPress,
+        onPressed: disabled ? null : onPress,
         style: FilledButton.styleFrom(
           enableFeedback: true,
           backgroundColor: ButtonConfig.getFillColor(type, context),
@@ -473,8 +493,12 @@ class Button extends StatelessWidget {
               : Theme.of(context).colorScheme.surfaceContainer,
           disabledForegroundColor: Theme.of(context).colorScheme.scrim,
           disabledIconColor: Theme.of(context).colorScheme.scrim,
-          foregroundColor: type == ButtonType.filled ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.primary,
-          iconColor: type == ButtonType.filled ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.primary,
+          foregroundColor: type == ButtonType.filled
+              ? Theme.of(context).colorScheme.onPrimary
+              : Theme.of(context).colorScheme.primary,
+          iconColor: type == ButtonType.filled
+              ? Theme.of(context).colorScheme.onPrimary
+              : Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(
             borderRadius:
                 BorderRadius.circular(ButtonConfig.getBorderRadius(size)),
@@ -487,14 +511,15 @@ class Button extends StatelessWidget {
           children: [
             FaIcon(
               icon,
-              size: icon !=null ? (size == ButtonSize.large ? 17 : 15): 0,
+              size: icon != null ? (size == ButtonSize.large ? 17 : 15) : 0,
             ),
             const SizedBox(
               width: 4,
             ),
             Text(
               label,
-              style: (size == ButtonSize.large ? Style.body : Style.subHeadline).merge(labelStyle),
+              style: (size == ButtonSize.large ? Style.body : Style.subHeadline)
+                  .merge(labelStyle),
             )
           ],
         ),

@@ -90,8 +90,8 @@ class _LoginState extends State<Login> {
                   SizedBox(height: 50),
                   Text(
                     "Login to continue",
-                    style: Style.title1Emphasized
-                        .copyWith(color: Theme.of(context).colorScheme.onSurface),
+                    style: Style.title1Emphasized.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface),
                   ),
                   const SizedBox(
                     height: 6,
@@ -109,14 +109,16 @@ class _LoginState extends State<Login> {
                     padding: EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
-                        border:
-                            Border.all(width: 1, color: Theme.of(context).colorScheme.outlineVariant)),
+                        border: Border.all(
+                            width: 1,
+                            color:
+                                Theme.of(context).colorScheme.outlineVariant)),
                     child: Row(
                       children: [
                         Text(
                           "+91 ",
-                          style:
-                              Style.body.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                          style: Style.body.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface),
                         ),
                         const SizedBox(width: 4),
                         Expanded(
@@ -138,13 +140,12 @@ class _LoginState extends State<Login> {
                             } else {
                               buttonDisabled = true;
                               setState(() {});
-
                             }
                           },
                           decoration: const InputDecoration(
                               border: InputBorder.none, counter: Offstage()),
-                          style:
-                              Style.body.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                          style: Style.body.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface),
                         ))
                       ],
                     ),
@@ -153,29 +154,10 @@ class _LoginState extends State<Login> {
                     Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(phoneError,
-                          style: Style.caption2.copyWith(color: Theme.of(context).colorScheme.error)),
+                          style: Style.caption2.copyWith(
+                              color: Theme.of(context).colorScheme.error)),
                     ),
                   const SizedBox(height: 40),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     RichText(
-                  //       text: TextSpan(
-                  //         text: "Dont have an accoount? ",
-                  //         style: GoogleFonts.beVietnamPro(
-                  //             fontSize: 14, color: Theme.of(context).colorScheme.font1),
-                  //         children: <TextSpan>[
-                  //           TextSpan(
-                  //               text: 'Register here',
-                  //               style: GoogleFonts.beVietnamPro(
-                  //                   color: Theme.of(context).colorScheme.primary)),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                  // SizedBox(height: 40),
-
                   if (checkOtp != null)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,8 +165,8 @@ class _LoginState extends State<Login> {
                         const SizedBox(height: 40),
                         Text(
                           "Enter otp:",
-                          style: Style.subHeadline
-                              .copyWith(color: Theme.of(context).colorScheme.onSurface),
+                          style: Style.subHeadline.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface),
                         ),
                         const SizedBox(height: 20),
                         OtpTextField(
@@ -193,15 +175,18 @@ class _LoginState extends State<Login> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           fieldWidth: 50,
                           fieldHeight: 50,
-                          borderColor: Theme.of(context).colorScheme.outlineVariant,
-                          focusedBorderColor: Theme.of(context).colorScheme.outline,
+                          borderColor:
+                              Theme.of(context).colorScheme.outlineVariant,
+                          focusedBorderColor:
+                              Theme.of(context).colorScheme.outline,
                           borderWidth: 1,
                           textStyle: Style.body.copyWith(
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                           cursorColor: Theme.of(context).colorScheme.onSurface,
                           filled: true,
-                          fillColor: Theme.of(context).colorScheme.surfaceContainer,
+                          fillColor:
+                              Theme.of(context).colorScheme.surfaceContainer,
                           showFieldAsBox: true,
                           onSubmit: (String verificationCode) {
                             if (int.parse(verificationCode) == checkOtp!) {
@@ -211,13 +196,51 @@ class _LoginState extends State<Login> {
                         ),
                         SizedBox(height: 20)
                       ],
-                    )
+                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Dont have an accoount? ",
+                          style: GoogleFonts.beVietnamPro(fontSize: 14)),
+                      GestureDetector(
+                        onTap: () {
+                          if (phoneNumber.text.length != 10) {
+                            phoneNumber.text = "";
+                          }
+                          Navigator.push(
+                            mainContext,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    SignUp(phoneNumber: phoneNumber.text)),
+                          );
+                        },
+                        child: Text("Register here? ",
+                            style: GoogleFonts.beVietnamPro(
+                                fontSize: 14,
+                                color: Theme.of(context).colorScheme.primary)),
+                      ),
+                      // RichText(
+                      //   text: TextSpan(
+                      //     text:,
+                      //     children: <TextSpan>[
+                      //       TextSpan(
+                      //           text: '',
+                      //           style: GoogleFonts.beVietnamPro(
+                      //               color:
+                      //                   Theme.of(context).colorScheme.primary)),
+                      //     ],
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                  SizedBox(height: 40),
                 ],
               )),
               RichText(
                 text: TextSpan(
                   text: "By continuing, you agree to Grocki's ",
-                  style: Style.footnote.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                  style: Style.footnote
+                      .copyWith(color: Theme.of(context).colorScheme.onSurface),
                   children: <TextSpan>[
                     TextSpan(
                         text: 'Terms of Use',
@@ -229,7 +252,8 @@ class _LoginState extends State<Login> {
                               throw Exception('Could not launch url');
                             }
                           },
-                        style: Style.footnote.copyWith(color: Theme.of(context).colorScheme.primary)),
+                        style: Style.footnote.copyWith(
+                            color: Theme.of(context).colorScheme.primary)),
                     TextSpan(text: ' & '),
                     TextSpan(
                         text: 'Privacy Policy!',
@@ -241,7 +265,8 @@ class _LoginState extends State<Login> {
                               throw Exception('Could not launch url');
                             }
                           },
-                        style: Style.footnote.copyWith(color: Theme.of(context).colorScheme.primary)),
+                        style: Style.footnote.copyWith(
+                            color: Theme.of(context).colorScheme.primary)),
                   ],
                 ),
               ),
@@ -285,11 +310,16 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   // error texts
   String nameError = "";
+  String phoneError = "";
 
   String language = "english";
   bool presedDone = false;
   TextEditingController userName = TextEditingController();
-
+  TextEditingController phone = TextEditingController();
+  bool otpSend = false;
+  bool buttonDisabled = false;
+  int? checkOtp;
+  bool verified = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -314,73 +344,243 @@ class _SignUpState extends State<SignUp> {
                     ),
                     SizedBox(height: 50),
                     Text(
-                      "Login to continue",
-                      style: Style.title1Emphasized
-                          .copyWith(color: Theme.of(context).colorScheme.onSurface),
+                      "Register to continue",
+                      style: Style.title1Emphasized.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface),
                     ),
-                    // SizedBox(height: 10),
-                    Text("Enter your user name"),
-                    SizedBox(height: 6),
-                    if (nameError.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: Text(nameError,
-                            style:
-                                Style.caption2.copyWith(color: Theme.of(context).colorScheme.error)),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    if (widget.phoneNumber.isEmpty) ...[
+                      Text("Enter your phone"),
+                      SizedBox(height: 6),
+                      Container(
+                        height: 50,
+                        padding: EdgeInsets.symmetric(horizontal: 12),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                                width: 1,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .outlineVariant)),
+                        child: Row(
+                          children: [
+                            Text(
+                              "+91 ",
+                              style: Style.body.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
+                            ),
+                            const SizedBox(width: 4),
+                            Expanded(
+                                child: TextField(
+                              // style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                              enabled: checkOtp == null,
+                              controller: phone,
+                              maxLength: 10,
+                              cursorColor:
+                                  Theme.of(context).colorScheme.primary,
+                              keyboardType: TextInputType.phone,
+                              onChanged: (_) {
+                                if (phoneError.isNotEmpty) {
+                                  phoneError = "";
+                                  setState(() {});
+                                }
+                                if (phone.text.length == 10) {
+                                  buttonDisabled = false;
+                                  setState(() {});
+                                } else {
+                                  buttonDisabled = true;
+                                  setState(() {});
+                                }
+                              },
+                              decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  counter: Offstage()),
+                              style: Style.body.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
+                            ))
+                          ],
+                        ),
                       ),
+                      if (phoneError.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(phoneError,
+                              style: Style.caption2.copyWith(
+                                  color: Theme.of(context).colorScheme.error)),
+                        ),
+                      SizedBox(height: 10),
+                    ],
+                    Text("Enter your full name"),
+                    SizedBox(height: 6),
                     Container(
                       height: 50,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 10,
-                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(14),
                           border: Border.all(
-                              width: 0.5,
-                              color: nameError.isEmpty
-                                  ? Colors.black
-                                  : Theme.of(context).colorScheme.error)),
+                              width: 1,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .outlineVariant)),
                       child: TextField(
-                        style: Style.body.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                        // style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        // enabled: checkOtp == null,
                         controller: userName,
+                        // maxLength: 10,
+                        cursorColor: Theme.of(context).colorScheme.primary,
                         keyboardType: TextInputType.text,
                         onChanged: (_) {
                           if (nameError.isNotEmpty) {
                             nameError = "";
                             setState(() {});
                           }
+                          // if (phoneNumber.text.length == 10) {
+                          //   buttonDisabled = false;
+                          //   setState(() {});
+                          // } else {
+                          //   buttonDisabled = true;
+                          //   setState(() {});
+                          // }
                         },
-                        decoration: InputDecoration(border: InputBorder.none),
+                        decoration: const InputDecoration(
+                            border: InputBorder.none, counter: Offstage()),
+                        style: Style.body.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    if (nameError.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Text(nameError,
+                            style: Style.caption2.copyWith(
+                                color: Theme.of(context).colorScheme.error)),
+                      ),
+                    // Container(
+                    //   height: 50,
+                    //   padding: EdgeInsets.symmetric(
+                    //     horizontal: 10,
+                    //   ),
+                    //   decoration: BoxDecoration(
+                    //       borderRadius: BorderRadius.circular(10),
+                    //       border: Border.all(
+                    //           width: 0.5,
+                    //           color: nameError.isEmpty
+                    //               ? Colors.black
+                    //               : Theme.of(context).colorScheme.error)),
+                    //   child: TextField(
+                    //     style: Style.body.copyWith(
+                    //         color: Theme.of(context).colorScheme.onSurface),
+                    //     controller: userName,
+                    //     keyboardType: TextInputType.text,
+                    //     onChanged: (_) {
+                    //       if (nameError.isNotEmpty) {
+                    //         nameError = "";
+                    //         setState(() {});
+                    //       }
+                    //     },
+                    //     decoration: InputDecoration(border: InputBorder.none),
+                    //   ),
+                    // ),
+                    if (checkOtp != null)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 40),
+                          Text(
+                            "Enter otp:",
+                            style: Style.subHeadline.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface),
+                          ),
+                          const SizedBox(height: 20),
+                          OtpTextField(
+                            numberOfFields: 4,
+                            borderRadius: BorderRadius.circular(14),
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            fieldWidth: 50,
+                            fieldHeight: 50,
+                            borderColor:
+                                Theme.of(context).colorScheme.outlineVariant,
+                            focusedBorderColor:
+                                Theme.of(context).colorScheme.outline,
+                            borderWidth: 1,
+                            textStyle: Style.body.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                            cursorColor:
+                                Theme.of(context).colorScheme.onSurface,
+                            filled: true,
+                            fillColor:
+                                Theme.of(context).colorScheme.surfaceContainer,
+                            showFieldAsBox: true,
+                            onSubmit: (String verificationCode) {
+                              if (int.parse(verificationCode) == checkOtp!) {
+                                verified = true;
+                                setState(() {});
+                                // login(context, phone.text);
+                              }
+                            }, // end onSubmit
+                          ),
+                          SizedBox(height: 20)
+                        ],
+                      ),
                   ],
                 ),
               ),
               SizedBox(height: 20),
-              Button(
-                  size: ButtonSize.large,
-                  type: ButtonType.gray,
-                  label: "Done",
-                  onPress: () {
-                    // RegExp numReg = RegExp(r'^-?[0-9]+$');
-                    // bool error = false;
+              if (!verified)
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 20,
+                  child: Button(
+                      disabled: buttonDisabled,
+                      size: ButtonSize.large,
+                      type: ButtonType.filled,
+                      label: "Send Otp",
+                      onPress: () async {
+                        print(phone.text.length);
+                        if (phone.text.length != 10) {
+                          phoneError = "Enter valid phone";
+                        } else if (userName.text.isEmpty) {
+                          nameError = "Enter valid name";
+                        } else {
+                          otpSend = true;
+                          buttonDisabled = true;
+                          checkOtp = await sendOtp(phone.text);
+                          setState(() {});
+                        }
+                        setState(() {});
+                      }),
+                )
+              else
+                Button(
+                    size: ButtonSize.large,
+                    type: ButtonType.filled,
+                    label: "Continue",
+                    onPress: () async {
+                      // RegExp numReg = RegExp(r'^-?[0-9]+$');
+                      // bool error = false;
 
-                    // if (userName.text.isEmpty) {
-                    //   nameError = "required *";
-                    //   error = true;
-                    // }
+                      // if (userName.text.isEmpty) {
+                      //   nameError = "required *";
+                      //   error = true;
+                      // }
 
-                    // setState(() {});
+                      // setState(() {});
 
-                    // if (!error && !presedDone) {
-                    //   presedDone = true;
-                    //   createAccount(
-                    //       context, widget.phoneNumber, userName.text, language);
+                      // if (!error && !presedDone) {
+                      presedDone = true;
+                      createAccount(
+                        context,
+                        widget.phoneNumber,
+                        userName.text,
+                      );
 
-                    //   setState(() {});
-                    // }
-                  }),
+                      setState(() {});
+                      // }
+                    }),
               presedDone
                   ? LoadingAnimationWidget.fallingDot(
                       color: Colors.white, size: 200)
@@ -425,14 +625,15 @@ Future<ImageSource?> selectPickerType(BuildContext context) async {
                           EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Theme.of(context).colorScheme.primary)),
+                          border: Border.all(
+                              color: Theme.of(context).colorScheme.primary)),
                       child: Row(
                         children: [
                           Expanded(
                               child: Text(
                             "Camera",
-                            style:
-                                GoogleFonts.beVietnamPro(color: Theme.of(context).colorScheme.primary),
+                            style: GoogleFonts.beVietnamPro(
+                                color: Theme.of(context).colorScheme.primary),
                           )),
                           Icon(
                             Icons.camera_alt,
@@ -453,14 +654,15 @@ Future<ImageSource?> selectPickerType(BuildContext context) async {
                           EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Theme.of(context).colorScheme.primary)),
+                          border: Border.all(
+                              color: Theme.of(context).colorScheme.primary)),
                       child: Row(
                         children: [
                           Expanded(
                               child: Text(
                             "Gallery",
-                            style:
-                                GoogleFonts.beVietnamPro(color: Theme.of(context).colorScheme.primary),
+                            style: GoogleFonts.beVietnamPro(
+                                color: Theme.of(context).colorScheme.primary),
                           )),
                           Icon(
                             Icons.photo,

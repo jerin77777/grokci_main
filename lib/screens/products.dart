@@ -5,6 +5,8 @@ import 'package:grokci_main/backend/server.dart';
 import 'package:grokci_main/screens/notifications.dart';
 import 'package:grokci_main/types.dart';
 import 'package:grokci_main/widgets.dart';
+import 'package:intl/intl.dart';
+import 'package:accordion/accordion.dart';
 
 class ProductsInCategory extends StatefulWidget {
   const ProductsInCategory(
@@ -104,8 +106,11 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
                                 children: [
                                   ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
-                                      child: Image.asset("assets/oil.jpeg",
-                                          width: 60, height: 60)),
+                                      child: Image.network(
+                                          getUrl(Bucket.products,
+                                              product["images"][0]),
+                                          width: 60,
+                                          height: 60)),
                                   SizedBox(width: 10),
                                   Expanded(
                                       child: Column(
@@ -384,8 +389,8 @@ class _ProductDetailsState extends State<ProductDetails> {
   Map? productData;
   int imageIdx = 0;
   String direction = "";
-  // double sellingPrice = 0;
-  // double originalPrice = 0;
+  double stars = 0;
+
   @override
   void initState() {
     getData();
@@ -395,9 +400,14 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   getData() async {
     productData = await getProduct(widget.productId);
-    print(productData);
-    // productData!["discount"] =
-    //     productData!["originalPrice"] - productData!["sellingPrice"] / productData!["originalPrice"];
+    if (productData!["stars"].isNotEmpty) {
+      for (var star in productData!["stars"]) {
+        stars += star;
+      }
+      stars = stars / productData!["stars"].length;
+    }
+
+    print(productData!["stars"]);
     setState(() {});
   }
 
@@ -430,27 +440,6 @@ class _ProductDetailsState extends State<ProductDetails> {
         ),
         body: Column(
           children: [
-            // SizedBox(height: 5),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-            //   child: Row(
-            //     children: [
-            //       GestureDetector(
-            //           onTap: () {
-            //             Navigator.pop(context);
-            //           },
-            //           child: Icon(Icons.arrow_back, size: 22)),
-            //       SizedBox(width: 15),
-            //       Text(
-            //         productData!["name"],
-            //         style: Style.body.copyWith(
-            //             color: Theme.of(context).colorScheme.onSurface),
-            //       ),
-            //       Expanded(child: SizedBox()),
-            //       Icon(Icons.notifications_none, size: 22)
-            //     ],
-            //   ),
-            // ),
             Divider(color: Theme.of(context).colorScheme.outline, height: 1),
             Expanded(
                 child: ListView(
@@ -487,6 +476,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     },
                     child: Image.network(getUrl(
                         Bucket.products, productData!["images"][imageIdx]))),
+                SizedBox(height: 10),
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   for (var i = 0; i < productData!["images"].length; i++)
                     Container(
@@ -509,34 +499,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                 SizedBox(height: 10),
                 Row(
                   children: [
-                    Icon(
-                      Icons.star,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 16,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 16,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 16,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 16,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 16,
-                    ),
+                    for (var i = 0; i < stars; i++)
+                      Icon(
+                        Icons.star,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 16,
+                      ),
                     SizedBox(width: 15),
                     Text(
-                      "4.5 stars (1,089 ratings)",
+                      "${stars.toInt()} stars (${productData!["stars"].length} ratings)",
                       style: Style.caption1.copyWith(
                           color:
                               Theme.of(context).colorScheme.onSurfaceVariant),
@@ -572,7 +543,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     ),
                     Expanded(child: SizedBox()),
                     Text(
-                      "@₹${productData!["sellingPrice"]}/I",
+                      productData!["priceDescription"],
                       style: Style.caption1.copyWith(
                           color:
                               Theme.of(context).colorScheme.onSurfaceVariant),
@@ -602,83 +573,54 @@ class _ProductDetailsState extends State<ProductDetails> {
                               color: Theme.of(context).colorScheme.primary),
                           SizedBox(width: 10),
                           Text(
-                            "Expiry Date: 30 OCT 2024",
+                            "Expiry Date: ${DateFormat('dd MMM yyyy').format(DateTime.parse(productData!["expiryDate"]))}",
                             style: Style.callout.copyWith(
                                 color: Theme.of(context).colorScheme.onSurface),
                           )
                         ],
                       ),
                       SizedBox(height: 20),
-                      if (productData!["about"] != null) ...[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      if (productData!["about"] != null)
+                        Accordion(
+                          title: "About the Product",
                           children: [
                             Text(
-                              "About the Product",
-                              style: Style.subHeadline.copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface),
+                              productData!["about"],
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            Icon(Icons.add, size: 18)
                           ],
                         ),
-                        SizedBox(height: 5),
-                        Text(
-                          productData!["about"],
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(height: 10),
-                      ],
-                      if (productData!["ingredients"] != null) ...[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      if (productData!["ingredients"] != null)
+                        Accordion(
+                          title: "Ingredients",
                           children: [
                             Text(
-                              "Ingredients",
-                              style: Style.subHeadline.copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface),
+                              productData!["ingredients"],
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            Icon(Icons.add, size: 18)
                           ],
                         ),
-                        SizedBox(height: 5),
-                        Text(
-                          productData!["ingredients"],
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(height: 10),
-                      ],
                       if (productData!["eanCode"] != null ||
-                          productData!["manufacturer"] != null) ...[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          productData!["manufacturer"] != null)
+                        Accordion(
+                          title: "Other Product Info",
                           children: [
-                            Text(
-                              "Other Product Info",
-                              style: Style.subHeadline.copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface),
-                            ),
-                            Icon(Icons.add, size: 18)
+                            if (productData!["eanCode"] != null)
+                              Text(
+                                "${productData!["EAN CODE: ${productData!["eanCode"]}"]}",
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            if (productData!["manufacturer"] != null)
+                              Text(
+                                "${productData!["Manufactured & Marketed By: ${productData!["manufacturer"]}"]}",
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                           ],
                         ),
-                        SizedBox(height: 5),
-                        if (productData!["eanCode"] != null)
-                          Text(
-                            "${productData!["EAN CODE: ${productData!["eanCode"]}"]}",
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        if (productData!["manufacturer"] != null)
-                          Text(
-                            "${productData!["Manufactured & Marketed By: ${productData!["manufacturer"]}"]}",
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                      ],
                       SizedBox(height: 20),
                       Row(
                         children: [
@@ -706,7 +648,6 @@ class _ProductDetailsState extends State<ProductDetails> {
               color: Theme.of(context).colorScheme.outline,
               height: 1,
             ),
-
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               child: Row(
@@ -730,6 +671,49 @@ class _ProductDetailsState extends State<ProductDetails> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class Accordion extends StatefulWidget {
+  const Accordion({super.key, required this.title, required this.children});
+  final String title;
+  final List<Widget> children;
+  @override
+  State<Accordion> createState() => _AccordionState();
+}
+
+class _AccordionState extends State<Accordion> {
+  bool open = false;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            open = !open;
+            setState(() {});
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                widget.title,
+                style: Style.subHeadline
+                    .copyWith(color: Theme.of(context).colorScheme.onSurface),
+              ),
+              if (open)
+                Icon(Icons.minimize, size: 18)
+              else
+                Icon(Icons.add, size: 18)
+            ],
+          ),
+        ),
+        SizedBox(height: 5),
+        if (open)
+          for (var child in widget.children) child,
+        SizedBox(height: 10),
+      ],
     );
   }
 }
