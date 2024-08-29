@@ -49,12 +49,7 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          leadingWidth: 30,
-          title: Text(
-            "Products in ${widget.categoryName}",
-            style: Style.headline
-                .copyWith(color: Theme.of(context).colorScheme.onSurface),
-          ),
+          title: Text("Products in ${widget.categoryName}".toLowerCase()),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.notifications_none),
@@ -70,7 +65,7 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Divider(color: Theme.of(context).colorScheme.outline, height: 1),
+            Divider(color: Theme.of(context).colorScheme.outline, height: 0.3),
             SizedBox(height: 10),
             if (products.isNotEmpty)
               Container(
@@ -420,12 +415,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          leadingWidth: 30,
-          title: Text(
-            productData!["name"],
-            style: Style.body
-                .copyWith(color: Theme.of(context).colorScheme.onSurface),
-          ),
+          title: Text(productData!["name"].toString().toLowerCase()),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.notifications_none),
@@ -440,7 +430,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         ),
         body: Column(
           children: [
-            Divider(color: Theme.of(context).colorScheme.outline, height: 1),
+            Divider(color: Theme.of(context).colorScheme.outline, height: 0.3),
             Expanded(
                 child: ListView(
               padding: EdgeInsets.symmetric(horizontal: 15),

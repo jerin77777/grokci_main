@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:grokci_main/backend/server.dart';
-import 'package:grokci_main/screens/changeMode.dart';
 import 'package:grokci_main/screens/feedback.dart';
 import 'package:grokci_main/screens/login.dart';
 import 'package:grokci_main/screens/security.dart';

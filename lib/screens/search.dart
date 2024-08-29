@@ -203,13 +203,14 @@ class _SearchViewState extends State<SearchView> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.surface,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Column(
           children: [
             SearchBarWidget(
               textEnabled: true,
-              label: "Search for Products...",
+              label: "Search for products...",
               onSearchPress: (value) async {
                 searching = true;
                 setState(() {});

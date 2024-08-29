@@ -2,107 +2,34 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:grokci_main/theme_provider.dart';
 import 'package:grokci_main/types.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:provider/provider.dart';
 
 import '../backend/server.dart';
 
 class Security extends StatefulWidget {
-  const Security({super.key});
+  Security({super.key});
 
   @override
   State<Security> createState() => _SecurityState();
+  ThemeMode themeMode = ThemeMode.light;
 }
 
 class _SecurityState extends State<Security> {
-  final LocalAuthentication auth = LocalAuthentication();
-  bool supported = false;
-  // SupportState _supportState = _SupportState.unknown;
-  bool? _canCheckBiometrics;
-  List<BiometricType>? _availableBiometrics;
-  String _authorized = 'Not Authorized';
-  bool _isAuthenticating = false;
-  bool authenticated = false;
 
-  bool passageEnabled = false;
-
-  @override
-  void initState() {
-    super.initState();
-    auth.isDeviceSupported().then(
-          (bool isSupported) => setState(() => supported = isSupported),
-        );
-  }
-
-  Future<void> _checkBiometrics() async {
-    late bool canCheckBiometrics;
-    try {
-      canCheckBiometrics = await auth.canCheckBiometrics;
-    } on PlatformException catch (e) {
-      canCheckBiometrics = false;
-      print(e);
+  static String getThemeMode(ThemeMode theme) {
+    switch (theme) {
+      case ThemeMode.system:
+        return "System Default";
+      case ThemeMode.light:
+        return "Light";
+      case ThemeMode.dark:
+        return "Dark";
+      default:
+        return "Select theme";
     }
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {
-      _canCheckBiometrics = canCheckBiometrics;
-    });
-  }
-
-  Future<void> _getAvailableBiometrics() async {
-    late List<BiometricType> availableBiometrics;
-    try {
-      availableBiometrics = await auth.getAvailableBiometrics();
-      print(availableBiometrics);
-    } on PlatformException catch (e) {
-      availableBiometrics = <BiometricType>[];
-      print(e);
-    }
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {
-      _availableBiometrics = availableBiometrics;
-    });
-  }
-
-  Future<void> _authenticate() async {
-    try {
-      setState(() {
-        _isAuthenticating = true;
-        _authorized = 'Authenticating';
-      });
-      authenticated = await auth.authenticate(
-        localizedReason: 'Let OS determine authentication method',
-        options: const AuthenticationOptions(
-          stickyAuth: true,
-        ),
-      );
-      setState(() {
-        _isAuthenticating = false;
-      });
-    } on PlatformException catch (e) {
-      print(e);
-      setState(() {
-        _isAuthenticating = false;
-        _authorized = 'Error - ${e.message}';
-      });
-      return;
-    }
-    if (!mounted) {
-      return;
-    }
-
-    setState(
-        () => _authorized = authenticated ? 'Authorized' : 'Not Authorized');
-  }
-
-  Future<void> _cancelAuthentication() async {
-    await auth.stopAuthentication();
-    setState(() => _isAuthenticating = false);
   }
 
   @override
@@ -110,14 +37,8 @@ class _SecurityState extends State<Security> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        
         appBar: AppBar(
-          leadingWidth: 30,
-          title: Text(
-            "User Preferences",
-            style: Style.headline
-                .copyWith(color: Theme.of(context).colorScheme.onSurface),
-          ),
+          title: const Text("User Preferences"),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.notifications_none),
@@ -151,7 +72,7 @@ class _SecurityState extends State<Security> {
             //     ],
             //   ),
             // ),
-            Divider(color: Theme.of(context).colorScheme.outline, height: 1),
+            Divider(color: Theme.of(context).colorScheme.outline, height: 0.3),
             SizedBox(height: 10),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
@@ -176,35 +97,44 @@ class _SecurityState extends State<Security> {
                             style: Style.body.copyWith(
                                 color: Theme.of(context).colorScheme.onSurface),
                           ),
-                          MenuAnchor(menuChildren: [
-                            MenuItemButton(
-                                onPressed: () {},
-                                child: Text(
-                                  "System default",
-                                  style: Style.body.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface),
-                                )),
-                            MenuItemButton(
-                                onPressed: () {},
-                                child: Text(
-                                  "Light",
-                                  style: Style.body.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface),
-                                )),
-                            MenuItemButton(
-                                onPressed: () {},
-                                child: Text(
-                                  "Dark",
-                                  style: Style.body.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface),
-                                )),
-                          ])
+                          
+                          DropdownMenu(
+                              onSelected: (thememode) {
+                                if (thememode != null) {
+                                  Provider.of<ThemeProvider>(context,
+                                          listen: false)
+                                      .themeMode = thememode;
+                                  // print(thememode);
+                                }
+                              },
+                              width: 190,
+                              hintText: getThemeMode(Provider.of<ThemeProvider>(context).themeMode),
+                              textStyle: Style.subHeadline,
+                              inputDecorationTheme: InputDecorationTheme(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                constraints: BoxConstraints.expand(height: 50),
+                                filled: true,
+                                fillColor: Theme.of(context).colorScheme.surfaceContainerHigh,
+                                outlineBorder: const BorderSide(
+                                  width: 0,
+                                  color: Colors.transparent,
+                                )
+                              ),
+                              dropdownMenuEntries: <DropdownMenuEntry<
+                                  ThemeMode>>[
+                                DropdownMenuEntry(
+                                    value: ThemeMode.system,
+                                    label: "System Default",
+                                    labelWidget: Text("System Default", style: Style.subHeadline,)),
+                                DropdownMenuEntry(
+                                    value: ThemeMode.light, label: 'Light',
+                                    labelWidget: Text("Light", style: Style.subHeadline,)),
+                                DropdownMenuEntry(
+                                    value: ThemeMode.dark, label: 'Dark',
+                                    labelWidget: Text("Dark", style: Style.subHeadline,))
+                              ])
                         ],
                       )
                     ],

@@ -619,12 +619,7 @@ class _AddressState extends State<Address> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          leadingWidth: 30,
-          title: Text(
-            "Checkout",
-            style: Style.headline
-                .copyWith(color: Theme.of(context).colorScheme.onSurface),
-          ),
+          title: const Text("Manage Address"),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.notifications_none),
@@ -660,6 +655,7 @@ class _AddressState extends State<Address> {
               //   ],
               // ),
               // SizedBox(height: 15),
+              
               Expanded(
                 child: ListView(
                   children: [
@@ -689,7 +685,7 @@ class _AddressState extends State<Address> {
                     const SizedBox(height: 8),
                     if (addresses.isNotEmpty)
                       Container(
-                        padding: EdgeInsets.symmetric(vertical: 14),
+                        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(14),
                             color: Theme.of(context)
@@ -699,13 +695,16 @@ class _AddressState extends State<Address> {
                           children: [
                             SizedBox(width: 5),
                             for (var address in addresses)
-                              Row(
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 16),
+                              child:Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Radio(
                                     activeColor:
                                         Theme.of(context).colorScheme.primary,
                                     value: address["id"],
+                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                     groupValue: selected,
                                     onChanged: (value) async {
                                       selected = address["id"];
@@ -733,7 +732,7 @@ class _AddressState extends State<Address> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        address["name"],
+                                        address["userName"],
                                         style: Style.callout.copyWith(
                                             color: Theme.of(context)
                                                 .colorScheme
@@ -768,7 +767,7 @@ class _AddressState extends State<Address> {
                                       }),
                                   SizedBox(width: 15),
                                 ],
-                              )
+                              ),)
                           ],
                         ),
                       )

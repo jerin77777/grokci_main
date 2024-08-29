@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:grokci_main/globals.dart';
 import 'package:grokci_main/screens/address.dart';
@@ -13,7 +15,10 @@ import 'package:grokci_main/screens/dashboard.dart';
 import 'package:grokci_main/screens/login.dart';
 import 'package:grokci_main/screens/profile.dart';
 import 'package:grokci_main/screens/search.dart';
+import 'package:grokci_main/screens/security.dart';
+import 'package:grokci_main/theme_provider.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'backend/server.dart';
@@ -30,27 +35,6 @@ Future<void> main() async {
   db = Databases(client);
   storage = Storage(client);
 
-
-  // changes status and system navigation color based on theme
-  SchedulerBinding.instance.platformDispatcher.onPlatformBrightnessChanged =
-      () async {
-
-    Brightness _brightness =
-        SchedulerBinding.instance.platformDispatcher.platformBrightness;
-
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: _brightness == Brightness.dark
-          ? darkMode.colorScheme.surface
-          : lightMode.colorScheme.surface,
-      systemNavigationBarColor: _brightness == Brightness.dark
-          ? darkMode.colorScheme.surface
-          : lightMode.colorScheme.surface,
-      statusBarIconBrightness: _brightness == Brightness.dark ? Brightness.light : Brightness.dark,
-      systemNavigationBarIconBrightness: _brightness == Brightness.dark ? Brightness.light : Brightness.dark,
-      statusBarBrightness: _brightness,
-    ));
-  };
-
   client
           .setEndpoint(AppConfig.endpoint) // Your Appwrite Endpoint
           .setProject(AppConfig.project) // Your project ID
@@ -58,7 +42,10 @@ Future<void> main() async {
       ;
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => ThemeProvider(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -66,20 +53,57 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    // changes status and system navigation color based on theme
+    switch (Provider.of<ThemeProvider>(context).themeMode) {
+      case ThemeMode.system:
+        SchedulerBinding.instance.platformDispatcher
+            .onPlatformBrightnessChanged = () async {
+          Brightness _brightness =
+              SchedulerBinding.instance.platformDispatcher.platformBrightness;
+
+          SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+            statusBarColor: _brightness == Brightness.dark
+                ? darkMode.colorScheme.surface
+                : lightMode.colorScheme.surface,
+            systemNavigationBarColor: _brightness == Brightness.dark
+                ? darkMode.colorScheme.surface
+                : lightMode.colorScheme.surface,
+            statusBarIconBrightness: _brightness == Brightness.dark
+                ? Brightness.light
+                : Brightness.dark,
+            systemNavigationBarIconBrightness: _brightness == Brightness.dark
+                ? Brightness.light
+                : Brightness.dark,
+            statusBarBrightness: _brightness,
+          ));
+        };
+        break;
+      case ThemeMode.light:
+        SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+            statusBarColor: Color(0xFFFBFDF8),
+            systemNavigationBarColor: Color(0xFFFBFDF8),
+            statusBarIconBrightness: Brightness.dark,
+            systemNavigationBarIconBrightness: Brightness.dark,
+            statusBarBrightness: Brightness.light));
+        break;
+      case ThemeMode.dark:
+        SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+            statusBarColor: Color(0xFF191C19),
+            systemNavigationBarColor: Color(0xFF191C19),
+            statusBarIconBrightness: Brightness.light,
+            systemNavigationBarIconBrightness: Brightness.light,
+            statusBarBrightness: Brightness.dark));
+        break;
+      default:
+    }
+
     return StreamBuilder<Object>(
         stream: themeStream,
         builder: (context, snapshot) {
           return MaterialApp(
+            themeMode: Provider.of<ThemeProvider>(context).themeMode,
             theme: lightMode.copyWith(
-              appBarTheme: AppBarTheme(
-                systemOverlayStyle: SystemUiOverlayStyle(
-                  statusBarColor: Theme.of(context).colorScheme.surface,
-                  systemNavigationBarColor:
-                      Theme.of(context).colorScheme.surface,
-                  systemStatusBarContrastEnforced: true,
-                  systemNavigationBarContrastEnforced: true,
-                ),
-              ),
               inputDecorationTheme: InputDecorationTheme(
                 hintStyle: TextStyle(
                     color: Theme.of(context)
@@ -274,7 +298,7 @@ class _HomeState extends State<Home> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         bottomNavigationBar: Platform.isIOS
             ? CupertinoTabBar(
                 onTap: (index) {
@@ -305,39 +329,38 @@ class _HomeState extends State<Home> {
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.shopping_bag),
-                    label: 'Shopping Bag  ',
+                    label: 'Shopping Bag',
                   ),
                 ],
               )
-            : BottomNavigationBar(
-                showUnselectedLabels: true,
-                selectedFontSize: 12,
-                unselectedFontSize: 12,
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
-                type: BottomNavigationBarType.fixed,
-                items: const <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.home),
+            : Container(
+              foregroundDecoration: BoxDecoration(
+                border: Border(top: BorderSide(
+                  color: Theme.of(context).colorScheme.outline,
+                  width: 0.3,
+                )),
+              ),
+              child: NavigationBar(
+                destinations: const <NavigationDestination>[
+                  NavigationDestination(
+                    icon: Icon(FontAwesomeIcons.house, size: 18,),
                     label: 'Home',
                   ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.search),
+                  NavigationDestination(
+                    icon: Icon(FeatherIcons.search, size: 20,),
                     label: 'Search',
                   ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.person),
+                  NavigationDestination(
+                    icon: Icon(FontAwesomeIcons.solidUser, size: 20,),
                     label: 'Account',
                   ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.shopping_bag),
-                    label: 'Shopping Bag  ',
+                  NavigationDestination(
+                    icon: Icon(Icons.shopping_bag, size: 22,),
+                    label: 'Shopping Bag',
                   ),
                 ],
-                currentIndex: navIdx,
-                selectedItemColor: Theme.of(context).colorScheme.primary,
-                unselectedItemColor: Theme.of(context).colorScheme.surfaceTint,
-                onTap: (index) {
+                selectedIndex: navIdx,
+                onDestinationSelected: (index) {
                   navIdx = index;
                   if (index == 0) {
                     routerSink.add({"route": "dashboard"});
@@ -350,7 +373,7 @@ class _HomeState extends State<Home> {
                   }
                   setState(() {});
                 },
-              ),
+              )),
         body: StreamBuilder<Map>(
             initialData: const {"route": "dashboard"},
             stream: routerStream,

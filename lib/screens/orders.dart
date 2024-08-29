@@ -34,12 +34,7 @@ class _OrdersState extends State<Orders> {
       child: Scaffold(
           backgroundColor: Theme.of(context).colorScheme.surface,
           appBar: AppBar(
-            leadingWidth: 30,
-            title: Text(
-              "My Orders",
-              style: Style.headline
-                  .copyWith(color: Theme.of(context).colorScheme.onSurface),
-            ),
+            title: const Text("My Orders"),
             actions: <Widget>[
               IconButton(
                 icon: const Icon(Icons.notifications_none),
@@ -76,7 +71,7 @@ class _OrdersState extends State<Orders> {
               //     ],
               //   ),
               // ),
-              Divider(color: Theme.of(context).colorScheme.outline, height: 1),
+              Divider(color: Theme.of(context).colorScheme.outline, height: 0.3),
               SizedBox(height: 10),
               Expanded(
                 child: ListView(
@@ -191,13 +186,8 @@ class _OrderDetailsState extends State<OrderDetails> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
-         appBar: AppBar(
-            leadingWidth: 30,
-            title: Text(
-                    "Order Details",
-              style: Style.headline
-                  .copyWith(color: Theme.of(context).colorScheme.onSurface),
-            ),
+          appBar: AppBar(
+            title: const Text("Order Details"),
             actions: <Widget>[
               IconButton(
                 icon: const Icon(Icons.notifications_none),
@@ -213,7 +203,7 @@ class _OrderDetailsState extends State<OrderDetails> {
         body: Column(
           children: [
           
-            Divider(color: Theme.of(context).colorScheme.outline, height: 1),
+            Divider(color: Theme.of(context).colorScheme.outline, height: 0.3),
             SizedBox(height: 10),
             Expanded(
                 child: ListView(
