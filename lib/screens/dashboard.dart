@@ -26,15 +26,13 @@ class _DashboardState extends State<Dashboard> {
   getData() async {
     address = await getAddress();
     monthlyPicks = await getMonthlyPicks();
-    categories = await getCategories(limit: 4);
-
+    categories = await getCategories(limit: 5);
     setState(() {});
   }
 
   @override
   void initState() {
     getData();
-    // TODO: implement initState
     super.initState();
   }
 

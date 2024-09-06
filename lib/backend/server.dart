@@ -1,5 +1,6 @@
 // import 'dart:js_interop';
 
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:appwrite/appwrite.dart';
@@ -24,9 +25,6 @@ late Account account;
 late Storage storage;
 late BuildContext mainContext;
 SharedPreferences? sharedPreferences;
-// final LocalStorage local = LocalStorage('grokci');
-
-// late TwilioFlutter twilioFlutter;
 
 // delivery states picking, delivering, completed
 // order states delivering, delivered, payed
@@ -34,34 +32,33 @@ SharedPreferences? sharedPreferences;
 
 class AppConfig {
   static String endpoint = "***";
-  static String project =  "***";
-  static String mapKey =  "***";
-  static String geoCode =  "***";
-  static String database =  "***";
-  static String orders =  "***";
-  static String products =  "***";
-  static String orderProductMap =  "***";
-  static String drivers =  "***";
-  static String users =  "***";
-  static String categories =  "***";
-  static String warehouses =  "***";
-  static String promotions =  "***";
-  static String monthlyPicks =  "***";
-  static String cart =  "***";
-  static String address =  "***";
-  static String notifications =  "***";
-  static String support =  "***";
-  static String feedback =  "***";
+  static String project = "***";
+  static String mapKey = "***";
+  static String geoCode = "***";
+  static String database = "***";
+  static String orders = "***";
+  static String products = "***";
+  static String orderProductMap = "***";
+  static String drivers = "***";
+  static String users = "***";
+  static String categories = "***";
+  static String warehouses = "***";
+  static String promotions = "***";
+  static String monthlyPicks = "***";
+  static String cart = "***";
+  static String address = "***";
+  static String notifications = "***";
+  static String support = "***";
+  static String feedback = "***";
 
-  static String twilloSid =  "***";
-  static String twilloToken =  "***";
-  static String twilloNumber =  "***";
+  static String twilloSid = "***";
+  static String twilloToken = "***";
+  static String twilloNumber = "***";
 }
 
-
 class Bucket {
-  static String categories = "6650a1990032c806f041";
-  static String products = "66432daf000dc57d6cf0";
+  static String categories = "***";
+  static String products = "***";
 }
 
 createAccount(
@@ -69,6 +66,7 @@ createAccount(
   String phoneNumber,
   String userName,
 ) async {
+  debugPrint(phoneNumber);
   var doc = await db.createDocument(
       databaseId: AppConfig.database,
       collectionId: AppConfig.users,
@@ -236,7 +234,7 @@ getAddress() async {
       queries: [Query.equal("userId", userId), Query.equal("selected", true)]);
   result = getResult(address.documents);
   if (result.isEmpty) {
-    return null;
+    return {"address": "Select Address"};
   }
   return result[0];
 }
@@ -432,6 +430,22 @@ getNotifications() async {
   result = getResult(temp.documents);
 
   return result;
+}
+
+saveThemeType(String value) {
+  return sharedPreferences!.setString("theme", value);
+}
+
+getThemeType() {
+  return sharedPreferences!.get("theme");
+}
+
+saveBag(List bag) {
+  return sharedPreferences!.setString("bag", jsonEncode(bag));
+}
+
+List getBagLocal() {
+  return jsonDecode(sharedPreferences!.get("bag").toString());
 }
 
 List<Map> getResult(List<Document> documents) {

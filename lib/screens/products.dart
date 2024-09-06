@@ -49,7 +49,12 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          title: Text("Products in ${widget.categoryName}".toLowerCase()),
+          leadingWidth: 30,
+          title: Text(
+            "Products in ${widget.categoryName}",
+            style: Style.headline
+                .copyWith(color: Theme.of(context).colorScheme.onSurface),
+          ),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.notifications_none),
@@ -65,7 +70,7 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Divider(color: Theme.of(context).colorScheme.outline, height: 0.3),
+            Divider(color: Theme.of(context).colorScheme.outline, height: 1),
             SizedBox(height: 10),
             if (products.isNotEmpty)
               Container(
@@ -160,80 +165,36 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
                                           ),
                                           Expanded(child: SizedBox()),
                                           if (cart.contains(product["id"]))
-                                            Container(
-                                              height: 32,
-                                              decoration: BoxDecoration(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .surfaceContainer,
-                                                  borderRadius:
-                                                      BorderRadius.circular(8)),
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 8, horizontal: 8),
-                                              child: Row(
-                                                children: [
-                                                  GestureDetector(
-                                                      onTap: () async {
-                                                        if (product["qty"] >
-                                                            0) {
-                                                          product["qty"] -= 1;
-                                                          // if (!saved) {
-                                                          // total -= item["product"]["sellingPrice"];
-                                                          // }
+                                            StepperWidget(
+                                              quantity: product["qty"],
+                                              decrementFunc: () async {
+                                                if (product["qty"] > 0) {
+                                                  product["qty"] -= 1;
+                                                  // if (!saved) {
+                                                  // total -= item["product"]["sellingPrice"];
+                                                  // }
 
-                                                          setState(() {});
+                                                  setState(() {});
 
-                                                          updateBag(
-                                                              product["id"],
-                                                              product["qty"]);
-                                                        }
-                                                        if (product["qty"] ==
-                                                            0) {
-                                                          cart.remove(
-                                                              product["id"]);
-                                                        }
-                                                      },
-                                                      child: Icon(
-                                                          FontAwesomeIcons
-                                                              .minus,
-                                                          size: 20,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .onSurface)),
-                                                  SizedBox(width: 8),
-                                                  Text(
-                                                    product["qty"].toString(),
-                                                    style: Style.subHeadline
-                                                        .copyWith(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .colorScheme
-                                                                .onSurface),
-                                                  ),
-                                                  SizedBox(width: 8),
-                                                  GestureDetector(
-                                                      onTap: () async {
-                                                        product["qty"] += 1;
-                                                        // if (!saved) {
-                                                        // total += item["product"]["sellingPrice"];
-                                                        // }
+                                                  updateBag(product["id"],
+                                                      product["qty"]);
+                                                }
+                                                if (product["qty"] == 0) {
+                                                  cart.remove(product["id"]);
+                                                }
+                                              },
+                                              incrementFunc: () async {
+                                                product["qty"] += 1;
+                                                // if (!saved) {
+                                                // total += item["product"]["sellingPrice"];
+                                                // }
 
-                                                        setState(() {});
-                                                        updateBag(product["id"],
-                                                            product["qty"]);
+                                                setState(() {});
+                                                updateBag(product["id"],
+                                                    product["qty"]);
 
-                                                        // getData();
-                                                      },
-                                                      child: Icon(
-                                                          FontAwesomeIcons.plus,
-                                                          size: 20,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .onSurface)),
-                                                ],
-                                              ),
+                                                // getData();
+                                              },
                                             )
                                           else
                                             Button(
@@ -385,7 +346,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   int imageIdx = 0;
   String direction = "";
   double stars = 0;
-
+  List<String> cart = [];
   @override
   void initState() {
     getData();
@@ -395,6 +356,10 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   getData() async {
     productData = await getProduct(widget.productId);
+    cart = await getCartProductIds();
+    if (cart.contains(productData!["id"])) {
+      productData!["qty"] = await getQty(productData!["id"]);
+    }
     if (productData!["stars"].isNotEmpty) {
       for (var star in productData!["stars"]) {
         stars += star;
@@ -415,7 +380,12 @@ class _ProductDetailsState extends State<ProductDetails> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          title: Text(productData!["name"].toString().toLowerCase()),
+          leadingWidth: 30,
+          title: Text(
+            productData!["name"],
+            style: Style.body
+                .copyWith(color: Theme.of(context).colorScheme.onSurface),
+          ),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.notifications_none),
@@ -430,7 +400,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         ),
         body: Column(
           children: [
-            Divider(color: Theme.of(context).colorScheme.outline, height: 0.3),
+            Divider(color: Theme.of(context).colorScheme.outline, height: 1),
             Expanded(
                 child: ListView(
               padding: EdgeInsets.symmetric(horizontal: 15),
@@ -649,12 +619,50 @@ class _ProductDetailsState extends State<ProductDetails> {
                           label: "Buy Now",
                           onPress: () {})),
                   SizedBox(width: 20),
-                  Expanded(
-                      child: Button(
-                          size: ButtonSize.medium,
-                          type: ButtonType.filled,
-                          label: "Add to Bag",
-                          onPress: () {}))
+                  cart.contains(productData!["id"])
+                      ? StepperWidget(
+                          quantity: productData!["qty"],
+                          decrementFunc: () async {
+                            if (productData!["qty"] > 0) {
+                              productData!["qty"] -= 1;
+                              // if (!saved) {
+                              // total -= item["productData!"]["sellingPrice"];
+                              // }
+
+                              setState(() {});
+
+                              updateBag(
+                                  productData!["id"], productData!["qty"]);
+                            }
+                            if (productData!["qty"] == 0) {
+                              cart.remove(productData!["id"]);
+                            }
+                          },
+                          incrementFunc: () async {
+                            productData!["qty"] += 1;
+                            // if (!saved) {
+                            // total += item["productData!"]["sellingPrice"];
+                            // }
+
+                            setState(() {});
+                            updateBag(productData!["id"], productData!["qty"]);
+
+                            // getData();
+                          },
+                        )
+                      : Expanded(
+                          child: Button(
+                              size: ButtonSize.medium,
+                              type: ButtonType.filled,
+                              label: "Add to Bag",
+                              onPress: () {
+                                productData!["qty"] = 1;
+                                cart.add(productData!["id"]);
+                                addToBag(productData!["id"]);
+                                showMessage(context,
+                                    "Added ${productData!["name"]} to bag");
+                                setState(() {});
+                              })),
                 ],
               ),
             )

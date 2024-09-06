@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:grokci_main/main.dart';
 import 'package:grokci_main/screens/products.dart';
 
 import '../types.dart';
@@ -15,7 +16,24 @@ class Search extends StatefulWidget {
   State<Search> createState() => _SearchState();
 }
 
-class _SearchState extends State<Search> {
+class _SearchState extends State<Search> with RouteAware {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  // Called when the top route has been popped off, and the current route shows up.
+  void didPopNext() {
+    setState(() {});
+  }
+
   List<Map> categories = [];
   Map qtyCache = {};
 
@@ -179,7 +197,24 @@ class SearchView extends StatefulWidget {
   State<SearchView> createState() => _SearchViewState();
 }
 
-class _SearchViewState extends State<SearchView> {
+class _SearchViewState extends State<SearchView> with RouteAware {
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  // Called when the top route has been popped off, and the current route shows up.
+  void didPopNext() {
+    super.didPopNext();
+    getData();
+  }
+
   List<Map> products = [];
   List<String> cart = [];
 
@@ -203,14 +238,13 @@ class _SearchViewState extends State<SearchView> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.surface,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Column(
           children: [
             SearchBarWidget(
               textEnabled: true,
-              label: "Search for products...",
+              label: "Search for Products...",
               onSearchPress: (value) async {
                 searching = true;
                 setState(() {});
@@ -286,8 +320,11 @@ class _SearchViewState extends State<SearchView> {
                             children: [
                               ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: Image.asset("assets/oil.jpeg",
-                                      width: 80, height: 80)),
+                                  child: Image.network(
+                                      getUrl(Bucket.products,
+                                          product["images"][0]),
+                                      width: 80,
+                                      height: 80)),
                               SizedBox(width: 10),
                               Expanded(
                                   child: Column(
@@ -334,85 +371,91 @@ class _SearchViewState extends State<SearchView> {
                                                 .onSurface),
                                       ),
                                       Expanded(child: SizedBox()),
-                                      if (cart.contains(product["id"]))
-                                        Container(
-                                          height: 32,
-                                          decoration: BoxDecoration(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .surfaceContainer,
-                                              borderRadius:
-                                                  BorderRadius.circular(8)),
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 8, horizontal: 8),
-                                          child: Row(
-                                            children: [
-                                              GestureDetector(
-                                                  onTap: () async {
-                                                    if (product["qty"] > 0) {
-                                                      product["qty"] -= 1;
-                                                      // if (!saved) {
-                                                      // total -= item["product"]["sellingPrice"];
-                                                      // }
+                                      cart.contains(product["id"])
+                                          ? Container(
+                                              height: 32,
+                                              decoration: BoxDecoration(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .surfaceContainer,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8)),
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 8, horizontal: 8),
+                                              child: Row(
+                                                children: [
+                                                  GestureDetector(
+                                                      onTap: () async {
+                                                        if (product["qty"] >
+                                                            0) {
+                                                          product["qty"] -= 1;
+                                                          // if (!saved) {
+                                                          // total -= item["product"]["sellingPrice"];
+                                                          // }
 
-                                                      setState(() {});
+                                                          updateBag(
+                                                              product["id"],
+                                                              product["qty"]);
+                                                          setState(() {});
+                                                        }
+                                                        if (product["qty"] ==
+                                                            0) {
+                                                          cart.remove(
+                                                              product["id"]);
+                                                        }
+                                                      },
+                                                      child: Icon(
+                                                          FontAwesomeIcons
+                                                              .minus,
+                                                          size: 20,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .onSurface)),
+                                                  SizedBox(width: 8),
+                                                  Text(
+                                                    product["qty"].toString(),
+                                                    style: Style.subHeadline
+                                                        .copyWith(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .onSurface),
+                                                  ),
+                                                  SizedBox(width: 8),
+                                                  GestureDetector(
+                                                      onTap: () async {
+                                                        product["qty"] += 1;
+                                                        // if (!saved) {
+                                                        // total += item["product"]["sellingPrice"];
+                                                        // }
 
-                                                      updateBag(product["id"],
-                                                          product["qty"]);
-                                                    }
-                                                    if (product["qty"] == 0) {
-                                                      cart.remove(
-                                                          product["id"]);
-                                                    }
-                                                  },
-                                                  child: Icon(
-                                                      FontAwesomeIcons.minus,
-                                                      size: 20,
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .onSurface)),
-                                              SizedBox(width: 8),
-                                              Text(
-                                                product["qty"].toString(),
-                                                style: Style.subHeadline
-                                                    .copyWith(
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .onSurface),
+                                                        setState(() {});
+                                                        updateBag(product["id"],
+                                                            product["qty"]);
+
+                                                        // getData();
+                                                      },
+                                                      child: Icon(
+                                                          FontAwesomeIcons.plus,
+                                                          size: 20,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .onSurface)),
+                                                ],
                                               ),
-                                              SizedBox(width: 8),
-                                              GestureDetector(
-                                                  onTap: () async {
-                                                    product["qty"] += 1;
-                                                    // if (!saved) {
-                                                    // total += item["product"]["sellingPrice"];
-                                                    // }
-
-                                                    setState(() {});
-                                                    updateBag(product["id"],
-                                                        product["qty"]);
-
-                                                    // getData();
-                                                  },
-                                                  child: Icon(
-                                                      FontAwesomeIcons.plus,
-                                                      size: 20,
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .onSurface)),
-                                            ],
-                                          ),
-                                        )
-                                      else
-                                        Button(
-                                            size: ButtonSize.medium,
-                                            type: ButtonType.filled,
-                                            label: "Add to Bag",
-                                            onPress: () {
-                                              addToBag(product["id"]);
-                                              showMessage(context,
-                                                  "Added ${product["name"]} to bag");
-                                            })
+                                            )
+                                          : Button(
+                                              size: ButtonSize.medium,
+                                              type: ButtonType.filled,
+                                              label: "Add to Bag",
+                                              onPress: () {
+                                                addToBag(product["id"]);
+                                                setState(() {});
+                                                showMessage(context,
+                                                    "Added ${product["name"]} to bag");
+                                              })
                                     ],
                                   )
                                 ],

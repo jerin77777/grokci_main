@@ -111,8 +111,9 @@ class _LoginState extends State<Login> {
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
                             width: 1,
-                            color:
-                                Theme.of(context).colorScheme.outlineVariant)),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .outlineVariant)),
                     child: Row(
                       children: [
                         Text(
@@ -183,7 +184,8 @@ class _LoginState extends State<Login> {
                           textStyle: Style.body.copyWith(
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
-                          cursorColor: Theme.of(context).colorScheme.onSurface,
+                          cursorColor:
+                              Theme.of(context).colorScheme.onSurface,
                           filled: true,
                           fillColor:
                               Theme.of(context).colorScheme.surfaceContainer,
@@ -197,50 +199,14 @@ class _LoginState extends State<Login> {
                         SizedBox(height: 20)
                       ],
                     ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Dont have an accoount? ",
-                          style: GoogleFonts.beVietnamPro(fontSize: 14)),
-                      GestureDetector(
-                        onTap: () {
-                          if (phoneNumber.text.length != 10) {
-                            phoneNumber.text = "";
-                          }
-                          Navigator.push(
-                            mainContext,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    SignUp(phoneNumber: phoneNumber.text)),
-                          );
-                        },
-                        child: Text("Register here? ",
-                            style: GoogleFonts.beVietnamPro(
-                                fontSize: 14,
-                                color: Theme.of(context).colorScheme.primary)),
-                      ),
-                      // RichText(
-                      //   text: TextSpan(
-                      //     text:,
-                      //     children: <TextSpan>[
-                      //       TextSpan(
-                      //           text: '',
-                      //           style: GoogleFonts.beVietnamPro(
-                      //               color:
-                      //                   Theme.of(context).colorScheme.primary)),
-                      //     ],
-                      //   ),
-                      // ),
-                    ],
-                  ),
                   SizedBox(height: 40),
                 ],
               )),
               RichText(
                 text: TextSpan(
                   text: "By continuing, you agree to Grocki's ",
-                  style: Style.footnote
-                      .copyWith(color: Theme.of(context).colorScheme.onSurface),
+                  style: Style.footnote.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface),
                   children: <TextSpan>[
                     TextSpan(
                         text: 'Terms of Use',
@@ -309,6 +275,12 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   // error texts
+  @override
+  void initState() {
+    super.initState();
+    phone.text = widget.phoneNumber;
+  }
+
   String nameError = "";
   String phoneError = "";
 
@@ -351,69 +323,6 @@ class _SignUpState extends State<SignUp> {
                     const SizedBox(
                       height: 6,
                     ),
-                    if (widget.phoneNumber.isEmpty) ...[
-                      Text("Enter your phone"),
-                      SizedBox(height: 6),
-                      Container(
-                        height: 50,
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(
-                                width: 1,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .outlineVariant)),
-                        child: Row(
-                          children: [
-                            Text(
-                              "+91 ",
-                              style: Style.body.copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface),
-                            ),
-                            const SizedBox(width: 4),
-                            Expanded(
-                                child: TextField(
-                              // style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
-                              enabled: checkOtp == null,
-                              controller: phone,
-                              maxLength: 10,
-                              cursorColor:
-                                  Theme.of(context).colorScheme.primary,
-                              keyboardType: TextInputType.phone,
-                              onChanged: (_) {
-                                if (phoneError.isNotEmpty) {
-                                  phoneError = "";
-                                  setState(() {});
-                                }
-                                if (phone.text.length == 10) {
-                                  buttonDisabled = false;
-                                  setState(() {});
-                                } else {
-                                  buttonDisabled = true;
-                                  setState(() {});
-                                }
-                              },
-                              decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                  counter: Offstage()),
-                              style: Style.body.copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface),
-                            ))
-                          ],
-                        ),
-                      ),
-                      if (phoneError.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(phoneError,
-                              style: Style.caption2.copyWith(
-                                  color: Theme.of(context).colorScheme.error)),
-                        ),
-                      SizedBox(height: 10),
-                    ],
                     Text("Enter your full name"),
                     SizedBox(height: 6),
                     Container(
@@ -485,102 +394,34 @@ class _SignUpState extends State<SignUp> {
                     //     decoration: InputDecoration(border: InputBorder.none),
                     //   ),
                     // ),
-                    if (checkOtp != null)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 40),
-                          Text(
-                            "Enter otp:",
-                            style: Style.subHeadline.copyWith(
-                                color: Theme.of(context).colorScheme.onSurface),
-                          ),
-                          const SizedBox(height: 20),
-                          OtpTextField(
-                            numberOfFields: 4,
-                            borderRadius: BorderRadius.circular(14),
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            fieldWidth: 50,
-                            fieldHeight: 50,
-                            borderColor:
-                                Theme.of(context).colorScheme.outlineVariant,
-                            focusedBorderColor:
-                                Theme.of(context).colorScheme.outline,
-                            borderWidth: 1,
-                            textStyle: Style.body.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
-                            cursorColor:
-                                Theme.of(context).colorScheme.onSurface,
-                            filled: true,
-                            fillColor:
-                                Theme.of(context).colorScheme.surfaceContainer,
-                            showFieldAsBox: true,
-                            onSubmit: (String verificationCode) {
-                              if (int.parse(verificationCode) == checkOtp!) {
-                                verified = true;
-                                setState(() {});
-                                // login(context, phone.text);
-                              }
-                            }, // end onSubmit
-                          ),
-                          SizedBox(height: 20)
-                        ],
-                      ),
                   ],
                 ),
               ),
               SizedBox(height: 20),
-              if (!verified)
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 20,
-                  child: Button(
-                      disabled: buttonDisabled,
-                      size: ButtonSize.large,
-                      type: ButtonType.filled,
-                      label: "Send Otp",
-                      onPress: () async {
-                        print(phone.text.length);
-                        if (phone.text.length != 10) {
-                          phoneError = "Enter valid phone";
-                        } else if (userName.text.isEmpty) {
-                          nameError = "Enter valid name";
-                        } else {
-                          otpSend = true;
-                          buttonDisabled = true;
-                          checkOtp = await sendOtp(phone.text);
-                          setState(() {});
-                        }
-                        setState(() {});
-                      }),
-                )
-              else
-                Button(
-                    size: ButtonSize.large,
-                    type: ButtonType.filled,
-                    label: "Continue",
-                    onPress: () async {
-                      // RegExp numReg = RegExp(r'^-?[0-9]+$');
-                      // bool error = false;
+              Button(
+                  size: ButtonSize.large,
+                  type: ButtonType.filled,
+                  label: "Continue",
+                  onPress: () async {
+                    // RegExp numReg = RegExp(r'^-?[0-9]+$');
+                    // bool error = false;
 
-                      // if (userName.text.isEmpty) {
-                      //   nameError = "required *";
-                      //   error = true;
-                      // }
+                    // if (userName.text.isEmpty) {
+                    //   nameError = "required *";
+                    //   error = true;
+                    // }
 
-                      // setState(() {});
+                    // setState(() {});
 
-                      // if (!error && !presedDone) {
-                      presedDone = true;
-                      createAccount(
-                        context,
-                        widget.phoneNumber,
-                        userName.text,
-                      );
+                    // if (!error && !presedDone) {
+                    createAccount(
+                      context,
+                      phone.text,
+                      userName.text,
+                    );
 
-                      setState(() {});
-                      // }
-                    }),
+                    setState(() {});
+                  }),
               presedDone
                   ? LoadingAnimationWidget.fallingDot(
                       color: Colors.white, size: 200)
