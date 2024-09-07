@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grokci_main/backend/server.dart';
 
 import '../types.dart';
@@ -35,20 +34,15 @@ class _OrdersState extends State<Orders> {
       child: Scaffold(
           backgroundColor: Theme.of(context).colorScheme.surface,
           appBar: AppBar(
-            leadingWidth: 30,
-            title: Text(
-              "My Orders",
-              style: Style.headline
-                  .copyWith(color: Theme.of(context).colorScheme.onSurface),
-            ),
+            title: const Text("My Orders"),
             actions: <Widget>[
               IconButton(
                 icon: const Icon(Icons.notifications_none),
                 onPressed: () {
-                  Navigator.push(
-                    mainContext,
-                    MaterialPageRoute(builder: (context) => Notifications()),
-                  );
+                    Navigator.push(
+                  mainContext,
+                  MaterialPageRoute(builder: (context) => Notifications()),
+                );
                 },
               ),
             ],
@@ -77,7 +71,8 @@ class _OrdersState extends State<Orders> {
               //     ],
               //   ),
               // ),
-              Divider(color: Theme.of(context).colorScheme.outline, height: 1),
+              Divider(color: Theme.of(context).colorScheme.outline, height: 0.3),
+              SizedBox(height: 10),
               Expanded(
                 child: ListView(
                   padding: EdgeInsets.symmetric(horizontal: 10),
@@ -93,7 +88,6 @@ class _OrdersState extends State<Orders> {
                           );
                         },
                         child: Container(
-                          margin: EdgeInsets.only(top: 10),
                           padding: EdgeInsets.symmetric(
                               vertical: 10, horizontal: 10),
                           decoration: BoxDecoration(
@@ -192,28 +186,24 @@ class _OrderDetailsState extends State<OrderDetails> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        appBar: AppBar(
-          leadingWidth: 30,
-          title: Text(
-            "Order Details",
-            style: Style.headline
-                .copyWith(color: Theme.of(context).colorScheme.onSurface),
-          ),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.notifications_none),
-              onPressed: () {
-                Navigator.push(
+          appBar: AppBar(
+            title: const Text("Order Details"),
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.notifications_none),
+                onPressed: () {
+                    Navigator.push(
                   mainContext,
                   MaterialPageRoute(builder: (context) => Notifications()),
                 );
-              },
-            ),
-          ],
-        ),
+                },
+              ),
+            ],
+          ),
         body: Column(
           children: [
-            Divider(color: Theme.of(context).colorScheme.outline, height: 1),
+          
+            Divider(color: Theme.of(context).colorScheme.outline, height: 0.3),
             SizedBox(height: 10),
             Expanded(
                 child: ListView(
@@ -226,14 +216,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                           Theme.of(context).colorScheme.surfaceContainerHigh),
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Order ID: ${widget.order["id"]}",
-                        maxLines: 1,
-                        overflow: TextOverflow.clip,
-                        style: Style.callout,
-                      ),
+                      Text("Order ID: ${widget.order["id"]}",
+                          maxLines: 1, overflow: TextOverflow.clip),
                       SizedBox(height: 5),
                       Divider(
                           color: Theme.of(context).colorScheme.outline,
@@ -255,14 +240,11 @@ class _OrderDetailsState extends State<OrderDetails> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    product["name"],
-                                    style: Style.callout,
-                                  ),
+                                  Text("Order Id: ${product["name"]}"),
                                   SizedBox(height: 15),
                                   Text(
                                     "₹ ${product["sellingPrice"]}",
-                                    style: Style.calloutEmphasized,
+                                    style: TextStyle(),
                                   ),
                                 ],
                               ),
@@ -275,25 +257,20 @@ class _OrderDetailsState extends State<OrderDetails> {
                           height: 1),
                       SizedBox(height: 10),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "Total amount Paid:",
-                            style: Style.calloutEmphasized,
-                          ),
+                          Text("Total amount Paid:"),
                           Text(
                             "₹ ${widget.order["sellingPrice"]}",
-                            style: Style.calloutEmphasized,
                           )
                         ],
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Row(
                   children: [
-                    FaIcon(FontAwesomeIcons.brandsFontAwesome),
+                    Icon(Icons.file_copy),
                     SizedBox(width: 5),
                     Text(
                       "Download Invoice",
@@ -305,7 +282,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                         color: Theme.of(context).colorScheme.primary)
                   ],
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text("pricing details"),
                 SizedBox(height: 10),
                 Container(

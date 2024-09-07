@@ -31,12 +31,7 @@ class _NotificationsState extends State<Notifications> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          leadingWidth: 30,
-          title: Text(
-            "Notifications",
-            style: Style.headline
-                .copyWith(color: Theme.of(context).colorScheme.onSurface),
-          ),
+          title: const Text("Notifications"),
           // actions: <Widget>[
           //   IconButton(
           //     icon: const Icon(Icons.notifications_none),
@@ -51,7 +46,7 @@ class _NotificationsState extends State<Notifications> {
         ),
         body: Column(
           children: [
-            Divider(color: Theme.of(context).colorScheme.outline, height: 1),
+            Divider(color: Theme.of(context).colorScheme.outline, height: 0.3),
             if (notifications.isNotEmpty)
               Expanded(
                 child: ListView(

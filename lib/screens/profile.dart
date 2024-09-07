@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:grokci_main/backend/server.dart';
-import 'package:grokci_main/screens/changeMode.dart';
 import 'package:grokci_main/screens/feedback.dart';
 import 'package:grokci_main/screens/login.dart';
 import 'package:grokci_main/screens/security.dart';
@@ -14,7 +13,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'address.dart';
 import 'notifications.dart';
 import 'orders.dart';
-import 'profileEdit.dart';
 import 'support.dart';
 
 class Profile extends StatefulWidget {
@@ -26,12 +24,15 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   String name = "";
+  TextEditingController _name = TextEditingController();
+  bool edit = false;
   getData() async {
     var doc = await db.getDocument(
         databaseId: AppConfig.database,
         collectionId: AppConfig.users,
         documentId: sharedPreferences!.get("phone").toString());
     name = doc.data["userName"];
+    _name.text = name;
     setState(() {});
   }
 
@@ -137,30 +138,67 @@ class _ProfileState extends State<Profile> {
                       name: name != "" ? "$name[0]" : " ",
                     ),
                     SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Hi, $name",
-                              style: Style.title3.copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface)),
-                          Text("How are you doing ?",
-                              style: Style.body.copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSurfaceVariant))
-                        ],
+                    if (edit)
+                      Expanded(
+                          child: TextBox(
+                        controller: _name,
+                        radius: 10,
+                        hasBorder: true,
+                      ))
+                    else
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Hi, $name",
+                                style: Style.title3.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface)),
+                            Text("How are you doing ?",
+                                style: Style.body.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant))
+                          ],
+                        ),
                       ),
-                    ),
+                    if (edit)
+                      GestureDetector(
+                        onTap: () {
+                          edit = false;
+                          String userId =
+                              sharedPreferences!.get("phone").toString();
+
+                          db.updateDocument(
+                              databaseId: AppConfig.database,
+                              collectionId: AppConfig.users,
+                              documentId: userId,
+                              data: {"userName": _name.text});
+
+                          name = _name.text;
+                          setState(() {});
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(left: 10),
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary,
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Center(
+                            child: Icon(
+                              FontAwesomeIcons.check,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              size: 14,
+                            ),
+                          ),
+                        ),
+                      ),
                     SizedBox(width: 10),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          mainContext,
-                          MaterialPageRoute(
-                              builder: (context) => EditProfile()),
-                        );
+                        edit = !edit;
+                        setState(() {});
                       },
                       child: Container(
                         padding: EdgeInsets.all(12),
@@ -169,7 +207,9 @@ class _ProfileState extends State<Profile> {
                             borderRadius: BorderRadius.circular(20)),
                         child: Center(
                           child: Icon(
-                            FontAwesomeIcons.pen,
+                            (edit)
+                                ? FontAwesomeIcons.xmark
+                                : FontAwesomeIcons.pen,
                             color: Theme.of(context).colorScheme.onPrimary,
                             size: 14,
                           ),

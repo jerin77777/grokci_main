@@ -25,6 +25,7 @@ late Account account;
 late Storage storage;
 late BuildContext mainContext;
 SharedPreferences? sharedPreferences;
+// final LocalStorage local = LocalStorage('grokci');
 
 // delivery states picking, delivering, completed
 // order states delivering, delivered, payed
@@ -50,10 +51,6 @@ class AppConfig {
   static String notifications = "***";
   static String support = "***";
   static String feedback = "***";
-
-  static String twilloSid = "***";
-  static String twilloToken = "***";
-  static String twilloNumber = "***";
 }
 
 class Bucket {
@@ -66,7 +63,6 @@ createAccount(
   String phoneNumber,
   String userName,
 ) async {
-  debugPrint(phoneNumber);
   var doc = await db.createDocument(
       databaseId: AppConfig.database,
       collectionId: AppConfig.users,
@@ -98,19 +94,59 @@ login(context, phoneNumber) async {
   }
 }
 
-Future<int> sendOtp(phoneNumber) async {
-  TwilioFlutter twilioFlutter = TwilioFlutter(
-      accountSid: AppConfig.twilloSid,
-      authToken: AppConfig.twilloToken,
-      twilioNumber: AppConfig.twilloNumber);
+class Auth {
+  final _authtoken = sharedPreferences?.getString("authToken");
 
-  final Random _random = Random();
-  int _otp = 1000 + _random.nextInt(9000);
-  await twilioFlutter.sendSMS(
-      toNumber: "+91 ${phoneNumber}",
-      messageBody:
-          "$_otp<#> is your One Time Usable (OTP) code for logging in to your Grokci account.\n\n #GreenerChoice");
-  return _otp;
+  Future<String> sendOtp(phoneNumber, BuildContext context) async {
+    Client client = Client();
+    Functions functions = Functions(client);
+
+    client.setEndpoint(AppConfig.endpoint).setProject(AppConfig.project);
+
+    try {
+      final result = await functions.createExecution(
+        functionId: "66d9de7a002bd5bea60b",
+        body: '{"mobileNumber": "$phoneNumber"}',
+      );
+
+      // Parse the response
+      final responseData = jsonDecode(result.responseBody);
+
+      if (responseData["success"] == true) {
+        sharedPreferences?.setString("authToken", responseData["token"]);
+        showMessage(context, "OTP sent successfully!");
+        return responseData["data"]["data"]['verificationId'];
+      } else {
+        showMessage(context, "Unable to send OTP. Please try again!");
+        return "";
+      }
+    } catch (e) {
+      showMessage(context, "Unable to send OTP. Try again later!");
+      return "";
+    }
+  }
+
+  Future<String> verifyOTP(String? verificationId, String otpCode, BuildContext context) async {
+    Client client = Client();
+    Functions functions = Functions(client);
+
+    client.setEndpoint(AppConfig.endpoint).setProject(AppConfig.project);
+
+    final result = await functions.createExecution(
+      functionId: '66d9e7f700103761e48e',
+      body:
+          '{"token": "$_authtoken", "verificationId": "$verificationId", "otpCode": "$otpCode"}',
+    );
+
+    final responseData = jsonDecode(result.responseBody);
+
+    if (responseData["success"] == true) {
+      return responseData["data"]["message"];
+    } else {
+      showMessage(context, "Please Enter correct OTP!");
+      return "";
+    }
+  }
 }
 
 getMonthlyPicks() async {
@@ -430,22 +466,6 @@ getNotifications() async {
   result = getResult(temp.documents);
 
   return result;
-}
-
-saveThemeType(String value) {
-  return sharedPreferences!.setString("theme", value);
-}
-
-getThemeType() {
-  return sharedPreferences!.get("theme");
-}
-
-saveBag(List bag) {
-  return sharedPreferences!.setString("bag", jsonEncode(bag));
-}
-
-List getBagLocal() {
-  return jsonDecode(sharedPreferences!.get("bag").toString());
 }
 
 List<Map> getResult(List<Document> documents) {
