@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grokci_main/backend/server.dart';
 import 'package:grokci_main/screens/address.dart';
 import 'package:grokci_main/screens/notifications.dart';
@@ -58,7 +57,12 @@ class _CheckoutState extends State<Checkout> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          title: const Text("Checkout"),
+          leadingWidth: 30,
+          title: Text(
+            "Checkout",
+            style: Style.headline
+                .copyWith(color: Theme.of(context).colorScheme.onSurface),
+          ),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.notifications_none),
@@ -73,7 +77,7 @@ class _CheckoutState extends State<Checkout> {
         ),
         body: Column(
           children: [
-            Divider(color: Theme.of(context).colorScheme.outline, height: 0.3),
+            Divider(color: Theme.of(context).colorScheme.outline, height: 1),
             const SizedBox(height: 10),
             Expanded(
                 child: ListView(
@@ -103,7 +107,7 @@ class _CheckoutState extends State<Checkout> {
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
-                                  "Deliver to:",
+                                  "Deliver To:",
                                   style: Style.headline.copyWith(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -124,7 +128,6 @@ class _CheckoutState extends State<Checkout> {
                                   })
                             ],
                           ),
-                          const SizedBox(height: 8,),
                           Text(
                             currentAddress?["name"],
                             style: Style.callout.copyWith(
@@ -156,7 +159,6 @@ class _CheckoutState extends State<Checkout> {
                       }),
                 SizedBox(height: 10),
                 Container(
-                  height: 54,
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   decoration: BoxDecoration(
@@ -166,13 +168,12 @@ class _CheckoutState extends State<Checkout> {
                   child: Row(
                     children: [
                       Icon(
-                        FontAwesomeIcons.truckFast,
+                        Icons.delivery_dining,
                         color: Theme.of(context).colorScheme.primary,
-                        size: 16,
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 8),
                       Text(
-                        "Delivering within a hour",
+                        "Delivery within a hour",
                         style: Style.headline.copyWith(
                             color: Theme.of(context).colorScheme.onSurface),
                       )
@@ -347,16 +348,23 @@ class _CheckoutState extends State<Checkout> {
                   style: Style.title2Emphasized
                       .copyWith(color: Theme.of(context).colorScheme.onSurface),
                 ),
-                StepperWidget(
-                    quantity: item["qty"],
-                    incrementFunc: () async {
-                      item["qty"]--;
-                      setState(() {});
-                    },
-                    decrementFunc: () async {
-                      item["qty"]++;
-                      setState(() {});
-                    }),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surfaceContainer,
+                      borderRadius: BorderRadius.circular(8)),
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  child: Text(item["qty"].toString()),
+                )
+                // StepperWidget(
+                //     quantity: item["qty"],
+                //     incrementFunc: () async {
+                //       item["qty"]--;
+                //       setState(() {});
+                //     },
+                //     decrementFunc: () async {
+                //       item["qty"]++;
+                //       setState(() {});
+                //     }),
               ],
             ),
           ],

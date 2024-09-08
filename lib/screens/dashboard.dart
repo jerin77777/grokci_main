@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grokci_main/screens/products.dart';
-// import 'package:pay/pay.dart';
+import 'package:intl/intl.dart';
 
 import 'address.dart';
 import '../backend/server.dart';
@@ -23,10 +23,19 @@ class _DashboardState extends State<Dashboard> {
   List monthlyPicks = [];
   List categories = [];
   Map address = {};
+  List<String> cart = [];
+
+  bool showDetail = false;
+  Map productData = {};
+  int imageIdx = 0;
+  double stars = 0;
+  String direction = "";
+
   getData() async {
     address = await getAddress();
     monthlyPicks = await getMonthlyPicks();
-    categories = await getCategories(limit: 4);
+    categories = await getCategories(limit: 5);
+    cart = await getCartProductIds();
 
     setState(() {});
   }
@@ -34,12 +43,13 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     getData();
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     if (monthlyPicks.isEmpty) {
       return Center(
           child: CircularProgressIndicator(
@@ -48,6 +58,330 @@ class _DashboardState extends State<Dashboard> {
     }
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
+      bottomSheet: AnimatedContainer(
+        duration: Duration(milliseconds: 500),
+        width: width,
+        height: showDetail ? height : 0,
+        child: !showDetail
+            ? SizedBox()
+            : GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onPanUpdate: (details) {
+                  print(details.delta.dy);
+                },
+                child: Column(
+                  children: [
+                    Expanded(
+                        child: ListView(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      children: [
+                        SizedBox(height: 10),
+                        GestureDetector(
+                            onVerticalDragUpdate: (details) {
+                              if (details.delta.dy > 0) {
+                                direction = "down";
+                              } else {
+                                direction = "";
+                              }
+                            },
+                            onVerticalDragEnd: (details) {
+                              if (direction == "down") {
+                                showDetail = false;
+                                setState(() {});
+                              }
+                            },
+                            onPanEnd: (_) {
+                              if (direction == "right") {
+                                if (imageIdx > 0) {
+                                  imageIdx--;
+                                  setState(() {});
+                                }
+                              }
+
+                              // Swiping in left direction.
+                              if (direction == "left") {
+                                if (imageIdx <
+                                    productData!["images"].length - 1) {
+                                  imageIdx++;
+                                  setState(() {});
+                                }
+                              }
+                            },
+                            onPanUpdate: (details) {
+                              // Swiping in right direction.
+                              if (details.delta.dx > 0) {
+                                direction = "right";
+                              }
+
+                              // Swiping in left direction.
+                              if (details.delta.dx < 0) {
+                                direction = "left";
+                              }
+                            },
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(getUrl(Bucket.products,
+                                  productData!["images"][imageIdx])),
+                            )),
+                        SizedBox(height: 10),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              for (var i = 0;
+                                  i < productData!["images"].length;
+                                  i++)
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 2),
+                                  width: 10,
+                                  height: 10,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: (i == imageIdx)
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .surfaceTint
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .outline),
+                                )
+                            ]),
+                        SizedBox(height: 10),
+                        Text(
+                          productData!["name"],
+                          style: Style.body.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            for (var i = 0; i < stars; i++)
+                              Icon(
+                                Icons.star,
+                                color: Theme.of(context).colorScheme.primary,
+                                size: 16,
+                              ),
+                            SizedBox(width: 15),
+                            Text(
+                              "${stars.toInt()} stars (${productData!["stars"].length} ratings)",
+                              style: Style.caption1.copyWith(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Text("Quantity:  ${productData!["netContent"]}")
+                          ],
+                        ),
+                        SizedBox(height: 5),
+                        Row(
+                          children: [
+                            Text(
+                              "${productData!["discountPercentage"].toString()}% off",
+                              style: Style.title3.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              productData!["originalPrice"].toString(),
+                              style: Style.title3Emphasized.copyWith(
+                                  decoration: TextDecoration.lineThrough,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant),
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              "₹ ${productData!["sellingPrice"]}",
+                              style: Style.title3Emphasized.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
+                            ),
+                            Expanded(child: SizedBox()),
+                            Text(
+                              productData!["priceDescription"],
+                              style: Style.caption1.copyWith(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          "Product Details",
+                          style: Style.footnoteEmphasized.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface),
+                        ),
+                        SizedBox(height: 10),
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .surfaceContainerHighest,
+                              borderRadius: BorderRadius.circular(14)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Icon(Icons.access_time_filled,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    "Expiry Date: ${DateFormat('dd MMM yyyy').format(DateTime.parse(productData!["expiryDate"]))}",
+                                    style: Style.callout.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 20),
+                              if (productData!["about"] != null)
+                                Accordion(
+                                  title: "About the Product",
+                                  children: [
+                                    Text(
+                                      productData!["about"],
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              if (productData!["ingredients"] != null)
+                                Accordion(
+                                  title: "Ingredients",
+                                  children: [
+                                    Text(
+                                      productData!["ingredients"],
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              if (productData!["eanCode"] != null ||
+                                  productData!["manufacturer"] != null)
+                                Accordion(
+                                  title: "Other Product Info",
+                                  children: [
+                                    if (productData!["eanCode"] != null)
+                                      Text(
+                                        "${productData!["EAN CODE: ${productData!["eanCode"]}"]}",
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    if (productData!["manufacturer"] != null)
+                                      Text(
+                                        "${productData!["Manufactured & Marketed By: ${productData!["manufacturer"]}"]}",
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                  ],
+                                ),
+                              SizedBox(height: 20),
+                              Row(
+                                children: [
+                                  Icon(Icons.info,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    "Additional details",
+                                    style: Style.subHeadline.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary),
+                                  ),
+                                  Expanded(child: SizedBox()),
+                                  Icon(Icons.keyboard_arrow_right_rounded,
+                                      color:
+                                          Theme.of(context).colorScheme.primary)
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 50)
+                      ],
+                    )),
+                    Divider(
+                      color: Theme.of(context).colorScheme.outline,
+                      height: 1,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 15),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: Button(
+                                  size: ButtonSize.medium,
+                                  type: ButtonType.tonal,
+                                  label: "Buy Now",
+                                  onPress: () {})),
+                          SizedBox(width: 20),
+                          cart.contains(productData!["id"])
+                              ? StepperWidget(
+                                  quantity: productData!["qty"],
+                                  decrementFunc: () async {
+                                    if (productData!["qty"] > 0) {
+                                      productData!["qty"] -= 1;
+                                      // if (!saved) {
+                                      // total -= item["productData!"]["sellingPrice"];
+                                      // }
+
+                                      setState(() {});
+
+                                      updateBag(productData!["id"],
+                                          productData!["qty"]);
+                                    }
+                                    if (productData!["qty"] == 0) {
+                                      cart.remove(productData!["id"]);
+                                    }
+                                  },
+                                  incrementFunc: () async {
+                                    if (productData!["qty"] < 5) {
+                                      productData!["qty"] += 1;
+
+                                      setState(() {});
+                                      updateBag(productData!["id"],
+                                          productData!["qty"]);
+                                    }
+
+                                    // getData();
+                                  },
+                                )
+                              : Expanded(
+                                  child: Button(
+                                      size: ButtonSize.medium,
+                                      type: ButtonType.filled,
+                                      label: "Add to Bag",
+                                      onPress: () {
+                                        productData!["qty"] = 1;
+                                        cart.add(productData!["id"]);
+                                        addToBag(productData!["id"]);
+                                        showMessage(context,
+                                            "Added ${productData!["name"]} to bag");
+                                        setState(() {});
+                                      })),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
         child: Column(
@@ -175,20 +509,32 @@ class _DashboardState extends State<Dashboard> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        for (var category in monthlyPicks)
+                        for (var product in monthlyPicks)
                           InkWell(
                             splashColor:
                                 Theme.of(context).colorScheme.surfaceContainer,
-                            onTap: () {
-                              Navigator.push(
-                                mainContext,
-                                MaterialPageRoute(
-                                    builder: (context) => ProductsInCategory(
-                                          categoryId: category["id"],
-                                          categoryName:
-                                              category["categoryName"],
-                                        )),
-                              );
+                            onTap: () async {
+                              productData = product;
+                              showDetail = true;
+                              if (cart.contains(productData!["id"])) {
+                                productData!["qty"] =
+                                    await getQty(productData!["id"]);
+                              }
+                              if (productData!["stars"].isNotEmpty) {
+                                for (var star in productData!["stars"]) {
+                                  stars += star;
+                                }
+                                stars = stars / productData!["stars"].length;
+                              }
+                              setState(() {});
+                              // Navigator.push(
+                              //   mainContext,
+                              //   MaterialPageRoute(
+                              //       builder: (context) => ProductsInCategory(
+                              //             categoryId: product["id"],
+                              //             categoryName: product["name"],
+                              //           )),
+                              // );
                             },
                             child: Padding(
                                 padding: const EdgeInsets.all(10),
@@ -207,8 +553,8 @@ class _DashboardState extends State<Dashboard> {
                                         child: Container(
                                           padding: const EdgeInsets.all(6),
                                           child: Image.network(
-                                            getUrl(Bucket.categories,
-                                                category["imageId"]),
+                                            getUrl(Bucket.products,
+                                                product["images"][0]),
                                             width: 52,
                                             height: 52,
                                             fit: BoxFit.contain,
@@ -221,7 +567,7 @@ class _DashboardState extends State<Dashboard> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            category["categoryName"],
+                                            product["name"],
                                             style: Style.subHeadlineEmphasized
                                                 .copyWith(
                                                     color: Theme.of(context)

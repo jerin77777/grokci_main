@@ -363,7 +363,6 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                 Expanded(
                     child: TextField(
                         controller: controller,
-                        autofocus: true,
                         cursorColor: Theme.of(context).colorScheme.primary,
                         style: Style.body.copyWith(
                             color: Theme.of(context).colorScheme.onSurface),

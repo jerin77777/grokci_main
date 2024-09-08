@@ -29,6 +29,12 @@ class _BagState extends State<Bag> {
 
   getData({bool? saveForLater}) async {
     total = 0;
+    bag = getBagLocal();
+    if (bag.isNotEmpty) {
+      queried = true;
+    }
+    setState(() {});
+
     bag = await getBag();
     for (var item in bag) {
       Map product = await getProduct(item["productId"]);
@@ -43,6 +49,8 @@ class _BagState extends State<Bag> {
         item["product"] = product;
       }
     }
+
+    saveBag(bag);
 
     queried = true;
     setState(() {});
@@ -84,13 +92,11 @@ class _BagState extends State<Bag> {
                 ),
                 if (!queried)
                   SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 40,),
-                          Center(child: CircularProgressIndicator(
-                        color: Theme.of(context).colorScheme.primary,))
-                        ]
-                      )
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
                   )
                 else if (bag.isEmpty && saved.isEmpty)
                   SliverToBoxAdapter(
@@ -145,7 +151,7 @@ class _BagState extends State<Bag> {
           ),
           if (total != 0)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: [
                   Expanded(
@@ -228,13 +234,15 @@ class _BagState extends State<Bag> {
                 StepperWidget(
                     quantity: item["qty"],
                     incrementFunc: () async {
-                      item["qty"] += 1;
-                      if (!saved) {
-                        total += item["product"]["sellingPrice"];
-                      }
+                      if (item["qty"] < 5) {
+                        item["qty"] += 1;
+                        if (!saved) {
+                          total += item["product"]["sellingPrice"];
+                        }
 
-                      setState(() {});
-                      updateBag(item["productId"], item["qty"]);
+                        setState(() {});
+                        updateBag(item["productId"], item["qty"]);
+                      }
 
                       // getData();
                     },

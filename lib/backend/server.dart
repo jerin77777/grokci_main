@@ -25,73 +25,37 @@ late Account account;
 late Storage storage;
 late BuildContext mainContext;
 SharedPreferences? sharedPreferences;
-// final LocalStorage local = LocalStorage('grokci');
 
 // delivery states picking, delivering, completed
 // order states delivering, delivered, payed
 // all database details used from here
 
 class AppConfig {
-  static String endpoint = "***";
+  static String endpoint =  "***";
   static String project = "***";
   static String mapKey = "***";
-  static String geoCode = "***";
-  static String database = "***";
-  static String orders = "***";
-  static String products = "***";
-  static String orderProductMap = "***";
+  static String geoCode =  "***";
+  static String database =  "***";
+  static String orders =  "***";
+  static String products =  "***";
+  static String orderProductMap =  "***";
   static String drivers = "***";
   static String users = "***";
   static String categories = "***";
-  static String warehouses = "***";
+  static String warehouses =  "***";
   static String promotions = "***";
   static String monthlyPicks = "***";
-  static String cart = "***";
-  static String address = "***";
-  static String notifications = "***";
-  static String support = "***";
-  static String feedback = "***";
+  static String cart =  "***";
+  static String address =  "***";
+  static String notifications =  "***";
+  static String support =  "***";
+  static String feedback =  "***";
+
 }
 
 class Bucket {
   static String categories = "***";
-  static String products = "***";
-}
-
-createAccount(
-  context,
-  String phoneNumber,
-  String userName,
-) async {
-  var doc = await db.createDocument(
-      databaseId: AppConfig.database,
-      collectionId: AppConfig.users,
-      documentId: phoneNumber,
-      data: {
-        "userName": userName,
-        "phoneNumber": phoneNumber,
-      });
-  sharedPreferences!.setString("phone", phoneNumber);
-  Navigator.of(context)
-      .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
-}
-
-login(context, phoneNumber) async {
-  try {
-    Document temp = await db.getDocument(
-        databaseId: AppConfig.database,
-        collectionId: AppConfig.users,
-        documentId: phoneNumber);
-
-    sharedPreferences!.setString("phone", phoneNumber);
-    Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
-  } catch (e) {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SignUp(
-              phoneNumber: phoneNumber,
-            )));
-  }
+  static String products =  "***";
 }
 
 class Auth {
@@ -126,7 +90,8 @@ class Auth {
     }
   }
 
-  Future<String> verifyOTP(String? verificationId, String otpCode, BuildContext context) async {
+  Future<String> verifyOTP(
+      String? verificationId, String otpCode, BuildContext context) async {
     Client client = Client();
     Functions functions = Functions(client);
 
@@ -149,6 +114,44 @@ class Auth {
   }
 }
 
+createAccount(
+  context,
+  String phoneNumber,
+  String userName,
+) async {
+  debugPrint(phoneNumber);
+  var doc = await db.createDocument(
+      databaseId: AppConfig.database,
+      collectionId: AppConfig.users,
+      documentId: phoneNumber,
+      data: {
+        "userName": userName,
+        "phoneNumber": phoneNumber,
+      });
+  sharedPreferences!.setString("phone", phoneNumber);
+  Navigator.of(context)
+      .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+}
+
+login(context, phoneNumber) async {
+  try {
+    Document temp = await db.getDocument(
+        databaseId: AppConfig.database,
+        collectionId: AppConfig.users,
+        documentId: phoneNumber);
+
+    sharedPreferences!.setString("phone", phoneNumber);
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+  } catch (e) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => SignUp(
+              phoneNumber: phoneNumber,
+            )));
+  }
+}
+
+
 getMonthlyPicks() async {
   List<Map> result = [];
 
@@ -161,7 +164,7 @@ getMonthlyPicks() async {
   // db.getDocument(databaseId: AppConfig.database, collectionId: AppConfig.categories, documentId: documentId)
   DocumentList temp2 = await db.listDocuments(
     databaseId: AppConfig.database,
-    collectionId: AppConfig.categories,
+    collectionId: AppConfig.products,
     queries: [Query.equal("\$id", temp.documents.first.data["categories"])],
   );
   result = getResult(temp2.documents);
@@ -466,6 +469,38 @@ getNotifications() async {
   result = getResult(temp.documents);
 
   return result;
+}
+
+saveThemeType(String value) {
+  return sharedPreferences!.setString("theme", value);
+}
+
+getThemeType() {
+  return sharedPreferences!.get("theme");
+}
+
+saveBag(List bag) {
+  return sharedPreferences!.setString("bag", jsonEncode(bag));
+}
+
+List getBagLocal() {
+  if (sharedPreferences!.get("bag") != null) {
+    return jsonDecode(sharedPreferences!.get("bag").toString());
+  } else {
+    return [];
+  }
+}
+
+saveAddress(List address) {
+  return sharedPreferences!.setString("address", jsonEncode(address));
+}
+
+List getAddressLocal() {
+  if (sharedPreferences!.get("address") != null) {
+    return jsonDecode(sharedPreferences!.get("address").toString());
+  } else {
+    return [];
+  }
 }
 
 List<Map> getResult(List<Document> documents) {

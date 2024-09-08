@@ -89,7 +89,8 @@ Future<bool> makeDefault(BuildContext context) async {
 }
 
 class AddAddress extends StatefulWidget {
-  const AddAddress({super.key});
+  const AddAddress({super.key, this.addressId});
+  final String? addressId;
 
   @override
   State<AddAddress> createState() => _AddAddressState();
@@ -104,7 +105,6 @@ class _AddAddressState extends State<AddAddress> {
   int addressCount = 0;
   bool selected = false;
   TextEditingController name = TextEditingController();
-  TextEditingController userName = TextEditingController();
   TextEditingController houseNo = TextEditingController();
   TextEditingController street = TextEditingController();
   TextEditingController city = TextEditingController();
@@ -112,7 +112,6 @@ class _AddAddressState extends State<AddAddress> {
   TextEditingController phone = TextEditingController();
 
   String nameError = "";
-  String userNameError = "";
   String houseNoError = "";
   String streetError = "";
   String cityError = "";
@@ -154,18 +153,16 @@ class _AddAddressState extends State<AddAddress> {
         collectionId: AppConfig.users,
         documentId: phone.text);
 
-    userName.text = doc.data["userName"];
-
     gotLocation = true;
     setState(() {});
-
     DocumentList temp = await db.listDocuments(
         databaseId: AppConfig.database,
         collectionId: AppConfig.address,
         queries: [Query.equal("userId", userId)]);
     addressCount = temp.documents.length;
 
-    name.text = "Address ${(addressCount + 1)}";
+    // name.text = "Address ${(addressCount + 1)}";
+    name.text = doc.data["userName"];
   }
 
   @override
@@ -198,7 +195,6 @@ class _AddAddressState extends State<AddAddress> {
                 child: GestureDetector(
                     behavior: HitTestBehavior.deferToChild,
                     onTap: () {
-                      print("heeerr");
                       addAddress = false;
                       setState(() {});
                     },
@@ -242,23 +238,6 @@ class _AddAddressState extends State<AddAddress> {
                         controller: name,
                         onType: (_) {
                           nameError = "";
-                          setState(() {});
-                        },
-                      ),
-                      Text(nameError,
-                          style: Style.caption2.copyWith(
-                              color: Theme.of(context).colorScheme.error)),
-                      SizedBox(height: 10),
-                      Text(
-                        "Full name *",
-                        style: Style.footnoteEmphasized.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface),
-                      ),
-                      SizedBox(height: 8),
-                      TextBox(
-                        controller: userName,
-                        onType: (_) {
-                          userNameError = "";
                           setState(() {});
                         },
                       ),
@@ -379,72 +358,80 @@ class _AddAddressState extends State<AddAddress> {
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
+                              borderRadius: BorderRadius.circular(20),
                               color: Theme.of(context)
                                   .colorScheme
                                   .surfaceContainer),
-                          child: Text("Make this default address"),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("Make this default address"),
+                          ),
                         ),
                       )
                     ],
                   )),
                   SizedBox(height: 20),
-                  Expanded(
-                    child: Button(
-                        size: ButtonSize.large,
-                        type: ButtonType.filled,
-                        label: "Save Address",
-                        onPress: () async {
-                          if (name.text.isEmpty) {
-                            nameError = "required";
-                          }
-                          if (userName.text.isEmpty) {
-                            userNameError = "required";
-                          }
-                          if (houseNo.text.isEmpty) {
-                            houseNoError = "required";
-                          }
+                  Button(
+                      size: ButtonSize.large,
+                      type: ButtonType.filled,
+                      label: "Save Address",
+                      onPress: () async {
+                        if (name.text.isEmpty) {
+                          nameError = "required";
+                        }
+                        if (houseNo.text.isEmpty) {
+                          houseNoError = "required";
+                        }
 
-                          if (street.text.isEmpty) {
-                            streetError = "required";
-                          }
-                          if (city.text.isEmpty) {
-                            cityError = "required";
-                          }
-                          if (pincode.text.isEmpty) {
-                            pincodeError = "required";
-                          }
-                          selected = addressCount == 0;
-                          if (nameError.isEmpty &&
-                              userNameError.isEmpty &&
-                              houseNoError.isEmpty &&
-                              streetError.isEmpty &&
-                              cityError.isEmpty &&
-                              pincodeError.isEmpty) {
+                        if (street.text.isEmpty) {
+                          streetError = "required";
+                        }
+                        if (city.text.isEmpty) {
+                          cityError = "required";
+                        }
+                        if (pincode.text.isEmpty) {
+                          pincodeError = "required";
+                        }
+                        selected = addressCount == 0;
+                        setState(() {});
+                        
+                        if (nameError.isEmpty &&
+                            houseNoError.isEmpty &&
+                            streetError.isEmpty &&
+                            cityError.isEmpty &&
+                            pincodeError.isEmpty) {
+                          Map data = {
+                            "userId": userId,
+                            "name": name.text,
+                            "address":
+                                "${houseNo.text}, ${street.text}, ${city.text}, ${pincode.text}",
+                            "lat": marker.latitude,
+                            "lng": marker.longitude,
+                            "houseNumber": houseNo.text,
+                            "street": street.text,
+                            "city": city.text,
+                            "pincode": pincode.text,
+                            "phone": phone.text,
+                            "selected": selected
+                          };
+                          if (widget.addressId == null) {
                             await db.createDocument(
                                 databaseId: AppConfig.database,
                                 collectionId: AppConfig.address,
                                 documentId: Uuid().v4(),
-                                data: {
-                                  "userId": userId,
-                                  "name": name.text,
-                                  "address":
-                                      "${houseNo.text}, ${street.text}, ${city.text}, ${pincode.text}",
-                                  "userName": userName.text,
-                                  "lat": marker.latitude,
-                                  "lng": marker.longitude,
-                                  "houseNumber": houseNo.text,
-                                  "street": street.text,
-                                  "city": city.text,
-                                  "pincode": pincode.text,
-                                  "phone": phone.text,
-                                  "selected": selected
-                                });
+                                data: data);
+                          } else {
+                            await db.updateDocument(
+                                databaseId: AppConfig.database,
+                                collectionId: AppConfig.address,
+                                documentId: widget.addressId!,
+                                data: data);
                           }
-                          Navigator.pop(context);
-                          setState(() {});
-                        }),
-                  )
+                           Navigator.pop(context);
+                        }
+                       
+                        setState(() {});
+                      })
                 ],
               ),
             ),
@@ -597,12 +584,17 @@ class _AddressState extends State<Address> {
   List addresses = [];
   String selected = "";
   getData() async {
+    addresses = getAddressLocal();
+    setState(() {});
+
     addresses = await getAddresses();
     for (var address in addresses) {
       if (address["selected"]) {
         selected = address["id"];
       }
     }
+
+    saveAddress(addresses);
     setState(() {});
   }
 
@@ -619,12 +611,17 @@ class _AddressState extends State<Address> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          title: const Text("Manage Address"),
+          leadingWidth: 30,
+          title: Text(
+            "Manage Address",
+            style: Style.headline
+                .copyWith(color: Theme.of(context).colorScheme.onSurface),
+          ),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.notifications_none),
               onPressed: () {
-                  Navigator.push(
+                Navigator.push(
                   mainContext,
                   MaterialPageRoute(builder: (context) => Notifications()),
                 );
@@ -655,7 +652,6 @@ class _AddressState extends State<Address> {
               //   ],
               // ),
               // SizedBox(height: 15),
-              
               Expanded(
                 child: ListView(
                   children: [
@@ -685,7 +681,7 @@ class _AddressState extends State<Address> {
                     const SizedBox(height: 8),
                     if (addresses.isNotEmpty)
                       Container(
-                        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
+                        padding: EdgeInsets.symmetric(vertical: 14),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(14),
                             color: Theme.of(context)
@@ -695,16 +691,13 @@ class _AddressState extends State<Address> {
                           children: [
                             SizedBox(width: 5),
                             for (var address in addresses)
-                            Container(
-                              margin: const EdgeInsets.only(bottom: 16),
-                              child:Row(
+                              Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Radio(
                                     activeColor:
                                         Theme.of(context).colorScheme.primary,
                                     value: address["id"],
-                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                     groupValue: selected,
                                     onChanged: (value) async {
                                       selected = address["id"];
@@ -732,7 +725,7 @@ class _AddressState extends State<Address> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        address["userName"],
+                                        address["name"],
                                         style: Style.callout.copyWith(
                                             color: Theme.of(context)
                                                 .colorScheme
@@ -759,15 +752,16 @@ class _AddressState extends State<Address> {
                                         Navigator.push(
                                           mainContext,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AddAddress()),
+                                              builder: (context) => AddAddress(
+                                                    addressId: address["id"],
+                                                  )),
                                         ).then((_) {
                                           getData();
                                         });
                                       }),
                                   SizedBox(width: 15),
                                 ],
-                              ),)
+                              )
                           ],
                         ),
                       )

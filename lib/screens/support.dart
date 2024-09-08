@@ -100,7 +100,12 @@ class _SupportState extends State<Support> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        title: const Text("Support"),
+        leadingWidth: 30,
+        title: Text(
+          "Support",
+          style: Style.headline
+              .copyWith(color: Theme.of(context).colorScheme.onSurface),
+        ),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.notifications_none),
@@ -115,7 +120,7 @@ class _SupportState extends State<Support> {
       ),
       body: Column(
         children: [
-          Divider(color: Theme.of(context).colorScheme.outline, height: 0.3),
+          Divider(color: Theme.of(context).colorScheme.outline, height: 1),
           Expanded(
             child: ListView(
               padding: EdgeInsets.all(10),
