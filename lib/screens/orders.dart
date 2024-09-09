@@ -50,7 +50,8 @@ class _OrdersState extends State<Orders> {
           ),
           body: Column(
             children: [
-              Divider(color: Theme.of(context).colorScheme.outline, height: 0.3),
+              Divider(
+                  color: Theme.of(context).colorScheme.outline, height: 0.3),
               Expanded(
                 child: ListView(
                   padding: EdgeInsets.symmetric(horizontal: 10),
@@ -99,13 +100,15 @@ class _OrdersState extends State<Orders> {
                                             size: 10)
                                       ],
                                     ),
-                                    Text("Multiple Item (${order["qty"]} Items)",
+                                    Text(
+                                        "Multiple Item (${order["qty"]} Items)",
                                         style: TextStyle(fontSize: 15)),
                                     SizedBox(height: 10),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        Text("₹Order Value: ${order["sellingPrice"]}")
+                                        Text(
+                                            "Order Value: ₹${order["sellingPrice"]}")
                                         // RichText(
                                         //   text: TextSpan(
                                         //     text: "Order Value: ",
@@ -230,6 +233,17 @@ class _OrderDetailsState extends State<OrderDetails> {
                                     "₹ ${product["sellingPrice"]}",
                                     style: Style.calloutEmphasized,
                                   ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .surfaceContainer,
+                                        borderRadius: BorderRadius.circular(8)),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 5, horizontal: 10),
+                                    child: Text(
+                                        "Qty: ${product["qty"].toString()}"),
+                                  ),
                                 ],
                               ),
                             ],
@@ -250,7 +264,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                           Text(
                             "₹ ${widget.order["sellingPrice"]}",
                             style: Style.calloutEmphasized,
-                          )
+                          ),
                         ],
                       ),
                     ],

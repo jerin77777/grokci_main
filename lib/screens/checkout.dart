@@ -25,6 +25,7 @@ class _CheckoutState extends State<Checkout> {
   double total = 0;
   double totalOriginal = 0;
   int qty = 0;
+  int totalItem = 0;
 
   @override
   void initState() {
@@ -39,6 +40,7 @@ class _CheckoutState extends State<Checkout> {
       totalOriginal += item["product"]["originalPrice"] * item["qty"];
       total += item["product"]["sellingPrice"] * item["qty"];
       qty += item["qty"] as int;
+      totalItem++;
     }
 
     currentAddress = await getAddress();
@@ -125,7 +127,9 @@ class _CheckoutState extends State<Checkout> {
                                   })
                             ],
                           ),
-                          const SizedBox(height: 8,),
+                          const SizedBox(
+                            height: 8,
+                          ),
                           Text(
                             currentAddress?["name"],
                             style: Style.callout.copyWith(
@@ -157,7 +161,7 @@ class _CheckoutState extends State<Checkout> {
                       }),
                 SizedBox(height: 10),
                 Container(
-                  height: 54, 
+                  height: 54,
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   decoration: BoxDecoration(
@@ -216,7 +220,7 @@ class _CheckoutState extends State<Checkout> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("MRP (4 items)",
+                            Text("MRP (${totalItem} items)",
                                 style: Style.body.copyWith(
                                     color: Theme.of(context)
                                         .colorScheme
@@ -352,7 +356,7 @@ class _CheckoutState extends State<Checkout> {
                       color: Theme.of(context).colorScheme.surfaceContainer,
                       borderRadius: BorderRadius.circular(8)),
                   padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                  child: Text(item["qty"].toString()),
+                  child: Text("Qty: ${item["qty"].toString()}"),
                 )
                 // StepperWidget(
                 //     quantity: item["qty"],

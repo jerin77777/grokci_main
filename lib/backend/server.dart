@@ -33,27 +33,27 @@ SharedPreferences? sharedPreferences;
 // all database details used from here
 
 class AppConfig {
-  static String endpoint = "***";
-  static String project = "***";
-  static String database = "***";
-  static String keys = "***";
+  static String endpoint = "https://cloud.appwrite.io/v1";
+  static String project = "grokci";
+  static String database = "6504263e007ff813b432";
+  static String keys = "66ddc52c001d4143c0f6";
 
-  static String mapKey = "***";
-  static String geoCode = "***";
-  static String orders = "***";
-  static String products = "***";
-  static String orderProductMap = "***";
-  static String drivers = "***";
-  static String users = "***";
-  static String categories = "***";
-  static String warehouses = "***";
-  static String promotions = "***";
-  static String monthlyPicks = "***";
-  static String cart = "***";
-  static String address = "***";
-  static String notifications = "***";
-  static String support = "***";
-  static String feedback = "***";
+  static String mapKey = "*";
+  static String geoCode = "*";
+  static String orders = "*";
+  static String products = "*";
+  static String orderProductMap = "*";
+  static String drivers = "*";
+  static String users = "*";
+  static String categories = "*";
+  static String warehouses = "*";
+  static String promotions = "*";
+  static String monthlyPicks = "*";
+  static String cart = "*";
+  static String address = "*";
+  static String notifications = "*";
+  static String support = "*";
+  static String feedback = "*";
 }
 
 class Bucket {
@@ -67,7 +67,6 @@ setKeys() async {
 
   Map keys = jsonDecode(getResult(temp2.documents).first["keys"]);
   print(keys);
-  
 
   AppConfig.mapKey = keys["mapKey"];
   AppConfig.geoCode = keys["geoCode"];

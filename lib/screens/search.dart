@@ -319,7 +319,7 @@ class _SearchViewState extends State<SearchView> with RouteAware {
                         onTap: () async {
                           showDetail = true;
                           productData = product;
-
+                          FocusScope.of(context).unfocus();
                           if (cart.contains(productData!["id"])) {
                             productData!["qty"] =
                                 await getQty(productData!["id"]);
