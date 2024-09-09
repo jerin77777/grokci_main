@@ -112,16 +112,12 @@ class _FeedBackState extends State<FeedBack> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          leadingWidth: 30,
-          title: Text(
-            "Feedback",
-            style: Style.headline
-                .copyWith(color: Theme.of(context).colorScheme.onSurface),
-          ),
+          leadingWidth: 60,
+          title: const Text("Notifications"),
         ),
         body: Column(
           children: [
-            Divider(color: Theme.of(context).colorScheme.outline, height: 1),
+            Divider(color: Theme.of(context).colorScheme.outline, height: 0.3),
             Expanded(
               child: ListView(
                 padding: EdgeInsets.all(10),

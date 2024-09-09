@@ -202,8 +202,42 @@ class _HomeState extends State<Home> {
       },
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          bottomNavigationBar: Container(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          bottomNavigationBar: Platform.isIOS
+            ? CupertinoTabBar(
+                onTap: (index) {
+                  navIdx = index;
+                  if (index == 0) {
+                    routerSink.add({"route": "dashboard"});
+                  } else if (index == 1) {
+                    routerSink.add({"route": "search"});
+                  } else if (index == 2) {
+                    routerSink.add({"route": "profile"});
+                  } else if (index == 3) {
+                    routerSink.add({"route": "bag"});
+                  }
+                  setState(() {});
+                },
+                items: const <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.search),
+                    label: 'Search',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.person),
+                    label: 'Account',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.shopping_bag),
+                    label: 'Shopping Bag',
+                  ),
+                ],
+              )
+            : Container(
               foregroundDecoration: BoxDecoration(
                 border: Border(
                     top: BorderSide(

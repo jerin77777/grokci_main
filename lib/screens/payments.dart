@@ -28,12 +28,7 @@ class _PaymentsState extends State<Payments> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          leadingWidth: 30,
-          title: Text(
-            "Payment Methods",
-            style: Style.headline
-                .copyWith(color: Theme.of(context).colorScheme.onSurface),
-          ),
+          title: const Text("Payment Methods"),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.notifications_none),
@@ -70,7 +65,7 @@ class _PaymentsState extends State<Payments> {
             //     ],
             //   ),
             // ),
-            Divider(color: Theme.of(context).colorScheme.outline, height: 1),
+            Divider(color: Theme.of(context).colorScheme.outline, height: 0.3),
             SizedBox(height: 10),
             Expanded(
                 child: ListView(

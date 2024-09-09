@@ -29,12 +29,7 @@ class _SecurityState extends State<Security> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          leadingWidth: 30,
-          title: Text(
-            "User Preferences",
-            style: Style.headline
-                .copyWith(color: Theme.of(context).colorScheme.onSurface),
-          ),
+          title: const Text("User Preferences"),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.notifications_none),
@@ -45,7 +40,7 @@ class _SecurityState extends State<Security> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Divider(color: Theme.of(context).colorScheme.outline, height: 1),
+            Divider(color: Theme.of(context).colorScheme.outline, height: 0.3),
             SizedBox(height: 10),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
@@ -70,44 +65,80 @@ class _SecurityState extends State<Security> {
                             style: Style.body.copyWith(
                                 color: Theme.of(context).colorScheme.onSurface),
                           ),
-                          MenuAnchor(
-                            menuChildren: [
-                              MenuItemButton(
-                                onPressed: () {
-                                  type = "System Default";
-                                  saveThemeType(type);
+                          DropdownMenu(
+                              onSelected: (thememode) {
+                                if (thememode != null) {
+                                  saveThemeType(thememode);
                                   setState(() {});
-                                },
-                                child: Text('System Default'),
+                                  // print(thememode);
+                                }
+                              },
+                              width: 190,
+                              hintText: getThemeType(),
+                              textStyle: Style.subHeadline,
+                              inputDecorationTheme: InputDecorationTheme(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                constraints: BoxConstraints.expand(height: 50),
+                                filled: true,
+                                fillColor: Theme.of(context).colorScheme.surfaceContainerHigh,
+                                outlineBorder: const BorderSide(
+                                  width: 0,
+                                  color: Colors.transparent,
+                                )
                               ),
-                              MenuItemButton(
-                                onPressed: () {
-                                  type = "Light";
-                                  saveThemeType(type);
-                                  setState(() {});
-                                },
-                                child: Text('Light'),
-                              ),
-                              MenuItemButton(
-                                onPressed: () {
-                                  type = "Dark";
-                                  saveThemeType(type);
-                                  setState(() {});
-                                },
-                                child: Text('Dark'),
-                              ),
-                            ],
-                            builder: (BuildContext context,
-                                MenuController controller, Widget? child) {
-                              return ElevatedButton(
-                                onPressed: () {
-                                  controller.open();
-                                  print("object");
-                                },
-                                child: Text(type),
-                              );
-                            },
-                          ),
+                              dropdownMenuEntries: <DropdownMenuEntry<
+                                  String>>[
+                                DropdownMenuEntry(
+                                    value: "System Default",
+                                    label: "System Default",
+                                    labelWidget: Text("System Default", style: Style.subHeadline,)),
+                                DropdownMenuEntry(
+                                    value: "Light", label: 'Light',
+                                    labelWidget: Text("Light", style: Style.subHeadline,)),
+                                DropdownMenuEntry(
+                                    value: "Dark", label: 'Dark',
+                                    labelWidget: Text("Dark", style: Style.subHeadline,))
+                              ])
+                          // MenuAnchor(
+                          //   menuChildren: [
+                          //     MenuItemButton(
+                          //       onPressed: () {
+                          //         type = "System Default";
+                          //         saveThemeType(type);
+                          //         setState(() {});
+                          //       },
+                          //       child: Text('System Default'),
+                          //     ),
+                          //     MenuItemButton(
+                          //       onPressed: () {
+                          //         type = "Light";
+                          //         saveThemeType(type);
+                          //         setState(() {});
+                          //       },
+                          //       child: Text('Light'),
+                          //     ),
+                          //     MenuItemButton(
+                          //       onPressed: () {
+                          //         type = "Dark";
+                          //         saveThemeType(type);
+                          //         setState(() {});
+                          //       },
+                          //       child: Text('Dark'),
+                          //     ),
+                          //   ],
+                          //   builder: (BuildContext context,
+                          //       MenuController controller, Widget? child) {
+                          //     return ElevatedButton(
+                          //       onPressed: () {
+                          //         controller.open();
+                          //         print("object");
+                          //       },
+                          //       child: Text(type),
+                          //     );
+                          //   },
+                          // ),
                           // PopupMenuButton<String>(
                           //   onSelected: (value) {
                           //     // Handle the value selected from the menu

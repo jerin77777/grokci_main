@@ -204,7 +204,7 @@ class _AddAddressState extends State<AddAddress> {
     double height = MediaQuery.of(context).size.height;
 
     return SafeArea(
-        child: Scaffold(
+      child: Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       bottomSheet: SizedBox(
         width: width,
@@ -249,7 +249,7 @@ class _AddAddressState extends State<AddAddress> {
                     children: [
                       SizedBox(height: 10),
                       Text(
-                        "Address name *",
+                        "Full name *",
                         style: Style.footnoteEmphasized.copyWith(
                             color: Theme.of(context).colorScheme.onSurface),
                       ),
@@ -631,12 +631,8 @@ class _AddressState extends State<Address> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          leadingWidth: 30,
-          title: Text(
-            "Manage Address",
-            style: Style.headline
-                .copyWith(color: Theme.of(context).colorScheme.onSurface),
-          ),
+          leadingWidth: 60,
+          title: const Text("Manage Address"),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.notifications_none),
@@ -701,7 +697,7 @@ class _AddressState extends State<Address> {
                     const SizedBox(height: 8),
                     if (addresses.isNotEmpty)
                       Container(
-                        padding: EdgeInsets.symmetric(vertical: 14),
+                        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(14),
                             color: Theme.of(context)
@@ -718,6 +714,7 @@ class _AddressState extends State<Address> {
                                     activeColor:
                                         Theme.of(context).colorScheme.primary,
                                     value: address["id"],
+                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                     groupValue: selected,
                                     onChanged: (value) async {
                                       selected = address["id"];

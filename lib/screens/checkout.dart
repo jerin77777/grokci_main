@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grokci_main/backend/server.dart';
 import 'package:grokci_main/screens/address.dart';
 import 'package:grokci_main/screens/notifications.dart';
@@ -57,12 +58,8 @@ class _CheckoutState extends State<Checkout> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          leadingWidth: 30,
-          title: Text(
-            "Checkout",
-            style: Style.headline
-                .copyWith(color: Theme.of(context).colorScheme.onSurface),
-          ),
+          leadingWidth: 60,
+          title: const Text("Checkout"),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.notifications_none),
@@ -77,7 +74,7 @@ class _CheckoutState extends State<Checkout> {
         ),
         body: Column(
           children: [
-            Divider(color: Theme.of(context).colorScheme.outline, height: 1),
+            Divider(color: Theme.of(context).colorScheme.outline, height: 0.3),
             const SizedBox(height: 10),
             Expanded(
                 child: ListView(
@@ -107,7 +104,7 @@ class _CheckoutState extends State<Checkout> {
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
-                                  "Deliver To:",
+                                  "Deliver to:",
                                   style: Style.headline.copyWith(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -128,6 +125,7 @@ class _CheckoutState extends State<Checkout> {
                                   })
                             ],
                           ),
+                          const SizedBox(height: 8,),
                           Text(
                             currentAddress?["name"],
                             style: Style.callout.copyWith(
@@ -159,6 +157,7 @@ class _CheckoutState extends State<Checkout> {
                       }),
                 SizedBox(height: 10),
                 Container(
+                  height: 54, 
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   decoration: BoxDecoration(
@@ -168,12 +167,12 @@ class _CheckoutState extends State<Checkout> {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.delivery_dining,
+                        FontAwesomeIcons.truckFast,
                         color: Theme.of(context).colorScheme.primary,
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 12),
                       Text(
-                        "Delivery within a hour",
+                        "Delivering within a hour",
                         style: Style.headline.copyWith(
                             color: Theme.of(context).colorScheme.onSurface),
                       )

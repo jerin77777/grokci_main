@@ -92,11 +92,13 @@ class _BagState extends State<Bag> {
                 ),
                 if (!queried)
                   SliverToBoxAdapter(
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
+                    child: Column(
+                        children: [
+                          const SizedBox(height: 40,),
+                          Center(child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.primary,))
+                        ]
+                      )
                   )
                 else if (bag.isEmpty && saved.isEmpty)
                   SliverToBoxAdapter(
@@ -151,7 +153,7 @@ class _BagState extends State<Bag> {
           ),
           if (total != 0)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               child: Row(
                 children: [
                   Expanded(

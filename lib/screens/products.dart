@@ -66,12 +66,7 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
           },
         ),
         appBar: AppBar(
-          leadingWidth: 30,
-          title: Text(
-            "Products in ${widget.categoryName}",
-            style: Style.headline
-                .copyWith(color: Theme.of(context).colorScheme.onSurface),
-          ),
+          title: Text("Products in ${widget.categoryName}".toLowerCase()),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.notifications_none),
@@ -87,7 +82,7 @@ class _ProductsInCategoryState extends State<ProductsInCategory> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Divider(color: Theme.of(context).colorScheme.outline, height: 1),
+            Divider(color: Theme.of(context).colorScheme.outline, height: 0.3),
             SizedBox(height: 10),
             if (products.isNotEmpty)
               Container(

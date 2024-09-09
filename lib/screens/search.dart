@@ -96,7 +96,7 @@ class _SearchState extends State<Search> with RouteAware {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SearchBarWidget(
-                    label: "Search for Products...",
+                    label: "Search for products...",
                     onPress: () {
                       // SearchView
                       print("hii");
