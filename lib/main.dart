@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:appwrite/appwrite.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:grokci_main/globals.dart';
@@ -17,11 +19,14 @@ import 'package:grokci_main/screens/profile.dart';
 import 'package:grokci_main/screens/search.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:win32/win32.dart';
 
 import 'backend/server.dart';
 import 'types.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+ThemeMode themeMode = ThemeMode.system;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -30,6 +35,8 @@ Future<void> main() async {
   sharedPreferences = await SharedPreferences.getInstance();
   db = Databases(client);
   storage = Storage(client);
+  
+  setKeys();
 
   // changes status and system navigation color based on theme
 
@@ -37,30 +44,44 @@ Future<void> main() async {
     saveThemeType("System Default");
   } else if (getThemeType() == "System Default") {
     // default
-  } else if (getThemeType() == "Light") {
-    // light
-  } else if (getThemeType() == "Dark") {
-    // dark
-  }
-  SchedulerBinding.instance.platformDispatcher.onPlatformBrightnessChanged =
-      () async {
-    Brightness _brightness =
-        SchedulerBinding.instance.platformDispatcher.platformBrightness;
+    SchedulerBinding.instance.platformDispatcher.onPlatformBrightnessChanged =
+        () async {
+      Brightness _brightness =
+          SchedulerBinding.instance.platformDispatcher.platformBrightness;
 
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: _brightness == Brightness.dark
+            ? darkMode.colorScheme.surface
+            : lightMode.colorScheme.surface,
+        systemNavigationBarColor: _brightness == Brightness.dark
+            ? darkMode.colorScheme.surface
+            : lightMode.colorScheme.surface,
+        statusBarIconBrightness:
+            _brightness == Brightness.dark ? Brightness.light : Brightness.dark,
+        systemNavigationBarIconBrightness:
+            _brightness == Brightness.dark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: _brightness,
+      ));
+    };
+  } else if (getThemeType() == "Light") {
+    themeMode = ThemeMode.light;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: _brightness == Brightness.dark
-          ? darkMode.colorScheme.surface
-          : lightMode.colorScheme.surface,
-      systemNavigationBarColor: _brightness == Brightness.dark
-          ? darkMode.colorScheme.surface
-          : lightMode.colorScheme.surface,
-      statusBarIconBrightness:
-          _brightness == Brightness.dark ? Brightness.light : Brightness.dark,
-      systemNavigationBarIconBrightness:
-          _brightness == Brightness.dark ? Brightness.light : Brightness.dark,
-      statusBarBrightness: _brightness,
+      statusBarColor: lightMode.colorScheme.surface,
+      systemNavigationBarColor: lightMode.colorScheme.surface,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
     ));
-  };
+  } else if (getThemeType() == "Dark") {
+    themeMode = ThemeMode.dark;
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: darkMode.colorScheme.surface,
+      systemNavigationBarColor: darkMode.colorScheme.surface,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.dark,
+    ));
+  }
 
   client
           .setEndpoint(AppConfig.endpoint) // Your Appwrite Endpoint
@@ -81,30 +102,70 @@ class MyApp extends StatelessWidget {
         stream: themeStream,
         builder: (context, snapshot) {
           return MaterialApp(
-            navigatorObservers: [routeObserver],
-            theme: lightMode.copyWith(
-              appBarTheme: AppBarTheme(
-                systemOverlayStyle: SystemUiOverlayStyle(
-                  statusBarColor: Theme.of(context).colorScheme.surface,
-                  systemNavigationBarColor:
-                      Theme.of(context).colorScheme.surface,
-                  systemStatusBarContrastEnforced: true,
-                  systemNavigationBarContrastEnforced: true,
+              navigatorObservers: [routeObserver],
+              theme: lightMode.copyWith(
+                appBarTheme: AppBarTheme(
+                  systemOverlayStyle: SystemUiOverlayStyle(
+                    statusBarColor: Theme.of(context).colorScheme.surface,
+                    systemNavigationBarColor:
+                        Theme.of(context).colorScheme.surface,
+                    systemStatusBarContrastEnforced: true,
+                    systemNavigationBarContrastEnforced: true,
+                  ),
+                ),
+                inputDecorationTheme: InputDecorationTheme(
+                  hintStyle: TextStyle(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurfaceVariant), // Placeholder text color
                 ),
               ),
-              inputDecorationTheme: InputDecorationTheme(
-                hintStyle: TextStyle(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurfaceVariant), // Placeholder text color
-              ),
-            ),
-            debugShowCheckedModeBanner: false,
-            darkTheme: darkMode,
-            title: 'Grokci',
-            home: (sharedPreferences!.get("phone") == null) ? Login() : Home(),
-          );
+              themeMode: themeMode,
+              debugShowCheckedModeBanner: false,
+              darkTheme: darkMode,
+              title: 'Grokci',
+              home: SplashScreen()
+
+              // (sharedPreferences!.get("phone") == null) ? Login() : Home(),
+              );
         });
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    Timer(
+        Duration(seconds: 2),
+        () => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => (sharedPreferences!.get("phone") == null)
+                    ? Login()
+                    : Home())));
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
+          child: SvgPicture.asset(
+            width: 200,
+            "assets/logo.svg",
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -135,18 +196,10 @@ class _HomeState extends State<Home> {
     mainContext = context;
 
     return WillPopScope(
+      // Prevent back navigation by returning `false`.
       onWillPop: () async {
-        return Future.value(false);
+        return false; // Return `true` to allow back navigation, `false` to block it.
       },
-    // return PopScope(
-    //   canPop: false,
-    //   onPopInvoked: (didPop) {
-    //     // if (navIdx == 0) {
-    //     // } else {
-    //     //   navIdx = 0;
-    //     //   setState(() {});
-    //     // }
-    //   },
       child: SafeArea(
         child: Scaffold(
           backgroundColor: Theme.of(context).colorScheme.background,
@@ -204,48 +257,6 @@ class _HomeState extends State<Home> {
                   setState(() {});
                 },
               )),
-          //  BottomNavigationBar(
-          //         showUnselectedLabels: true,
-          //         selectedFontSize: 12,
-          //         unselectedFontSize: 12,
-          //         backgroundColor: Theme.of(context).colorScheme.surface,
-          //         landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
-          //         type: BottomNavigationBarType.fixed,
-          //         items: const <BottomNavigationBarItem>[
-          //           BottomNavigationBarItem(
-          //             icon: Icon(Icons.home),
-          //             label: 'Home',
-          //           ),
-          //           BottomNavigationBarItem(
-          //             icon: Icon(Icons.search),
-          //             label: 'Search',
-          //           ),
-          //           BottomNavigationBarItem(
-          //             icon: Icon(Icons.person),
-          //             label: 'Account',
-          //           ),
-          //           BottomNavigationBarItem(
-          //             icon: Icon(Icons.shopping_bag),
-          //             label: 'Shopping Bag  ',
-          //           ),
-          //         ],
-          //         currentIndex: navIdx,
-          //         selectedItemColor: Theme.of(context).colorScheme.primary,
-          //         unselectedItemColor: Theme.of(context).colorScheme.surfaceTint,
-          //         onTap: (index) {
-          //           navIdx = index;
-          //           if (index == 0) {
-          //             routerSink.add({"route": "dashboard"});
-          //           } else if (index == 1) {
-          //             routerSink.add({"route": "search"});
-          //           } else if (index == 2) {
-          //             routerSink.add({"route": "profile"});
-          //           } else if (index == 3) {
-          //             routerSink.add({"route": "bag"});
-          //           }
-          //           setState(() {});
-          //         },
-          //       ),
           body: StreamBuilder<Map>(
               initialData: const {"route": "dashboard"},
               stream: routerStream,
@@ -277,6 +288,9 @@ class _HomeState extends State<Home> {
                     //   child: Checkout(),
                     // )
                   ],
+                  // onDidRemovePage: (_){
+                  //   return false;
+                  // },
                   onPopPage: (route, result) {
                     return true;
                   },

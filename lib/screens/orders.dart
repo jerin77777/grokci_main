@@ -55,28 +55,6 @@ class _OrdersState extends State<Orders> {
           ),
           body: Column(
             children: [
-              // Padding(
-              //   padding:
-              //       const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: [
-              //       GestureDetector(
-              //           onTap: () {
-              //             Navigator.pop(context);
-              //           },
-              //           child: Icon(Icons.arrow_back, size: 22)),
-              //       SizedBox(width: 15),
-              //       Text(
-              //         "My Orders",
-              //         style: Style.headline.copyWith(
-              //             color: Theme.of(context).colorScheme.onSurface),
-              //       ),
-              //       Expanded(child: SizedBox()),
-              //       Icon(Icons.notifications_none, size: 22)
-              //     ],
-              //   ),
-              // ),
               Divider(color: Theme.of(context).colorScheme.outline, height: 1),
               Expanded(
                 child: ListView(
@@ -105,12 +83,12 @@ class _OrdersState extends State<Orders> {
                           child: Row(
                             children: [
                               ClipRRect(
-                                  borderRadius: BorderRadius.circular(15),
+                                  borderRadius: BorderRadius.circular(10),
                                   // width: 50,
                                   child: Image.network(
                                     getUrl(Bucket.products, order["imageId"]),
-                                    width: 60,
-                                    height: 60,
+                                    width: 70,
+                                    height: 70,
                                   )),
                               SizedBox(width: 10),
                               Expanded(
@@ -126,26 +104,24 @@ class _OrdersState extends State<Orders> {
                                             size: 10)
                                       ],
                                     ),
-                                    Text("Multiple Item (4 Items)",
+                                    Text("Multiple Item (${order["qty"]} Items)",
                                         style: TextStyle(fontSize: 15)),
                                     SizedBox(height: 10),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        RichText(
-                                          text: TextSpan(
-                                            text: "Order Value: ",
-                                            style: TextStyle(fontSize: 14),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                  text: '₹ 179',
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w600)),
-                                            ],
-                                          ),
-                                        ),
+                                        Text("₹Order Value: ${order["sellingPrice"]}")
+                                        // RichText(
+                                        //   text: TextSpan(
+                                        //     text: "Order Value: ",
+                                        //     style: TextStyle(fontSize: 14),
+                                        //     children: <TextSpan>[
+                                        //       TextSpan(
+                                        //           text: '',
+                                        //           style: ),
+                                        //     ],
+                                        //   ),
+                                        // ),
                                         // Text("Order Value: ₹ 179",
                                         //     style: TextStyle(fontSize: 15)),
                                       ],

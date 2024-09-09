@@ -5,6 +5,8 @@ import 'dart:math';
 
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:twilio_flutter/twilio_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -31,31 +33,60 @@ SharedPreferences? sharedPreferences;
 // all database details used from here
 
 class AppConfig {
-  static String endpoint =  "***";
+  static String endpoint = "***";
   static String project = "***";
+  static String database = "***";
+  static String keys = "***";
+
   static String mapKey = "***";
-  static String geoCode =  "***";
-  static String database =  "***";
-  static String orders =  "***";
-  static String products =  "***";
-  static String orderProductMap =  "***";
+  static String geoCode = "***";
+  static String orders = "***";
+  static String products = "***";
+  static String orderProductMap = "***";
   static String drivers = "***";
   static String users = "***";
   static String categories = "***";
-  static String warehouses =  "***";
+  static String warehouses = "***";
   static String promotions = "***";
   static String monthlyPicks = "***";
-  static String cart =  "***";
-  static String address =  "***";
-  static String notifications =  "***";
-  static String support =  "***";
-  static String feedback =  "***";
-
+  static String cart = "***";
+  static String address = "***";
+  static String notifications = "***";
+  static String support = "***";
+  static String feedback = "***";
 }
 
 class Bucket {
-  static String categories = "***";
-  static String products =  "***";
+  static String categories = "6650a1990032c806f041";
+  static String products = "66432daf000dc57d6cf0";
+}
+
+setKeys() async {
+  DocumentList temp2 = await db.listDocuments(
+      databaseId: AppConfig.database, collectionId: AppConfig.keys);
+
+  Map keys = jsonDecode(getResult(temp2.documents).first["keys"]);
+  print(keys);
+  
+
+  AppConfig.mapKey = keys["mapKey"];
+  AppConfig.geoCode = keys["geoCode"];
+  AppConfig.orders = keys["orders"];
+  AppConfig.products = keys["products"];
+  AppConfig.orderProductMap = keys["orderProductMap"];
+  AppConfig.drivers = keys["drivers"];
+  AppConfig.users = keys["users"];
+  AppConfig.categories = keys["categories"];
+  AppConfig.warehouses = keys["warehouses"];
+  AppConfig.promotions = keys["promotions"];
+  AppConfig.monthlyPicks = keys["monthlyPicks"];
+  AppConfig.cart = keys["cart"];
+  AppConfig.address = keys["address"];
+  AppConfig.notifications = keys["notifications"];
+  AppConfig.support = keys["support"];
+  AppConfig.feedback = keys["feedback"];
+  print("keys set");
+  print(AppConfig.users);
 }
 
 class Auth {
@@ -151,7 +182,6 @@ login(context, phoneNumber) async {
   }
 }
 
-
 getMonthlyPicks() async {
   List<Map> result = [];
 
@@ -164,7 +194,7 @@ getMonthlyPicks() async {
   // db.getDocument(databaseId: AppConfig.database, collectionId: AppConfig.categories, documentId: documentId)
   DocumentList temp2 = await db.listDocuments(
     databaseId: AppConfig.database,
-    collectionId: AppConfig.products,
+    collectionId: AppConfig.categories,
     queries: [Query.equal("\$id", temp.documents.first.data["categories"])],
   );
   result = getResult(temp2.documents);
@@ -472,6 +502,45 @@ getNotifications() async {
 }
 
 saveThemeType(String value) {
+  if (value == "Light") {
+    themeMode = ThemeMode.light;
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: lightMode.colorScheme.surface,
+      systemNavigationBarColor: lightMode.colorScheme.surface,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
+    ));
+  } else if (value == "Dark") {
+    themeMode = ThemeMode.dark;
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: darkMode.colorScheme.surface,
+      systemNavigationBarColor: darkMode.colorScheme.surface,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.dark,
+    ));
+  } else {
+    themeMode = ThemeMode.system;
+    Brightness _brightness =
+        SchedulerBinding.instance.platformDispatcher.platformBrightness;
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: _brightness == Brightness.dark
+          ? darkMode.colorScheme.surface
+          : lightMode.colorScheme.surface,
+      systemNavigationBarColor: _brightness == Brightness.dark
+          ? darkMode.colorScheme.surface
+          : lightMode.colorScheme.surface,
+      statusBarIconBrightness:
+          _brightness == Brightness.dark ? Brightness.light : Brightness.dark,
+      systemNavigationBarIconBrightness:
+          _brightness == Brightness.dark ? Brightness.light : Brightness.dark,
+      statusBarBrightness: _brightness,
+    ));
+  }
+  themeSink.add("");
+
   return sharedPreferences!.setString("theme", value);
 }
 

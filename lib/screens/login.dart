@@ -529,7 +529,7 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
               SizedBox(height: 20),
-              if (!verified)
+              if (widget.phoneNumber.isEmpty)
                 SizedBox(
                   width: MediaQuery.of(context).size.width - 20,
                   child: Button(

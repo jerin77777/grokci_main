@@ -220,6 +220,9 @@ class _SearchViewState extends State<SearchView> with RouteAware {
 
   Map qtyCache = {};
 
+  Map productData = {};
+  double stars = 0;
+
   @override
   void initState() {
     getData();
@@ -233,11 +236,21 @@ class _SearchViewState extends State<SearchView> with RouteAware {
   }
 
   bool searching = false;
+  bool showDetail = false;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      bottomSheet: ProductDetails(
+        showDetail: showDetail,
+        productData: productData,
+        stars: stars,
+        onClose: () {
+          showDetail = false;
+          setState(() {});
+        },
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Column(
@@ -303,14 +316,28 @@ class _SearchViewState extends State<SearchView> with RouteAware {
                   children: [
                     for (var product in products)
                       InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            mainContext,
-                            MaterialPageRoute(
-                                builder: (context) => ProductDetails(
-                                      productId: product["id"],
-                                    )),
-                          );
+                        onTap: () async {
+                          showDetail = true;
+                          productData = product;
+
+                          if (cart.contains(productData!["id"])) {
+                            productData!["qty"] =
+                                await getQty(productData!["id"]);
+                          }
+                          if (productData!["stars"].isNotEmpty) {
+                            for (var star in productData!["stars"]) {
+                              stars += star;
+                            }
+                            stars = stars / productData!["stars"].length;
+                          }
+                          setState(() {});
+                          // Navigator.push(
+                          //   mainContext,
+                          //   MaterialPageRoute(
+                          //       builder: (context) => ProductDetails(
+                          //             productId: product["id"],
+                          //           )),
+                          // );
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(
@@ -371,91 +398,46 @@ class _SearchViewState extends State<SearchView> with RouteAware {
                                                 .onSurface),
                                       ),
                                       Expanded(child: SizedBox()),
-                                      cart.contains(product["id"])
-                                          ? Container(
-                                              height: 32,
-                                              decoration: BoxDecoration(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .surfaceContainer,
-                                                  borderRadius:
-                                                      BorderRadius.circular(8)),
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 8, horizontal: 8),
-                                              child: Row(
-                                                children: [
-                                                  GestureDetector(
-                                                      onTap: () async {
-                                                        if (product["qty"] >
-                                                            0) {
-                                                          product["qty"] -= 1;
-                                                          // if (!saved) {
-                                                          // total -= item["product"]["sellingPrice"];
-                                                          // }
+                                      if (cart.contains(product["id"]))
+                                        StepperWidget(
+                                          quantity: product["qty"],
+                                          decrementFunc: () async {
+                                            if (product["qty"] > 0) {
+                                              product["qty"] -= 1;
+                                              // if (!saved) {
+                                              // total -= item["product"]["sellingPrice"];
+                                              // }
 
-                                                          updateBag(
-                                                              product["id"],
-                                                              product["qty"]);
-                                                          setState(() {});
-                                                        }
-                                                        if (product["qty"] ==
-                                                            0) {
-                                                          cart.remove(
-                                                              product["id"]);
-                                                        }
-                                                      },
-                                                      child: Icon(
-                                                          FontAwesomeIcons
-                                                              .minus,
-                                                          size: 20,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .onSurface)),
-                                                  SizedBox(width: 8),
-                                                  Text(
-                                                    product["qty"].toString(),
-                                                    style: Style.subHeadline
-                                                        .copyWith(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .colorScheme
-                                                                .onSurface),
-                                                  ),
-                                                  SizedBox(width: 8),
-                                                  GestureDetector(
-                                                      onTap: () async {
-                                                        product["qty"] += 1;
-                                                        // if (!saved) {
-                                                        // total += item["product"]["sellingPrice"];
-                                                        // }
+                                              setState(() {});
 
-                                                        setState(() {});
-                                                        updateBag(product["id"],
-                                                            product["qty"]);
+                                              updateBag(product["id"],
+                                                  product["qty"]);
+                                            }
+                                            if (product["qty"] == 0) {
+                                              cart.remove(product["id"]);
+                                            }
+                                          },
+                                          incrementFunc: () async {
+                                            if (product!["qty"] < 5) {
+                                              product["qty"] += 1;
 
-                                                        // getData();
-                                                      },
-                                                      child: Icon(
-                                                          FontAwesomeIcons.plus,
-                                                          size: 20,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .onSurface)),
-                                                ],
-                                              ),
-                                            )
-                                          : Button(
-                                              size: ButtonSize.medium,
-                                              type: ButtonType.filled,
-                                              label: "Add to Bag",
-                                              onPress: () {
-                                                addToBag(product["id"]);
-                                                setState(() {});
-                                                showMessage(context,
-                                                    "Added ${product["name"]} to bag");
-                                              })
+                                              setState(() {});
+                                              updateBag(product["id"],
+                                                  product["qty"]);
+                                            }
+                                          },
+                                        )
+                                      else
+                                        Button(
+                                            size: ButtonSize.medium,
+                                            type: ButtonType.filled,
+                                            label: "Add to Bag",
+                                            onPress: () {
+                                              product["qty"] = 1;
+                                              cart.add(product["id"]);
+                                              addToBag(product["id"]);
+                                              setState(() {});
+                                            })
                                     ],
                                   )
                                 ],

@@ -294,7 +294,7 @@ class _ProfileState extends State<Profile> {
                         onTap: () {
                           showDialog(
                               context: context,
-                              builder: (context) => AlertDialog(
+                              builder: (context2) => AlertDialog(
                                     backgroundColor:
                                         Theme.of(context).colorScheme.surface,
                                     title: Text(
@@ -306,13 +306,12 @@ class _ProfileState extends State<Profile> {
                                     actions: [
                                       TextButton(
                                           onPressed: () {
-                                            sharedPreferences!.remove("phone");
-                                            Navigator.pushReplacement(
-                                              mainContext,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Login()),
-                                            );
+                                            Navigator.pop(context2);
+                                            Navigator.of(mainContext)
+                                                .pushReplacement(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            Login()));
                                           },
                                           child: Text("Yes",
                                               style: Style.body.copyWith(
@@ -322,7 +321,7 @@ class _ProfileState extends State<Profile> {
                                               ))),
                                       TextButton(
                                           onPressed: () {
-                                            Navigator.pop(context);
+                                            Navigator.pop(context2);
                                           },
                                           child: Text("Cancel",
                                               style: Style.body.copyWith(

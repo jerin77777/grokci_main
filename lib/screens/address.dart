@@ -89,8 +89,9 @@ Future<bool> makeDefault(BuildContext context) async {
 }
 
 class AddAddress extends StatefulWidget {
-  const AddAddress({super.key, this.addressId});
+  const AddAddress({super.key, this.addressId, this.data});
   final String? addressId;
+  final Map? data;
 
   @override
   State<AddAddress> createState() => _AddAddressState();
@@ -172,7 +173,26 @@ class _AddAddressState extends State<AddAddress> {
     if (mapsImplementation is GoogleMapsFlutterAndroid) {
       mapsImplementation.useAndroidViewSurface = true;
     }
-    getLocation();
+    if (widget.data != null) {
+      name.text = widget.data!["name"];
+      houseNo.text = widget.data!["houseNumber"];
+      street.text = widget.data!["street"];
+      city.text = widget.data!["city"];
+      pincode.text = widget.data!["pincode"];
+      phone.text = widget.data!["phone"];
+
+      marker = LatLng(widget.data!["lat"], widget.data!["lng"]);
+
+      myLocation = CameraPosition(
+        target: LatLng(widget.data!["lat"], widget.data!["lng"]),
+        zoom: 15.0,
+      );
+      gotLocation = true;
+
+      setState(() {});
+    } else {
+      getLocation();
+    }
 
     // TODO: implement initState
     super.initState();
@@ -394,7 +414,7 @@ class _AddAddressState extends State<AddAddress> {
                         }
                         selected = addressCount == 0;
                         setState(() {});
-                        
+
                         if (nameError.isEmpty &&
                             houseNoError.isEmpty &&
                             streetError.isEmpty &&
@@ -427,9 +447,9 @@ class _AddAddressState extends State<AddAddress> {
                                 documentId: widget.addressId!,
                                 data: data);
                           }
-                           Navigator.pop(context);
+                          Navigator.pop(context);
                         }
-                       
+
                         setState(() {});
                       })
                 ],
@@ -754,6 +774,7 @@ class _AddressState extends State<Address> {
                                           MaterialPageRoute(
                                               builder: (context) => AddAddress(
                                                     addressId: address["id"],
+                                                    data: address,
                                                   )),
                                         ).then((_) {
                                           getData();
