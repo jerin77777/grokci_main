@@ -185,7 +185,7 @@ class Category extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-          context,
+          mainContext,
           MaterialPageRoute(
               builder: (context) => ProductsInCategory(
                     categoryId: category["id"],
