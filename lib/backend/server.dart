@@ -33,10 +33,10 @@ SharedPreferences? sharedPreferences;
 // all database details used from here
 
 class AppConfig {
-  static String endpoint = "https://cloud.appwrite.io/v1";
-  static String project = "grokci";
-  static String database = "6504263e007ff813b432";
-  static String keys = "66ddc52c001d4143c0f6";
+  static String endpoint = "***";
+  static String project = "***";
+  static String database = "***";
+  static String keys = "***";
 
   static String mapKey = "*";
   static String geoCode = "*";
@@ -304,6 +304,16 @@ getAddress() async {
   if (result.isEmpty) {
     return {"address": "Select Address"};
   }
+  return result[0];
+}
+
+getWareHouse() async {
+  List<Map> result = [];
+  DocumentList warehouse = await db.listDocuments(
+    databaseId: AppConfig.database,
+    collectionId: AppConfig.warehouses,
+  );
+  result = getResult(warehouse.documents);
   return result[0];
 }
 
